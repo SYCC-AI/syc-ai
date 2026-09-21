@@ -23,10 +23,11 @@ const OPERATIONS = Object.freeze({
   ticketThread: ['GET', 'ticket'],
   ticketReply: ['POST', 'ticket-reply'],
   releaseCurrent: ['GET', '/api/installation/releases/current'],
+  installationDownloadGrant: ['POST', '/api/installation/downloads/grant'],
 });
 // Operations the installation signs for itself, with no user session behind
 // them. The update check has to keep working while nobody is logged in.
-const INSTALLATION_SIGNED = new Set(['releaseCurrent']);
+const INSTALLATION_SIGNED = new Set(['releaseCurrent', 'installationDownloadGrant']);
 const RESOURCE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 class ControlPlaneClientError extends Error {

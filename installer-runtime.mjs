@@ -110,7 +110,15 @@ export function createInstallerRuntime({
             asset.bytes !== selected.descriptor.bytes || asset.sha256 !== selected.descriptor.sha256) {
           throw new Error('download grant does not match signed release');
         }
-        download.headers = { authorization: `Bearer ${grant.token}` };
+        // The control plane binds the grant to an installation and checks the
+        // pair on redemption, so both halves travel together.
+        if (!/^[0-9a-f-]{36}$/.test(String(grant.installationId || ''))) {
+          throw new Error('download grant does not match signed release');
+        }
+        download.headers = {
+          authorization: `Bearer ${grant.token}`,
+          'x-syc-installation': grant.installationId,
+        };
         download.redirect = 'error';
       }
       const response = await fetchImpl(`${source}/${selected.descriptor.file}`, download);

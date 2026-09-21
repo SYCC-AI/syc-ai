@@ -10,7 +10,7 @@ import { existsSync, readFileSync, writeFileSync, renameSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createDeviceLink, CAPABILITIES } from './device-link.mjs';
-import { panelsStatus, installPanelStream } from './installer-runtime.mjs';
+import { createInstallerRuntime } from './installer-runtime.mjs';
 import { createControlPlaneClient } from './control-plane-client.mjs';
 import { createInstallationActivation } from './installation-activation.mjs';
 import { createOnboardingServer } from './onboarding-server.mjs';
@@ -85,6 +85,26 @@ const GEMINI_PORT = Number(process.env.FREE_GEMINI_PORT || 8789);
 const QWEN_PORT = Number(process.env.FREE_QWEN_PORT || 8794);
 const CURSOR_PORT = Number(process.env.FREE_CURSOR_PORT || 8796);
 const SYC_API_PORT = Number(process.env.FREE_SYC_API_PORT || 8797);
+
+// Professional-account packages are private: the control plane hands out a
+// short-lived grant bound to this installation, and the installer redeems it
+// for the bytes. The grant is requested with the installation's own key, so a
+// long install does not fail because the browser session expired.
+const installer = createInstallerRuntime({
+  root: ROOT.replace(/\/$/, ''),
+  requestDownloadGrant: activation
+    ? async ({ panelId, releaseSequence }) => {
+        const signer = await activation.signer();
+        const response = await createControlPlaneClient({ baseUrl: CONTROL_URL })
+          .call('installationDownloadGrant', { installation: signer, body: { panelId, releaseSequence } });
+        if (response.status !== 200 || !response.body?.data) {
+          throw new Error(response.body?.error || 'download grant unavailable');
+        }
+        return { ...response.body.data, installationId: signer.installationId };
+      }
+    : undefined,
+});
+const { panelsStatus, installPanelStream } = installer;
 
 // The phone link and the app this panel hands out.
 const APP_DIR = resolve(ROOT, 'app');

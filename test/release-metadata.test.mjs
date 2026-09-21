@@ -15,7 +15,12 @@ test('accepts only signed current release metadata with pinned asset identity', 
   const verified = verifyReleaseMetadata({ metadata, signature, publicKey, now: () => Date.parse('2026-09-20T18:11:00Z') });
   assert.equal(verified.sequence, 7);
   assert.equal(verified.assets.core.file, 'core.tar.zst');
-  assert.throws(() => verifyReleaseMetadata({ metadata: { ...metadata, sequence: 8 }, signature, publicKey }), /signature/);
+  // Pinned: expiry is checked before the signature, so a real clock drifting
+  // past this fixture's expiry would hide what this assertion is about.
+  assert.throws(() => verifyReleaseMetadata({
+    metadata: { ...metadata, sequence: 8 }, signature, publicKey,
+    now: () => Date.parse('2026-09-20T18:11:00Z'),
+  }), /signature/);
   assert.throws(() => verifyReleaseMetadata({ metadata, signature, publicKey, now: () => Date.parse('2026-09-22T00:00:00Z') }), /expired/);
 });
 

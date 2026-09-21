@@ -107,7 +107,10 @@ test('private artifact access downloads only with a grant matching the signed de
     root: f.root, fetchImpl: f.fetchImpl, spawnImpl: f.spawnImpl,
     requestDownloadGrant: async (input) => {
       asked.push(input);
-      return { token, asset: { panelId: 'claude', releaseSequence: 21, ...f.descriptor } };
+      return {
+        token, installationId: '55555555-5555-4555-8555-555555555555',
+        asset: { panelId: 'claude', releaseSequence: 21, ...f.descriptor },
+      };
     },
   });
   await runtime.installPanelStream('claude', f.res);
@@ -115,6 +118,8 @@ test('private artifact access downloads only with a grant matching the signed de
   const download = f.requests[2];
   assert.equal(download.url, 'https://releases.example/v0.5.0/panel-claude.tar.zst');
   assert.equal(download.options.headers.authorization, `Bearer ${token}`);
+  // The control plane redeems the pair, so the installation travels with it.
+  assert.equal(download.options.headers['x-syc-installation'], '55555555-5555-4555-8555-555555555555');
   assert.equal(download.options.redirect, 'error');
   assert.equal(f.requests[0].options.headers, undefined);
   assert.equal(f.spawned.length, 1);

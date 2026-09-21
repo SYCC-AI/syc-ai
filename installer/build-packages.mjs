@@ -95,7 +95,11 @@ if (!signingKeyFile || !Number.isSafeInteger(sequence) || sequence < 1) {
   throw new Error('SYC_RELEASE_SIGNING_KEY_FILE and positive SYC_RELEASE_SEQUENCE are required');
 }
 const issuedAt = new Date().toISOString();
-const expiresAt = process.env.SYC_RELEASE_EXPIRES_AT || new Date(Date.parse(issuedAt) + 24 * 60 * 60 * 1000).toISOString();
+// A release stays offerable for 90 days by default. A short window would mean
+// every installation that checked in later than that saw an expired manifest
+// and could not update at all — which is the one thing that must keep working.
+const expiresAt = process.env.SYC_RELEASE_EXPIRES_AT
+  || new Date(Date.parse(issuedAt) + 90 * 24 * 60 * 60 * 1000).toISOString();
 const signed = createSignedRelease({
   privateKey: readFileSync(signingKeyFile, 'utf8'), sequence, version: reg.version,
   issuedAt, expiresAt, minimumVersion: process.env.SYC_MINIMUM_VERSION || reg.version,
