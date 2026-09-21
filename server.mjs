@@ -61,6 +61,10 @@ const updates = activation && RELEASE_PUBLIC_KEY_FILE
       releasePublicKey: readFileSync(RELEASE_PUBLIC_KEY_FILE, 'utf8'),
       root: ROOT.replace(/\/$/, ''),
       stateFile: UPDATE_STATE_FILE,
+      // A core release carries the shell only. The professional accounts the
+      // owner installed live in apps/ and runtime/ under the same root, so an
+      // update that did not carry them across would uninstall them.
+      preserve: ['data', 'apps', 'runtime'],
       currentSequence: installedSequence(),
       downloadAsset: createAssetDownloader({ controlUrl: CONTROL_URL, activation }),
       extract: extractArchive,

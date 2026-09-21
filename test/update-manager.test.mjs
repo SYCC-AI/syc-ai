@@ -41,6 +41,29 @@ test('update verifies metadata and archive before atomic activation', async () =
   assert.equal(JSON.parse(await readFile(join(f.directory, 'state.json'))).sequence, 2);
 });
 
+test('an update carries the installed professional accounts across, it does not uninstall them', async () => {
+  const f = await fixture({ health: true });
+  // What the in-panel installer put into this root: a core release archive
+  // knows nothing about either tree.
+  await mkdir(join(f.root, 'apps', 'claude'), { recursive: true });
+  await writeFile(join(f.root, 'apps', 'claude', 'app.mjs'), 'installed');
+  await mkdir(join(f.root, 'runtime', 'claude-code'), { recursive: true });
+  await writeFile(join(f.root, 'runtime', 'claude-code', 'cli'), 'binary');
+
+  await applyUpdate({
+    root: f.root, stateFile: join(f.directory, 'state.json'), metadata: f.metadata,
+    signature: f.signature, publicKey: f.publicKey, asset: 'core',
+    preserve: ['data', 'apps', 'runtime'],
+    download: async () => f.payload,
+    extract: async (_archive, stage) => writeFile(join(stage, 'version'), 'new'),
+    healthCheck: async () => true,
+  });
+  assert.equal(await readFile(join(f.root, 'version'), 'utf8'), 'new');
+  assert.equal(await readFile(join(f.root, 'apps', 'claude', 'app.mjs'), 'utf8'), 'installed');
+  assert.equal(await readFile(join(f.root, 'runtime', 'claude-code', 'cli'), 'utf8'), 'binary');
+  assert.equal(await readFile(join(f.root, 'data', 'user-content'), 'utf8'), 'must-survive');
+});
+
 test('failed health check restores prior installation and replay is rejected', async () => {
   const f = await fixture({ health: false });
   await assert.rejects(applyUpdate({

@@ -18,6 +18,11 @@ async function atomicJson(path, value) {
 export async function applyUpdate({
   root, stateFile, metadata, signature, publicKey, asset,
   download, extract, healthCheck, now = Date.now,
+  // Trees the release archive does not carry and must not take away. `data`
+  // is the user's own state; `apps` and `runtime` are the professional
+  // accounts installed into this root by the in-panel installer, which a core
+  // release would otherwise silently uninstall.
+  preserve = ['data'],
 } = {}) {
   if (!root || !stateFile || !download || !extract || !healthCheck) throw new TypeError('update configuration is required');
   const release = verifyReleaseMetadata({ metadata, signature, publicKey, now });
@@ -38,8 +43,11 @@ export async function applyUpdate({
   let activated = false;
   try {
     await extract(archive, stage);
-    try { await cp(join(root, 'data'), join(stage, 'data'), { recursive: true, force: true }); }
-    catch (error) { if (error?.code !== 'ENOENT') throw error; }
+    for (const name of preserve) {
+      if (!/^[A-Za-z0-9._-]+$/.test(name) || name === '.' || name === '..') throw new Error('invalid preserved path');
+      try { await cp(join(root, name), join(stage, name), { recursive: true, force: true }); }
+      catch (error) { if (error?.code !== 'ENOENT') throw error; }
+    }
     try { await rename(root, backup); movedPrior = true; }
     catch (error) { if (error?.code !== 'ENOENT') throw error; }
     await rename(stage, root);
