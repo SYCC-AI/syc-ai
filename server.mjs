@@ -16,6 +16,8 @@ import { createInstallationActivation } from './installation-activation.mjs';
 import { createOnboardingServer } from './onboarding-server.mjs';
 import { centralRouteDecision } from './central-access-policy.mjs';
 import { startLegacyEdgeClient } from './server-startup.mjs';
+import { createUpdateService } from './update-service.mjs';
+import { createAssetDownloader, createHealthCheck, extractArchive } from './update-runtime.mjs';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PUBLIC_DIR = resolve(ROOT, 'public');
@@ -28,16 +30,44 @@ const COOKIE = 'sycfree';
 const CONTROL_URL = String(process.env.SYC_AI_CONTROL_URL || '');
 const PUBLIC_ORIGIN = String(process.env.SYC_AI_PUBLIC_ORIGIN || '');
 const ENTITLEMENT_PUBLIC_KEY_FILE = String(process.env.SYC_AI_ENTITLEMENT_PUBLIC_KEY_FILE || '');
-const onboarding = CONTROL_URL && PUBLIC_ORIGIN && ENTITLEMENT_PUBLIC_KEY_FILE
+const RELEASE_PUBLIC_KEY_FILE = String(process.env.SYC_AI_RELEASE_PUBLIC_KEY_FILE || '');
+const UPDATE_STATE_FILE = join(DATA_DIR, 'release-state.json');
+const activation = CONTROL_URL && PUBLIC_ORIGIN && ENTITLEMENT_PUBLIC_KEY_FILE
+  ? createInstallationActivation({
+      dataDirectory: DATA_DIR,
+      controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
+      entitlementPublicKey: readFileSync(ENTITLEMENT_PUBLIC_KEY_FILE, 'utf8'),
+      version: process.env.SYC_AI_VERSION || '0.1.0-preview.1',
+    })
+  : null;
+const onboarding = activation
   ? createOnboardingServer({
       controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
-      activation: createInstallationActivation({
-        dataDirectory: DATA_DIR,
-        controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
-        entitlementPublicKey: readFileSync(ENTITLEMENT_PUBLIC_KEY_FILE, 'utf8'),
-        version: process.env.SYC_AI_VERSION || '0.1.0-preview.1',
-      }),
+      activation,
       productOrigin: PUBLIC_ORIGIN,
+    })
+  : null;
+
+// The repair path. Without a pinned release key there is no trustworthy way to
+// be told what to install, so the channel stays off rather than half-on.
+function installedSequence() {
+  try { return Number(JSON.parse(readFileSync(UPDATE_STATE_FILE, 'utf8')).sequence) || 0; }
+  catch { return 0; }
+}
+const updates = activation && RELEASE_PUBLIC_KEY_FILE
+  ? createUpdateService({
+      activation,
+      controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
+      releasePublicKey: readFileSync(RELEASE_PUBLIC_KEY_FILE, 'utf8'),
+      root: ROOT.replace(/\/$/, ''),
+      stateFile: UPDATE_STATE_FILE,
+      currentSequence: installedSequence(),
+      downloadAsset: createAssetDownloader({ controlUrl: CONTROL_URL, activation }),
+      extract: extractArchive,
+      healthCheck: createHealthCheck(),
+      // The new tree is already in place; leaving lets the service manager
+      // start it. Restart=always in the unit is what completes the update.
+      onApplied: () => { setTimeout(() => process.exit(0), 1000).unref(); },
     })
   : null;
 // Professional accounts run as separate loopback services; this server is the
@@ -271,6 +301,21 @@ const server = createServer(async (req, res) => {
         ? json(res, 200, { user: authorization.user, access: authorization.access })
         : json(res, 401, { error: authorization.reason });
     }
+    // The update endpoints stay reachable in restricted mode on purpose: a
+    // panel locked by a failed required release must still be able to try
+    // again and show the owner why it is locked.
+    if (onboarding && (path === '/api/updates/status' || path === '/api/updates/check')) {
+      const authorization = await onboarding.authorize({
+        cookieHeader: req.headers.cookie || '', clientAddress: ip,
+        userAgent: req.headers['user-agent'] || '', allowRestricted: true,
+      });
+      if (!authorization.authorized) return json(res, 401, { error: authorization.reason });
+      if (!updates) return json(res, 503, { error: 'update_channel_unavailable' });
+      if (path === '/api/updates/status') return json(res, 200, updates.status());
+      if (req.method !== 'POST') return json(res, 405, { error: 'method_not_allowed' });
+      try { return json(res, 200, await updates.check()); }
+      catch (error) { return json(res, 502, { error: String(error?.code || 'control_unavailable') }); }
+    }
     if (onboarding && path.startsWith('/auth/')) {
       return json(res, 409, { error: 'central_account_required' });
     }
@@ -446,7 +491,9 @@ const server = createServer(async (req, res) => {
         cookieHeader: req.headers.cookie || '', clientAddress: ip,
         userAgent: req.headers['user-agent'] || '', allowRestricted: true,
       });
-      const decision = centralRouteDecision({ pathname: path, authorization });
+      const decision = centralRouteDecision({
+        pathname: path, authorization, updateRestricted: updates?.restricted() === true,
+      });
       user = decision.allow ? authorization.user : null;
       if (!decision.allow && decision.status === 403) return json(res, 403, { error: decision.reason });
     }
@@ -545,6 +592,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   // the management panel. On our own build there is no license file, so this is
   // a no-op and nothing phones home.
   startLegacyEdgeClient({ centralOnboardingEnabled: Boolean(onboarding) }).catch(() => {});
+  // Ask what release we should be on at startup and every six hours after.
+  updates?.start();
 }
 
 export function writeUsers(value) {

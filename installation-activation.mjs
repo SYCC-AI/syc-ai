@@ -136,6 +136,17 @@ export function createInstallationActivation({
 
   return Object.freeze({
     identity,
+    // Everything the update channel needs to speak for this installation
+    // without a user session, and nothing more: the private key stays here.
+    async signer() {
+      await identity();
+      const local = await identityPromise;
+      if (!local.installationId) throw new InstallationActivationError('installation_not_registered');
+      return Object.freeze({
+        installationId: local.installationId,
+        sign: (message) => sign(null, Buffer.from(message), createPrivateKey(local.privateKey)).toString('base64url'),
+      });
+    },
     async access() {
       const raw = await readOptional(entitlementPath);
       if (!raw) return entitlementAccess('', { publicKey: entitlementPublicKey, installationId: 'missing', now });

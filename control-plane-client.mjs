@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import { isIP } from 'node:net';
 
 const MAX_JSON_BYTES = 64 * 1024;
@@ -21,7 +22,11 @@ const OPERATIONS = Object.freeze({
   ticketCreate: ['POST', '/api/user/tickets'],
   ticketThread: ['GET', 'ticket'],
   ticketReply: ['POST', 'ticket-reply'],
+  releaseCurrent: ['GET', '/api/installation/releases/current'],
 });
+// Operations the installation signs for itself, with no user session behind
+// them. The update check has to keep working while nobody is logged in.
+const INSTALLATION_SIGNED = new Set(['releaseCurrent']);
 const RESOURCE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 class ControlPlaneClientError extends Error {
@@ -39,6 +44,25 @@ function controlOrigin(value) {
     throw new TypeError('control-plane URL must be a credential-free HTTPS origin');
   }
   return url.origin;
+}
+
+// The control plane rebuilds this exact string; keep the two in step.
+export function installationSigningMessage({ method, pathname, timestamp, nonce }) {
+  return `SYC-AI installation request v1\n${method}\n${pathname}\n${timestamp}\n${nonce}`;
+}
+
+// The signer keeps the private key; the gateway only ever sees a signature.
+function installationHeaders({ installationId, sign }, method, pathname, timestamp) {
+  if (!installationId || typeof sign !== 'function') throw new ControlPlaneClientError('installation_identity_required');
+  const nonce = randomBytes(18).toString('base64url');
+  const signature = sign(installationSigningMessage({ method, pathname, timestamp, nonce }));
+  if (!signature) throw new ControlPlaneClientError('installation_identity_required');
+  return {
+    'x-syc-installation': installationId,
+    'x-syc-timestamp': String(timestamp),
+    'x-syc-nonce': nonce,
+    'x-syc-signature': signature,
+  };
 }
 
 function safeHeader(value, maximum) {
@@ -132,7 +156,7 @@ function publicFailure(status, parsed) {
   return /^[a-z][a-z0-9_]{1,63}$/.test(code) ? code : 'control_request_failed';
 }
 
-export function createControlPlaneClient({ baseUrl, fetchImpl = fetch, timeoutMs = 10_000 } = {}) {
+export function createControlPlaneClient({ baseUrl, fetchImpl = fetch, timeoutMs = 10_000, now = Date.now } = {}) {
   const origin = controlOrigin(baseUrl);
   if (typeof fetchImpl !== 'function') throw new TypeError('fetch implementation is required');
   if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 120_000) {
@@ -147,6 +171,7 @@ export function createControlPlaneClient({ baseUrl, fetchImpl = fetch, timeoutMs
       clientAddress = '',
       userAgent = '',
       resourceId = '',
+      installation = null,
     } = {}) {
       const route = OPERATIONS[operation];
       if (!route) throw new ControlPlaneClientError('unsupported_control_operation');
@@ -167,6 +192,13 @@ export function createControlPlaneClient({ baseUrl, fetchImpl = fetch, timeoutMs
       }
       const agent = safeHeader(userAgent, 512);
       if (agent) headers['user-agent'] = agent;
+      if (INSTALLATION_SIGNED.has(operation)) {
+        // A signed request carries its own proof; a borrowed browser cookie
+        // must never ride along with it.
+        delete headers.cookie;
+        delete headers['x-syc-csrf'];
+        Object.assign(headers, installationHeaders(installation || {}, method, pathname, now()));
+      }
 
       let encoded;
       if (method === 'POST') {
