@@ -11,18 +11,20 @@
 // Nothing here embeds our server paths, accounts or secrets: only source, the
 // panel shells and the CLI runtimes travel. Per-user data is created on install.
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createSignedRelease } from './release-builder.mjs';
 import { resolveBuildTargets } from './build-plan.mjs';
+import { resolvePackageInputs } from './package-inputs.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 const DIST = join(HERE, 'dist');
 const reg = JSON.parse(readFileSync(join(HERE, 'panels.json'), 'utf8'));
 const targets = resolveBuildTargets(process.env.SYC_BUILD_TARGETS);
+const privateRuntimeRoot = process.env.SYC_PRIVATE_RUNTIME_ROOT || '';
 
 // Junk that must never travel in a package.
 const EXCLUDES = ['--exclude=.git', '--exclude=node_modules/.cache', '--exclude=*.log',
@@ -30,19 +32,33 @@ const EXCLUDES = ['--exclude=.git', '--exclude=node_modules/.cache', '--exclude=
 
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const mb = (n) => (n / 1048576).toFixed(1);
+const quote = (value) => `'${String(value).replaceAll("'", "'\\''")}'`;
+
+function packageInputs(paths) {
+  return resolvePackageInputs({ projectRoot: ROOT, privateRuntimeRoot, paths });
+}
 
 function pack(name, paths) {
   const out = join(DIST, `${name}.tar.zst`);
-  // Verify every path exists so a package is never silently short.
-  for (const p of paths) {
-    if (!existsSync(join(ROOT, p))) throw new Error(`missing path for ${name}: ${p}`);
-  }
-  const list = paths.map((p) => `'${p}'`).join(' ');
-  execSync(`tar ${EXCLUDES.join(' ')} -C '${ROOT}' -cf - ${list} | zstd -19 -T0 -q -o '${out}' -f`,
+  const list = packageInputs(paths).map(({ base, path }) => `-C ${quote(base)} ${quote(path)}`).join(' ');
+  execSync(`tar ${EXCLUDES.join(' ')} -cf - ${list} | zstd -19 -T0 -q -o ${quote(out)} -f`,
     { stdio: ['ignore', 'ignore', 'inherit'], shell: '/bin/bash' });
   const size = statSync(out).size;
   console.log(`  ${name.padEnd(18)} ${mb(size).padStart(7)} MB`);
   return { file: `${name}.tar.zst`, bytes: size, sha256: sha256(out) };
+}
+
+if (process.env.SYC_VALIDATE_PACKAGE_INPUTS === '1') {
+  let count = 0;
+  if (targets.core) count += packageInputs(reg.core.include).length;
+  if (targets.panels) {
+    for (const panel of Object.values(reg.panels)) count += packageInputs(panel.include).length;
+  }
+  if (targets.full) {
+    count += packageInputs([...reg.core.include, ...reg.bundled.flatMap((id) => reg.panels[id].include)]).length;
+  }
+  console.log(`validated ${count} package inputs; provider runtimes resolve only from the private runtime root`);
+  process.exit(0);
 }
 
 rmSync(DIST, { recursive: true, force: true });
