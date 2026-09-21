@@ -44,7 +44,9 @@ function sse(res) {
   return (event, data) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 }
 
-export function createInstallerRuntime({ root = DEFAULT_ROOT, fetchImpl = fetch, spawnImpl = spawn } = {}) {
+export function createInstallerRuntime({
+  root = DEFAULT_ROOT, fetchImpl = fetch, spawnImpl = spawn, requestDownloadGrant,
+} = {}) {
   const dataDirectory = join(root, 'data');
   const registryFile = join(root, 'installer', 'panels.json');
   const releaseFile = join(dataDirectory, 'release.json');
@@ -98,9 +100,20 @@ export function createInstallerRuntime({ root = DEFAULT_ROOT, fetchImpl = fetch,
       emit('step', {
         text: `downloading ${panel.name} (${(selected.descriptor.bytes / 1048576).toFixed(0)} MB)`, pct: 5,
       });
-      const response = await fetchImpl(`${source}/${selected.descriptor.file}`, {
-        signal: AbortSignal.timeout(15 * 60_000),
-      });
+      const download = { signal: AbortSignal.timeout(15 * 60_000) };
+      if (configuration.artifactAccess === 'grant') {
+        if (typeof requestDownloadGrant !== 'function') throw new Error('private download grant is unavailable');
+        const grant = await requestDownloadGrant({ panelId: id, releaseSequence: selected.sequence });
+        const asset = grant?.asset || {};
+        if (!/^[A-Za-z0-9_-]{43}$/.test(String(grant?.token || '')) || asset.panelId !== id ||
+            asset.releaseSequence !== selected.sequence || asset.file !== selected.descriptor.file ||
+            asset.bytes !== selected.descriptor.bytes || asset.sha256 !== selected.descriptor.sha256) {
+          throw new Error('download grant does not match signed release');
+        }
+        download.headers = { authorization: `Bearer ${grant.token}` };
+        download.redirect = 'error';
+      }
+      const response = await fetchImpl(`${source}/${selected.descriptor.file}`, download);
       if (!response.ok || !response.body) throw new Error('panel download failed');
       const declared = Number(response.headers.get('content-length'));
       if (Number.isFinite(declared) && declared !== selected.descriptor.bytes) {

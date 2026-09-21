@@ -40,6 +40,7 @@ test('named operations use only fixed HTTPS paths, methods and upstream origin',
     ['installationComplete', 'POST', '/api/user/installations/complete'],
     ['installationActivate', 'POST', '/api/user/installations/activate'],
     ['entitlementIssue', 'POST', '/api/user/entitlements/issue'],
+    ['downloadGrant', 'POST', '/api/user/downloads/grant'],
     ['ticketList', 'GET', '/api/user/tickets'],
     ['ticketCreate', 'POST', '/api/user/tickets'],
   ];
