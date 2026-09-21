@@ -1,0 +1,148 @@
+{
+  "product": "SYC-AI",
+  "version": "0.5.0",
+  "node_min": 20,
+  "core": {
+    "port": 8782,
+    "entry": "server.mjs",
+    "service": "syc-ai",
+    "workdir": ".",
+    "env": { "NODE_ENV": "production", "SYC_AI_PORT": "$PORT" },
+    "include": ["server.mjs", "server-startup.mjs", "device-link.mjs", "edge-client.mjs", "installer-runtime.mjs", "panel-release.mjs", "release-metadata.mjs", "control-plane-client.mjs", "installation-activation.mjs", "onboarding-server.mjs", "central-access-policy.mjs", "entitlement.mjs", "public", "scripts", "installer/panels.json", "installer/render-service.mjs", "installer/panel-install.sh", "installer/manage-installation.sh"]
+  },
+  "bundled": ["claude", "codex"],
+  "panels": {
+    "claude": {
+      "name": "Claude", "order": 1, "port": 8786, "entry": "apps/claude/server.mjs",
+      "workdir": "data/claude/workspace",
+      "include": ["apps/claude", "runtime/claude-code"],
+      "env": {
+        "HOME": "$ROOT/data/claude/accounts/primary",
+        "CLAUDE_BIN": "$ROOT/runtime/claude-code/bin/claude.exe",
+        "CLAUDE_CHAT_PORT": "$PORT",
+        "CLAUDE_CHAT_WORKSPACE": "$ROOT/data/claude/workspace",
+        "CLAUDE_CHAT_PROJECT_DIR": "$ROOT/data/claude/workspace",
+        "CLAUDE_CHAT_DATA_DIR": "$ROOT/data/claude/data",
+        "CLAUDE_CHAT_ACCOUNTS_HOME_ROOT": "$ROOT/data/claude/accounts",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [{ "suffix": "claude", "entry": "apps/claude/server.mjs", "workdir": "data/claude/workspace", "mem": "2G" }]
+    },
+    "codex": {
+      "name": "Codex", "order": 2, "port": 8785, "entry": "apps/codex/server.mjs",
+      "workdir": "data/codex/workspace",
+      "include": ["apps/codex", "runtime/codex"],
+      "env": {
+        "HOME": "$ROOT/data/codex/userhome",
+        "CODEX_HOME": "$ROOT/data/codex/home",
+        "CODEX_ACCOUNTS_DIR": "$ROOT/data/codex/accounts",
+        "CODEX_CHAT_DATA_DIR": "$ROOT/data/codex/data",
+        "CODEX_CHAT_WORKSPACE": "$ROOT/data/codex/workspace",
+        "CODEX_CHAT_PORT": "$PORT",
+        "CODEX_BIN": "$ROOT/runtime/codex/bin/codex.js",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [{ "suffix": "codex", "entry": "apps/codex/server.mjs", "workdir": "data/codex/workspace", "mem": "2G" }]
+    },
+    "qwen": {
+      "name": "Qwen", "order": 3, "port": 8794, "entry": "apps/qwen/server.mjs",
+      "workdir": "data/qwen/workspace",
+      "include": ["apps/qwen", "runtime/qwen-cli"],
+      "env": {
+        "HOME": "$ROOT/data/qwen/home",
+        "CODEX_CHAT_PORT": "$PORT",
+        "CODEX_CHAT_WORKSPACE": "$ROOT/data/qwen/workspace",
+        "CODEX_CHAT_DATA_DIR": "$ROOT/data/qwen/data",
+        "CODEX_HOME": "$ROOT/data/qwen/engine",
+        "CODEX_ACCOUNTS_DIR": "$ROOT/data/qwen/accounts",
+        "CODEX_USAGE_SESSION_ROOT": "$ROOT/data/qwen/engine/sessions",
+        "CODEX_BIN": "$ROOT/apps/qwen/engine/codex",
+        "QWEN_PANEL_HOME": "$ROOT/data/qwen/home",
+        "QWEN_ACCOUNT_HOMES": "$ROOT/data/qwen/account-homes",
+        "QWEN_CLI_ENTRY": "$ROOT/runtime/qwen-cli/cli-entry.js",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [{ "suffix": "qwen", "entry": "apps/qwen/server.mjs", "workdir": "data/qwen/workspace", "mem": "2G" }]
+    },
+    "gemini": {
+      "name": "Gemini", "order": 4, "port": 8789, "entry": "apps/gemini/server.mjs",
+      "workdir": "data/gemini/workspace",
+      "include": ["apps/gemini", "runtime/gemini-cli"],
+      "env": {
+        "HOME": "$ROOT/data/gemini/home",
+        "CODEX_CHAT_PORT": "$PORT",
+        "CODEX_CHAT_WORKSPACE": "$ROOT/data/gemini/workspace",
+        "CODEX_CHAT_DATA_DIR": "$ROOT/data/gemini/data",
+        "CODEX_HOME": "$ROOT/data/gemini/engine",
+        "CODEX_ACCOUNTS_DIR": "$ROOT/data/gemini/accounts",
+        "CODEX_USAGE_SESSION_ROOT": "$ROOT/data/gemini/engine/sessions",
+        "CODEX_BIN": "$ROOT/apps/gemini/engine/codex",
+        "GEMINI_CLI_HOME": "$ROOT/data/gemini/home",
+        "GEMINI_CLI_ENTRY": "$ROOT/runtime/gemini-cli/bundle/gemini.js",
+        "GEMINI_ACCOUNT_HOMES": "$ROOT/data/gemini/accounts",
+        "GEMINI_PROXY_URL": "http://127.0.0.1:8781",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [
+        { "suffix": "gemini", "entry": "apps/gemini/server.mjs", "workdir": "data/gemini/workspace", "mem": "2G" },
+        { "suffix": "gemini-ipv6-proxy", "entry": "apps/gemini/engine/ipv6-proxy.mjs", "workdir": ".", "mem": "128M",
+          "env": { "GEMINI_V6_PROXY_PORT": "8781", "NODE_ENV": "production" } }
+      ]
+    },
+    "cursor": {
+      "name": "Cursor", "order": 5, "port": 8796, "entry": "apps/cursor/server.mjs",
+      "workdir": "data/cursor/workspace",
+      "include": ["apps/cursor", "runtime/cursor-cli"],
+      "env": {
+        "HOME": "$ROOT/data/cursor/home",
+        "CODEX_CHAT_PORT": "$PORT",
+        "CODEX_CHAT_WORKSPACE": "$ROOT/data/cursor/workspace",
+        "CODEX_CHAT_DATA_DIR": "$ROOT/data/cursor/data",
+        "CODEX_HOME": "$ROOT/data/cursor/engine",
+        "CODEX_ACCOUNTS_DIR": "$ROOT/data/cursor/accounts",
+        "CODEX_USAGE_SESSION_ROOT": "$ROOT/data/cursor/engine/sessions",
+        "CODEX_BIN": "$ROOT/apps/cursor/engine/codex",
+        "CURSOR_CLI_HOME": "$ROOT/data/cursor/home",
+        "CURSOR_AGENT_BIN": "$ROOT/runtime/cursor-cli/cursor-agent",
+        "CURSOR_ACCOUNT_HOMES": "$ROOT/data/cursor/account-homes",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [{ "suffix": "cursor", "entry": "apps/cursor/server.mjs", "workdir": "data/cursor/workspace", "mem": "2G" }]
+    },
+    "kimi": {
+      "name": "Kimi", "order": 6, "port": 8788, "entry": "apps/kimi/server.mjs",
+      "workdir": "data/kimi/workspace",
+      "include": ["apps/kimi", "runtime/kimi-engine", "runtime/kimi-cli"],
+      "env": {
+        "HOME": "$ROOT/data/kimi/home",
+        "CODEX_CHAT_PORT": "$PORT",
+        "CODEX_CHAT_WORKSPACE": "$ROOT/data/kimi/workspace",
+        "CODEX_CHAT_DATA_DIR": "$ROOT/data/kimi/data",
+        "CODEX_HOME": "$ROOT/data/kimi/home",
+        "CODEX_ACCOUNTS_DIR": "$ROOT/data/kimi/accounts",
+        "CODEX_USAGE_SESSION_ROOT": "$ROOT/data/kimi/home/sessions",
+        "CODEX_BIN": "$ROOT/runtime/kimi-engine/bin/codex",
+        "KIMI_API_KEY": "kimi-oauth-via-proxy",
+        "KIMI_PROXY_BASE": "http://127.0.0.1:8787/v1",
+        "KIMI_CREDENTIALS_FILE": "$ROOT/data/kimi/credentials/kimi-code.json",
+        "TERM": "xterm-256color", "NODE_ENV": "production"
+      },
+      "services": [
+        { "suffix": "kimi", "entry": "apps/kimi/server.mjs", "workdir": "data/kimi/workspace", "mem": "2G" },
+        { "suffix": "kimi-auth", "entry": "apps/kimi/kimi-auth-proxy.mjs", "workdir": ".", "mem": "128M",
+          "env": { "KIMI_PROXY_PORT": "8787", "KIMI_CREDENTIALS_FILE": "$ROOT/data/kimi/credentials/kimi-code.json", "NODE_ENV": "production" } }
+      ]
+    },
+    "syc-api": {
+      "name": "SYC-API", "order": 7, "port": 8797, "entry": "apps/syc-api/server.mjs",
+      "workdir": "data/syc-api/workspace",
+      "include": ["apps/syc-api"],
+      "env": {
+        "HOME": "$ROOT/data/syc-api/workspace",
+        "OPENROUTER_CHAT_PORT": "$PORT",
+        "NODE_ENV": "production"
+      },
+      "services": [{ "suffix": "syc-api", "entry": "apps/syc-api/server.mjs", "workdir": "data/syc-api/workspace", "mem": "512M" }]
+    }
+  }
+}

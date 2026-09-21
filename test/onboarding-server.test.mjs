@@ -1,0 +1,123 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { createOnboardingServer } from '../onboarding-server.mjs';
+
+function fixture({ access = { mode: 'active', capabilities: { launch_status: 'enabled' } } } = {}) {
+  const calls = [];
+  const controlClient = { async call(operation, options) {
+    calls.push({ operation, options });
+    if (operation === 'catalog') return { status: 200, body: { data: { plans: [] } }, setCookies: [] };
+    if (operation === 'csrf') return { status: 200, body: { data: { csrfToken: 'csrf-1' } }, setCookies: ['syc_csrf=csrf-1'] };
+    if (operation === 'session') return { status: 200, body: { data: { user: { username: 'owner' } } }, setCookies: [] };
+    return { status: 200, body: { data: { ok: true } }, setCookies: ['syc_session=session-1'] };
+  } };
+  const activation = {
+    async activate(options) { calls.push({ operation: 'localActivate', options }); return { installationId: 'install-1', claims: { planId: 'main' } }; },
+    async access() { return access; },
+  };
+  return { calls, router: createOnboardingServer({ controlClient, activation, productOrigin: 'https://panel.example' }) };
+}
+
+test('onboarding server exposes exact same-origin routes and relays only named operations', async () => {
+  const { router, calls } = fixture();
+  const bootstrap = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/bootstrap', headers: {} });
+  assert.equal(bootstrap.status, 200);
+  assert.deepEqual(calls.map(({ operation }) => operation), ['catalog', 'csrf']);
+  assert.deepEqual(bootstrap.setCookies, ['syc_csrf=csrf-1']);
+  assert.equal(await router.dispatch({ method: 'GET', pathname: '/api/onboarding/unknown', headers: {} }), null);
+
+  const rejected = await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/login',
+    headers: { origin: 'https://evil.example', cookie: 'syc_csrf=csrf-1' },
+    body: { username: 'owner', password: 'secret' },
+  });
+  assert.deepEqual(rejected, { status: 403, body: { error: 'origin_forbidden' }, setCookies: [] });
+});
+
+test('account export is relayed through one exact authenticated route', async () => {
+  const { router, calls } = fixture();
+  const response = await router.dispatch({
+    method: 'GET', pathname: '/api/onboarding/export',
+    headers: { cookie: 'syc_session=session-1' }, clientAddress: '198.51.100.10',
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual(calls.map(({ operation }) => operation), ['accountExport']);
+  assert.equal(await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/export', headers: { origin: 'https://panel.example' },
+  }), null);
+});
+
+test('login and activation pass security context without exposing installation private material', async () => {
+  const { router, calls } = fixture();
+  const headers = {
+    origin: 'https://panel.example', cookie: 'syc_csrf=csrf-1; syc_session=session-1',
+    'x-syc-csrf': 'csrf-1', 'user-agent': 'browser',
+  };
+  const login = await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/login', headers,
+    body: { username: 'owner', password: 'secret' }, clientAddress: '198.51.100.10',
+  });
+  assert.equal(login.status, 200);
+  assert.deepEqual(login.setCookies, ['syc_session=session-1']);
+  const active = await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/activate', headers,
+    body: { planId: 'main' }, clientAddress: '198.51.100.10',
+  });
+  assert.equal(active.status, 200);
+  assert.equal(active.body.data.installationId, 'install-1');
+  assert.doesNotMatch(JSON.stringify(calls), /PRIVATE KEY/);
+});
+
+test('protected access requires both a valid control session and active local entitlement', async () => {
+  const { router } = fixture();
+  assert.deepEqual(await router.authorize({ cookieHeader: 'syc_session=session-1' }), {
+    authorized: true,
+    user: { username: 'owner', accountMode: 'central' },
+    access: { mode: 'active', capabilities: { launch_status: 'enabled' } },
+  });
+});
+
+test('account support routes list, create, read and reply through named control operations', async () => {
+  const { router, calls } = fixture();
+  const ticketId = '123e4567-e89b-42d3-a456-426614174000';
+  const headers = {
+    origin: 'https://panel.example', cookie: 'syc_session=session-1; syc_csrf=csrf-1',
+    'x-syc-csrf': 'csrf-1',
+  };
+
+  await router.dispatch({ method: 'GET', pathname: '/api/onboarding/tickets', headers });
+  await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/tickets', headers,
+    body: { subject: 'Update support', category: 'technical', severity: 'high', body: 'Update failed.' },
+  });
+  await router.dispatch({ method: 'GET', pathname: `/api/onboarding/tickets/${ticketId}`, headers });
+  await router.dispatch({
+    method: 'POST', pathname: `/api/onboarding/tickets/${ticketId}/replies`, headers,
+    body: { body: 'Additional details.' },
+  });
+
+  assert.deepEqual(calls.map(({ operation, options }) => [operation, options.resourceId || null]), [
+    ['ticketList', null],
+    ['ticketCreate', null],
+    ['ticketThread', ticketId],
+    ['ticketReply', ticketId],
+  ]);
+  assert.equal(await router.dispatch({
+    method: 'GET', pathname: '/api/onboarding/tickets/not-a-ticket', headers,
+  }), null);
+});
+
+test('restricted entitlement keeps the authenticated account available only when explicitly allowed', async () => {
+  const { router } = fixture({ access: { mode: 'restricted', reason: 'entitlement_expired', capabilities: { support: 'enabled' } } });
+  assert.deepEqual(await router.authorize({ cookieHeader: 'syc_session=session-1' }), {
+    authorized: false,
+    reason: 'entitlement_expired',
+    access: { mode: 'restricted', reason: 'entitlement_expired', capabilities: { support: 'enabled' } },
+  });
+  assert.deepEqual(await router.authorize({ cookieHeader: 'syc_session=session-1', allowRestricted: true }), {
+    authorized: true,
+    restricted: true,
+    user: { username: 'owner', accountMode: 'central' },
+    access: { mode: 'restricted', reason: 'entitlement_expired', capabilities: { support: 'enabled' } },
+  });
+});

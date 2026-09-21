@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#020817">
+  <title>Sign in — SYC-AI</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <script src="/i18n.js?v=5"></script>
+  <link rel="stylesheet" href="/main.css?v=6">
+</head>
+<body class="login-body">
+  <div class="login-scene" aria-hidden="true">
+    <div class="login-nebula login-nebula-one"></div>
+    <div class="login-nebula login-nebula-two"></div>
+    <div class="login-grid"></div>
+    <div class="login-stars"></div>
+    <div class="login-ring login-ring-one"></div>
+    <div class="login-ring login-ring-two"></div>
+  </div>
+
+  <main class="login-shell">
+    <form class="login-card" id="loginForm">
+      <div class="login-card-shine" aria-hidden="true"></div>
+
+      <div class="login-logo-stage" aria-hidden="true">
+        <div class="login-halo"></div>
+        <div class="login-orbit login-orbit-outer"></div>
+        <div class="login-orbit login-orbit-inner"></div>
+        <div class="login-logo-frame">
+          <img src="/syc-logo.jpg" alt="">
+        </div>
+      </div>
+
+      <p class="login-eyebrow"><span></span>SYC-AI<span></span></p>
+      <h1 id="onboardingTitle">Welcome to SYC-AI</h1>
+      <p class="login-subtitle" id="onboardingSubtitle">Your intelligent command center</p>
+
+      <div class="login-fields" id="onboardingFields">
+        <label class="login-field" for="username">
+          <span class="login-field-label" data-i18n>Username</span>
+          <span class="login-input-shell">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
+            <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" data-i18n-attr="placeholder" required autofocus>
+          </span>
+        </label>
+
+        <label class="login-field" for="password">
+          <span class="login-field-label" data-i18n>Password</span>
+          <span class="login-input-shell">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v11H5V10Zm7 4v3"/></svg>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" data-i18n-attr="placeholder" required>
+            <button class="login-password-toggle" id="passwordToggle" type="button" aria-label="Show password" data-i18n-attr="aria-label" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+            </button>
+          </span>
+        </label>
+
+        <div id="otpMount"></div>
+
+
+      </div>
+
+      <button class="login-submit" type="submit" id="submit">
+        <span id="submitLabel">Sign in</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <small id="error" role="alert" aria-live="polite"></small>
+
+      <nav id="onboardingNav" aria-label="Account options">
+        <button type="button" data-mode="signin">Sign in</button>
+        <button type="button" data-mode="signup">Create account</button>
+        <button type="button" data-mode="username">Recover username</button>
+        <button type="button" data-mode="password">Reset password</button>
+      </nav>
+
+      <div class="login-secure"><i></i><span data-i18n>Secure, encrypted connection</span></div>
+    </form>
+  </main>
+
+  <script type="module" src="/login.js?v=4"></script>
+</body>
+</html>

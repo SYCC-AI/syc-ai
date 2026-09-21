@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f1c">
+  <title>SYC</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <script src="/i18n.js?v=5"></script>
+  <link rel="stylesheet" href="/main.css?v=7">
+</head>
+<body class="profage-section">
+  <div class="ambient"></div>
+  <div class="watermark" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/main" aria-label="Back" data-i18n-attr="aria-label">
+        <svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg>
+      </a>
+      <div>
+        <strong id="sectionTitle" data-i18n>Professional accounts</strong>
+        <span id="sectionBlurb" data-i18n>Your private workspace</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar-menu" id="avatarMenu"></div>
+    </div>
+  </header>
+
+  <main class="dash">
+    <div class="grid" id="items">
+      <article class="card-wrap professional-card" data-brand="claude">
+        <a class="card" href="/profage/claude/">
+          <span class="card-icon card-logo brand-claude"><img src="/assets/claude-color.svg" alt="" loading="lazy"></span>
+          <b>Claude</b>
+          <small dir="auto">Claude Code</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/claude/?view=settings" data-label="Claude" title="Claude settings" aria-label="Claude settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="codex">
+        <a class="card" href="/profage/codex/">
+          <span class="card-icon card-logo brand-codex"><img src="/assets/codex-color.svg" alt="" loading="lazy"></span>
+          <b>Codex</b>
+          <small dir="auto">OpenAI Codex</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/codex/?view=settings" data-label="Codex" title="Codex settings" aria-label="Codex settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="qwen">
+        <a class="card" href="/profage/qwen/">
+          <span class="card-icon card-logo brand-qwen"><img src="/assets/qwen-color.svg" alt="" loading="lazy"></span>
+          <b>Qwen</b>
+          <small dir="auto">Qwen Code</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/qwen/?view=settings" data-label="Qwen" title="Qwen settings" aria-label="Qwen settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="gemini">
+        <a class="card" href="/profage/gemini/">
+          <span class="card-icon card-logo brand-gemini"><img src="/assets/gemini-color.svg" alt="" loading="lazy"></span>
+          <b>Gemini</b>
+          <small dir="auto">Google Gemini</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/gemini/?view=settings" data-label="Gemini" title="Gemini settings" aria-label="Gemini settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="cursor">
+        <a class="card" href="/profage/cursor/">
+          <span class="card-icon card-logo brand-cursor"><img src="/assets/cursor-color.svg" alt="" loading="lazy"></span>
+          <b>Cursor</b>
+          <small dir="auto">Cursor Agent</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/cursor/?view=settings" data-label="Cursor" title="Cursor settings" aria-label="Cursor settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="kimi">
+        <a class="card" href="/profage/kimi/">
+          <span class="card-icon card-logo brand-kimi"><img src="/assets/kimi-color.svg" alt="" loading="lazy"></span>
+          <b>Kimi</b>
+          <small dir="auto">Kimi Code</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/kimi/?view=settings" data-label="Kimi" title="Kimi settings" aria-label="Kimi settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card is-pending" data-brand="deepseek">
+        <a class="card disabled" href="#" aria-disabled="true" tabindex="-1">
+          <span class="card-icon card-logo brand-deepseek"><img src="/assets/deepseek-color.svg" alt="" loading="lazy"></span>
+          <b>DeepSeek</b>
+          <small dir="auto">DeepSeek</small>
+        </a>
+        <div class="professional-card-footer"><span class="professional-open-label" aria-hidden="false" data-i18n>Coming soon</span></div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="api">
+        <a class="card" href="/profage/syc-api/">
+          <span class="card-icon card-logo brand-api"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg></span>
+          <b>SYC-API</b>
+          <small dir="auto">Model APIs with your own key</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/syc-api/?view=settings" data-label="SYC-API" title="SYC-API settings" aria-label="SYC-API settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <div id="engineSettingsLayer" class="engine-settings-layer hidden">
+    <div class="engine-settings-box" role="dialog" aria-modal="true">
+      <header class="engine-settings-head">
+        <strong id="engineSettingsTitle" data-i18n>Settings</strong>
+        <button type="button" class="engine-settings-close" aria-label="Close" data-i18n-attr="aria-label" data-i18n>Back</button>
+      </header>
+      <iframe id="engineSettingsFrame" title="Settings" referrerpolicy="same-origin"></iframe>
+    </div>
+  </div>
+
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=3"></script>
+  <script src="/profage.js?v=4"></script>
+</body>
+</html>

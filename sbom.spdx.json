@@ -1,0 +1,1599 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "SYC-AI local publication candidate",
+  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-9b0008527f5aa08345bc750691a0cdf39a084999d50fb35f000a9aad4d3c688c",
+  "creationInfo": {
+    "created": "2026-09-21T13:48:20Z",
+    "creators": [
+      "Organization: SYC",
+      "Tool: syc-ai-local-evidence/1"
+    ]
+  },
+  "packages": [
+    {
+      "name": "SYC-AI",
+      "SPDXID": "SPDXRef-Package-SYC-AI",
+      "versionInfo": "0.5.0-local-candidate",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BUSL-1.1",
+      "copyrightText": "Copyright 2026 SYC"
+    }
+  ],
+  "files": [
+    {
+      "fileName": "./.gitignore",
+      "SPDXID": "SPDXRef-File-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "774ee34f992b8d779585eb1c674317913535f3d4abf0175f1942673dbb791ea3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./CONTRIBUTING.md",
+      "SPDXID": "SPDXRef-File-2",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9d64bf61c9a5fb9c5a984d7f225095ff258b3fdf53c36e1791fded9e0eee3d29"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./LICENSE",
+      "SPDXID": "SPDXRef-File-3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "590e414c804f3a6f34815746750314c09ef3fc1b5ad421fd28ef0c2dca823719"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./LICENSES/OFL-1.1.txt",
+      "SPDXID": "SPDXRef-File-4",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b30d0ac38caea1dffdbd627e1e6bdcba9c919ef05a536635b7f63926aa9f27c3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./README.md",
+      "SPDXID": "SPDXRef-File-5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "54276025fc7a0eb5a5a1dc769c2bafc4867184eb0eba2ca2378077a56e25f9d6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./SECURITY.md",
+      "SPDXID": "SPDXRef-File-6",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2f5dd7b0c525938287a5b48fbe62e7eed9140bba5d52df6a81700c20b4543930"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./THIRD_PARTY_NOTICES.md",
+      "SPDXID": "SPDXRef-File-7",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3d1a7d3694ead7f21f3c5a0eb04d65c9ad80a02e33bec388c6cbbb3884438562"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./central-access-policy.mjs",
+      "SPDXID": "SPDXRef-File-8",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "89ef15139dbdc4bd83d0590b3695e2fc715fe36a7d483be814b4867be9144a4c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./control-plane-client.mjs",
+      "SPDXID": "SPDXRef-File-9",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e61c6cb74bda978515b5e35424585792f46b1e9890996f7fb901f52bf9128747"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./device-link.mjs",
+      "SPDXID": "SPDXRef-File-10",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d7db2a3a1afe426a3acd6c62839b2784fbef79a681a42f011dda9b8dffd58b00"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./edge-client.mjs",
+      "SPDXID": "SPDXRef-File-11",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1def61580ed4153df6875a10e4aebaf718b125e1da791892d51a482f609475d8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./entitlement.mjs",
+      "SPDXID": "SPDXRef-File-12",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "aa1394376e9513a234728e6bdb0ba124bd25e6cd0c8ee1503d15600a17f058a6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./install.sh",
+      "SPDXID": "SPDXRef-File-13",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "faaa86d4b59336418becaacbf2e7ac647ad54a0317a3c0a0864a9cea68c9c0b0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installation-activation.mjs",
+      "SPDXID": "SPDXRef-File-14",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0a513efc130b0c9b6da8885dc61f02bc8b7a70243e8e4e338c0e8437da0dbe1d"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer-runtime.mjs",
+      "SPDXID": "SPDXRef-File-15",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1f88109086c217332fda85f7629f5dcaff572b9847ff65a73fdf835eeb974cc3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/build-packages.mjs",
+      "SPDXID": "SPDXRef-File-16",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "88773e15ccf7e48636e545d3b8d6736b711a167eeaefeff9da07632ca47b74e1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/build-plan.mjs",
+      "SPDXID": "SPDXRef-File-17",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d30252d33e1d2ef950bf2f0e65fc7f3155518ca0c1726826f243ad96d211d647"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/manage-installation.sh",
+      "SPDXID": "SPDXRef-File-18",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b52c6ee1a8cb6b2a97e79e8a264cbc4315e95e42d135dff7ad4a6686ac2af61b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/panel-install.sh",
+      "SPDXID": "SPDXRef-File-19",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2816e908c739857ea67eb542cad134c565a25837c4b29b705a56dfd6fffef93b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/panels.json",
+      "SPDXID": "SPDXRef-File-20",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "587bbe695da76e46b6a5d5e124e37501eeeab6de2b5bd2a4bbc36f91f6d837ce"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/release-builder.mjs",
+      "SPDXID": "SPDXRef-File-21",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c7632f34990cbefda8d716f163c79931c9269977ad319b8d7bdbd4029c6cc562"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./installer/render-service.mjs",
+      "SPDXID": "SPDXRef-File-22",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d6c17fdc7a2eb498a6786ce0145ea89519ef3c9cf80715fcac32dbb8585a6f6f"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./onboarding-server.mjs",
+      "SPDXID": "SPDXRef-File-23",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a6d737e3b4bd37894c4511d1c832bf474cf6ef10d3c5a9c115e6f62db65057f2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./package.json",
+      "SPDXID": "SPDXRef-File-24",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "29b3e704d5e97855393dc9032b41cb62db763820cf1c8dbae69f6dfe51d29cf5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./panel-release.mjs",
+      "SPDXID": "SPDXRef-File-25",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f2d5671fad1615a5e27fb52e12e5c227083d09006f4898fd3787c18fb507ef69"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/account-center.mjs",
+      "SPDXID": "SPDXRef-File-26",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8d0b88776ab758c4da26af36f2c95836085a3d82fed3a8ed30005635cb63f197"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/arefruqaa-bold.ttf",
+      "SPDXID": "SPDXRef-File-27",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "eb916bee1eec1f92b27ea9965a451bf2d8356f89d1fd2dc20244b2f51137fb54"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015-2021 The Aref Ruqaa Project Authors (https://github.com/alif-type/aref-ruqaa), with Reserved Font Name EURM10."
+    },
+    {
+      "fileName": "./public/assets/arefruqaa-regular.ttf",
+      "SPDXID": "SPDXRef-File-28",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e4f8e3be1cc9ce3b5684da0919f1bcc61b502263d4628dea93492f97545964aa"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015-2021 The Aref Ruqaa Project Authors (https://github.com/alif-type/aref-ruqaa), with Reserved Font Name EURM10."
+    },
+    {
+      "fileName": "./public/assets/blakahollow-regular.ttf",
+      "SPDXID": "SPDXRef-File-29",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "59cb30824e6023d454b4b44038cf44cdc9a4ad67f9795171c646c98ceb2bd542"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2019 The Blaka Project Authors (https://github.com/Gue3bara/Blaka)"
+    },
+    {
+      "fileName": "./public/assets/claude-color.svg",
+      "SPDXID": "SPDXRef-File-30",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3e77873c1e20226535f841d819c220864a8c5302dd33fde6a09a614761abcda9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/claude.svg",
+      "SPDXID": "SPDXRef-File-31",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1c10881e4729127e1a86e569613d786240acae13eacfa01860be065b66260e36"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/codex-color.svg",
+      "SPDXID": "SPDXRef-File-32",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "02c01fbd1d3e500c23f6db14ed8f06cfc72fb32395c8dbfd293b71fbe1bb26b2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/codex.svg",
+      "SPDXID": "SPDXRef-File-33",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2b4a04ddc2395b20d168694d3850ce2050a702c4a0cdeb4d8b31b9a970481a8c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/cursor-color.svg",
+      "SPDXID": "SPDXRef-File-34",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9dcac7ca80bf1e3eacc9e3dde8d695735277e2dda3b6fb46f8c5515298b92f24"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/deepseek-color.svg",
+      "SPDXID": "SPDXRef-File-35",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "969557225378828fd7e2cd67ec71380751597bb9520fab33c8f9f24eeebff099"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/gemini-color.svg",
+      "SPDXID": "SPDXRef-File-36",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "ed3e9aed795dad598f5df9cd8b7f8cf2fdca59779a8c46d76a283083093f7a0b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/googlegemini.svg",
+      "SPDXID": "SPDXRef-File-37",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a6228d8846040401e941a39ed17459785e8324dbb7b870ce84233c9b3e9863a0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/kimi-color.svg",
+      "SPDXID": "SPDXRef-File-38",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7cb5df6d08410be9c9c7c8f17b74c5867f25f31f2d3578a9e052934bd222141e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/kimi.svg",
+      "SPDXID": "SPDXRef-File-39",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e050b0cd0c29cdd91c049d1fe77d0296ee80b316f781d50a0323e2eb1b7c09a1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/lalezar-regular.ttf",
+      "SPDXID": "SPDXRef-File-40",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f976dfc4dbfb52eb31d3303229276c8cb278c1aefcaee3d19586343be0c465f2"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015 The Lalezar Project Authors (https://github.com/BornaIz/Lalezar)"
+    },
+    {
+      "fileName": "./public/assets/qwen-color.svg",
+      "SPDXID": "SPDXRef-File-41",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "953df5df14339a28f167a9c0dcce4fb859de220faa25dc0df36c249ba8d0cddb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/qwen.svg",
+      "SPDXID": "SPDXRef-File-42",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "36854c60b26bfa5a0cc0d4123727c0ef559efba6f129c0dfa623f3c443fe3e5b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/reemkufi-bold.ttf",
+      "SPDXID": "SPDXRef-File-43",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f26a45f176126b2897137372ec16c9d9fd587f4ae58c56a2ff20f7e254b3606b"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015-2022 The Reem Kufi Project Authors (https://github.com/aliftype/reem-kufi)."
+    },
+    {
+      "fileName": "./public/assets/reemkufi-regular.ttf",
+      "SPDXID": "SPDXRef-File-44",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c6ffe23b03b6d2f9ca46e2ab1bb2f6b5acfd63630cfa9b53fd387b93d843a4f1"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015-2022 The Reem Kufi Project Authors (https://github.com/aliftype/reem-kufi)."
+    },
+    {
+      "fileName": "./public/assets/syc-logo.jpg",
+      "SPDXID": "SPDXRef-File-45",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0945769c27315848fbbcfab9a2e0e611c77da410588591170ae8026871b1b206"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/syc-logo.svg",
+      "SPDXID": "SPDXRef-File-46",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2036e61473dcdc282fddd3d9175d0d171710c32902b70b8c52be3f702b6603b4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/assets/vazirmatn-regular.ttf",
+      "SPDXID": "SPDXRef-File-47",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)"
+    },
+    {
+      "fileName": "./public/assets/vazirmatn-semibold.ttf",
+      "SPDXID": "SPDXRef-File-48",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+        }
+      ],
+      "licenseConcluded": "OFL-1.1",
+      "copyrightText": "Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)"
+    },
+    {
+      "fileName": "./public/communications.html",
+      "SPDXID": "SPDXRef-File-49",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "eac91ab177a17a5ac4109c02042e7e350c1144071f370d114f4b8ab72701345e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/communications.js",
+      "SPDXID": "SPDXRef-File-50",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d4f57b5db5d4a5635faeb19c09aaef9c8b83392efce39554bd1d5e89e1adacc7"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/connection-android.html",
+      "SPDXID": "SPDXRef-File-51",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3fa40cae0b5512c52626a8918b6887c03bd309b6bf2780064c50032d3ded815d"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/connection-android.js",
+      "SPDXID": "SPDXRef-File-52",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "705a3b113095c0eb5e6b82f4616f80b5c2dda37375496ac71eaf5b65b254213e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/connection.html",
+      "SPDXID": "SPDXRef-File-53",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "287c443a1119bcb9cd21359da5059c480409e4b0efc75a35fc5f14f092e4a045"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/connection.js",
+      "SPDXID": "SPDXRef-File-54",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7550246a0f7232473ec8af108e9c472ddbae7697c5ff0ff86f0624a957f25d04"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/i18n.js",
+      "SPDXID": "SPDXRef-File-55",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f12af07e972c7575543031ba976e307baf50855c37a8010d59c107f810b4fb62"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/login.html",
+      "SPDXID": "SPDXRef-File-56",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "bdf86c6392a6193693031e4611cf94003b6587538d15c9d7debae883d7605423"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/login.js",
+      "SPDXID": "SPDXRef-File-57",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "bbad773def85a1c528b950a57ebc6b2d49d4ae8ad15dcb5eef4bceaf29b3c87a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/main.css",
+      "SPDXID": "SPDXRef-File-58",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2084eb5571d6fabf15d6e4fc476a1bf02f3733e9dbda1c00d2ba001bcf6a7057"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/main.html",
+      "SPDXID": "SPDXRef-File-59",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3fe0e578b8f9f92a2bbbbefc66c519119ee37a8d7b06d4d34ffff86aea02fff9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/main.js",
+      "SPDXID": "SPDXRef-File-60",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "722513fa729d4eb33aa22b9eb6fc9cc1b729978389bdf2075616227ef25a9883"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/onboarding-state.mjs",
+      "SPDXID": "SPDXRef-File-61",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "06cdf7928547f12f0246aaab0d04ccdf6b3eedcb687179a501cb578c895e49d0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/profage.html",
+      "SPDXID": "SPDXRef-File-62",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "79325f11a530bb98e9c1b45bbc2e4cd1ed1b51355e7308b2bbf0023ad73b1dc6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/profage.js",
+      "SPDXID": "SPDXRef-File-63",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9767eada4bf1670b7a78f08117e0ff148cfa4270d0b25e88b60a1c5469c012b0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/profile.js",
+      "SPDXID": "SPDXRef-File-64",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2e48e5fac6d1edc2609c86f5308d0e7b33a81e25895ade3175a9f5446174bcd0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/syc-logo.jpg",
+      "SPDXID": "SPDXRef-File-65",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0945769c27315848fbbcfab9a2e0e611c77da410588591170ae8026871b1b206"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./public/theme.js",
+      "SPDXID": "SPDXRef-File-66",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d721dec919b451afeb2836bfd8a694d1d0b461ffbc75f3a0ee7e88dfca7924ca"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./release-metadata.mjs",
+      "SPDXID": "SPDXRef-File-67",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "480f6cdbefe363a8ee94a96d1e310431296b05278338afaa82cff6f26bdcec89"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./scripts/set-admin-password.mjs",
+      "SPDXID": "SPDXRef-File-68",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7120a7c4a091d16a96a0f0721d5f0aec5c1f249b380a86c4b5ae6dc18b443876"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./server-startup.mjs",
+      "SPDXID": "SPDXRef-File-69",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "78bce55c053b0d88b990aca85807307bdccca3a85301603cdcef3f68f39fa42f"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./server.mjs",
+      "SPDXID": "SPDXRef-File-70",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5e1bf3fc7c29ce82693c2ac53218fbeb662d95bbf15677f9b6fdf85875cab7e5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/account-center.test.mjs",
+      "SPDXID": "SPDXRef-File-71",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b40b835c575ff031a744ef030f8e96d27e62aeb0343570a4229216d3f6346ce1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/build-plan.test.mjs",
+      "SPDXID": "SPDXRef-File-72",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3e01df3c27fd47ec50475d5fd34f499415d7c4a18a019b87190e84898206cbe9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/central-access-policy.test.mjs",
+      "SPDXID": "SPDXRef-File-73",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "07dcc3ab5d5fb490f86fad6f7d622d54c26388f2b12cb79b0bfd520252214f99"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/control-plane-client.test.mjs",
+      "SPDXID": "SPDXRef-File-74",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "89d5fa5f5e3d0efbf9d0ea45652bf223e205168ce9ea263ff01f9a0b16db970d"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/core-package-closure.test.mjs",
+      "SPDXID": "SPDXRef-File-75",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "68b0b02fec9d8ba6b9d875955d93e6aef07fafbee54b13616784dc26d4dac017"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/entitlement.test.mjs",
+      "SPDXID": "SPDXRef-File-76",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "44b28a599f79a84e6dc1cc545ff1939a1f5a0efed00d432eee6a2f7225c9e01a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/install-lifecycle.test.mjs",
+      "SPDXID": "SPDXRef-File-77",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "eac443329a151f2e7b5ca7517280917332e20167c08e2eea8a53d0026ff246df"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/installation-activation.test.mjs",
+      "SPDXID": "SPDXRef-File-78",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e69194cae870552c083a30ed887284dd3d1362c8687c003fa2685d77ade66d88"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/installer-runtime.test.mjs",
+      "SPDXID": "SPDXRef-File-79",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "66a8526aa516fe3d95ab2b58932ca4605342ee11e0530cac6289197831b8807c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/installer.test.mjs",
+      "SPDXID": "SPDXRef-File-80",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "369fc354dc217ad26d1c7f5ddf14fcb635f85c7d609e6bededb1e9f2da97b5a4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/onboarding-server.test.mjs",
+      "SPDXID": "SPDXRef-File-81",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9b7b193d92b07381229efd525f0d1b41b05a6670abe2ac7f01b633395a020c49"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/onboarding-state.test.mjs",
+      "SPDXID": "SPDXRef-File-82",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "80780a4c1e76b27f4a22546ac873235acaec917d9cf9f9ba376b0f46f426fd92"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/panel-release.test.mjs",
+      "SPDXID": "SPDXRef-File-83",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a5a4de317995bb7d5bf9839bbda88cbff1142a9fd2f54da44bcd737ffaaf21d5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/publication-evidence.test.mjs",
+      "SPDXID": "SPDXRef-File-84",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "88620165589b17913b3e02714af476df5e3702ed624bc015b9adff0806a71183"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/release-builder.test.mjs",
+      "SPDXID": "SPDXRef-File-85",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "79d9a590bd379d079534ac7745ff94e357287b39b18999be5a5bd4adb04e8686"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/release-metadata.test.mjs",
+      "SPDXID": "SPDXRef-File-86",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5383585e2b89c94355db5785523bf4c4dab18f847f7a656574b16301cab65fe3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/render-service.test.mjs",
+      "SPDXID": "SPDXRef-File-87",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7647fce42e557d7e49819668ebeb57704d9607828796877a1addbc73931a649b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/server-startup.test.mjs",
+      "SPDXID": "SPDXRef-File-88",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "767c11b2614b4aa1f5a757f495672fa08a4618bdabc3cfe60a2f33f7bc476000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/third-party-fonts.test.mjs",
+      "SPDXID": "SPDXRef-File-89",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "42c9f19ede475b49e6b2a285dc45c961b59672e71f1f0ba5dd43d8a3f3d1398a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./test/update-manager.test.mjs",
+      "SPDXID": "SPDXRef-File-90",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f19acf10fba3e76a868de3d461e6a11b34c4d284153f65c831b565724a415baf"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./third-party-fonts.json",
+      "SPDXID": "SPDXRef-File-91",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e7360d968aef2d34e36be594a3061ecfda6401c39e1e6719c8d7268ed54e3891"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./update-manager.mjs",
+      "SPDXID": "SPDXRef-File-92",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cde19043914861c8e7e04e318af069e7349abb362a122d2f7dab360591cf2477"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-SYC-AI"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-1"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-2"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-3"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-5"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-6"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-7"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-8"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-10"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-11"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-12"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-13"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-14"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-15"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-16"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-17"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-18"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-19"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-20"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-21"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-22"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-23"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-24"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-25"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-26"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-27"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-28"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-29"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-30"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-31"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-32"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-33"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-34"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-35"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-36"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-37"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-38"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-39"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-40"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-41"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-42"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-43"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-44"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-45"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-46"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-47"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-48"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-49"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-50"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-51"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-52"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-53"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-54"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-55"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-56"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-57"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-58"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-59"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-60"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-61"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-62"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-63"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-64"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-65"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-66"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-67"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-68"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-69"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-70"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-71"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-72"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-73"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-74"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-75"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-76"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-77"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-78"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-79"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-80"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-81"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-82"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-83"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-84"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-85"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-86"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-87"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-88"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-89"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-90"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-91"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-92"
+    }
+  ]
+}

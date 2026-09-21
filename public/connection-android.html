@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f1c">
+  <title>SYC</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <script src="/i18n.js?v=5"></script>
+  <link rel="stylesheet" href="/main.css?v=7">
+</head>
+<body class="profage-section">
+  <div class="ambient"></div>
+  <div class="watermark" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/connection" aria-label="Back" data-i18n-attr="aria-label">
+        <svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg>
+      </a>
+      <div>
+        <strong data-i18n>Android</strong>
+        <span data-i18n>Connect your phone so the panel’s agents can act on it</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar-menu" id="avatarMenu"></div>
+    </div>
+  </header>
+
+  <main class="dash device-page">
+    <section class="device-card">
+      <h2 data-i18n>1 · Install SYC Claw</h2>
+      <p class="muted" data-i18n>SYC Claw connects one phone to this panel. It does nothing else — the agents in your professional accounts act on the phone through it.</p>
+      <div class="device-app" id="appBox"></div>
+    </section>
+
+    <section class="device-card">
+      <h2 data-i18n>2 · Sign in on the phone</h2>
+      <p class="muted" data-i18n>Open SYC Claw, enter this panel’s address and your own username and password, then turn on access for SYC Claw when Android asks. The phone appears below once it is connected.</p>
+    </section>
+
+    <section class="device-card">
+      <h2 data-i18n>Connected phone</h2>
+      <div id="deviceBox"></div>
+    </section>
+  </main>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=3"></script>
+  <script src="/connection-android.js?v=2"></script>
+</body>
+</html>

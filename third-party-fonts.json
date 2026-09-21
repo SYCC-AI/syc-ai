@@ -1,0 +1,82 @@
+[
+  {
+    "file": "arefruqaa-bold.ttf",
+    "family": "Aref Ruqaa",
+    "version": "1.003",
+    "copyright": "Copyright 2015-2021 The Aref Ruqaa Project Authors (https://github.com/alif-type/aref-ruqaa), with Reserved Font Name EURM10.",
+    "reservedFontNames": ["EURM10"],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "eb916bee1eec1f92b27ea9965a451bf2d8356f89d1fd2dc20244b2f51137fb54"
+  },
+  {
+    "file": "arefruqaa-regular.ttf",
+    "family": "Aref Ruqaa",
+    "version": "1.003",
+    "copyright": "Copyright 2015-2021 The Aref Ruqaa Project Authors (https://github.com/alif-type/aref-ruqaa), with Reserved Font Name EURM10.",
+    "reservedFontNames": ["EURM10"],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "e4f8e3be1cc9ce3b5684da0919f1bcc61b502263d4628dea93492f97545964aa"
+  },
+  {
+    "file": "blakahollow-regular.ttf",
+    "family": "Blaka Hollow",
+    "version": "1.003",
+    "copyright": "Copyright 2019 The Blaka Project Authors (https://github.com/Gue3bara/Blaka)",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "59cb30824e6023d454b4b44038cf44cdc9a4ad67f9795171c646c98ceb2bd542"
+  },
+  {
+    "file": "lalezar-regular.ttf",
+    "family": "Lalezar",
+    "version": "1.004",
+    "copyright": "Copyright 2015 The Lalezar Project Authors (https://github.com/BornaIz/Lalezar)",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "f976dfc4dbfb52eb31d3303229276c8cb278c1aefcaee3d19586343be0c465f2"
+  },
+  {
+    "file": "reemkufi-bold.ttf",
+    "family": "Reem Kufi",
+    "version": "2.000",
+    "copyright": "Copyright 2015-2022 The Reem Kufi Project Authors (https://github.com/aliftype/reem-kufi).",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "f26a45f176126b2897137372ec16c9d9fd587f4ae58c56a2ff20f7e254b3606b"
+  },
+  {
+    "file": "reemkufi-regular.ttf",
+    "family": "Reem Kufi",
+    "version": "2.000",
+    "copyright": "Copyright 2015-2022 The Reem Kufi Project Authors (https://github.com/aliftype/reem-kufi).",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "c6ffe23b03b6d2f9ca46e2ab1bb2f6b5acfd63630cfa9b53fd387b93d843a4f1"
+  },
+  {
+    "file": "vazirmatn-regular.ttf",
+    "family": "Vazirmatn",
+    "version": "33.003",
+    "copyright": "Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+  },
+  {
+    "file": "vazirmatn-semibold.ttf",
+    "family": "Vazirmatn",
+    "version": "33.003",
+    "copyright": "Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)",
+    "reservedFontNames": [],
+    "license": "OFL-1.1",
+    "licenseFile": "LICENSES/OFL-1.1.txt",
+    "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+  }
+]

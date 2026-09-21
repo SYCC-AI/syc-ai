@@ -1,0 +1,554 @@
+// SYC-AI — the standalone panel server.
+//
+// Self-contained by design: no imports, data or configuration from anywhere
+// else. One account (admin) for now; its scrypt hash lives in data/users.json
+// (create or reset it with scripts/set-admin-password.mjs).
+import { createServer, request as httpRequest } from 'node:http';
+import { randomBytes, scryptSync, timingSafeEqual, createHmac, createCipheriv, createDecipheriv } from 'node:crypto';
+import { execFile } from 'node:child_process';
+import { existsSync, readFileSync, writeFileSync, renameSync } from 'node:fs';
+import { extname, join, normalize, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createDeviceLink, CAPABILITIES } from './device-link.mjs';
+import { panelsStatus, installPanelStream } from './installer-runtime.mjs';
+import { createControlPlaneClient } from './control-plane-client.mjs';
+import { createInstallationActivation } from './installation-activation.mjs';
+import { createOnboardingServer } from './onboarding-server.mjs';
+import { centralRouteDecision } from './central-access-policy.mjs';
+import { startLegacyEdgeClient } from './server-startup.mjs';
+
+const ROOT = fileURLToPath(new URL('.', import.meta.url));
+const PUBLIC_DIR = resolve(ROOT, 'public');
+const DATA_DIR = resolve(ROOT, 'data');
+const USERS_FILE = join(DATA_DIR, 'users.json');
+const SECRET_FILE = join(DATA_DIR, 'session-secret');
+const PORT = Number(process.env.SYC_AI_PORT || process.env.FREE_WEB_PORT || 8782);
+const SESSION_TTL = 12 * 60 * 60 * 1000;
+const COOKIE = 'sycfree';
+const CONTROL_URL = String(process.env.SYC_AI_CONTROL_URL || '');
+const PUBLIC_ORIGIN = String(process.env.SYC_AI_PUBLIC_ORIGIN || '');
+const ENTITLEMENT_PUBLIC_KEY_FILE = String(process.env.SYC_AI_ENTITLEMENT_PUBLIC_KEY_FILE || '');
+const onboarding = CONTROL_URL && PUBLIC_ORIGIN && ENTITLEMENT_PUBLIC_KEY_FILE
+  ? createOnboardingServer({
+      controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
+      activation: createInstallationActivation({
+        dataDirectory: DATA_DIR,
+        controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
+        entitlementPublicKey: readFileSync(ENTITLEMENT_PUBLIC_KEY_FILE, 'utf8'),
+        version: process.env.SYC_AI_VERSION || '0.1.0-preview.1',
+      }),
+      productOrigin: PUBLIC_ORIGIN,
+    })
+  : null;
+// Professional accounts run as separate loopback services; this server is the
+// only way in and it forwards a request only after the SYC-AI session checks out.
+const CODEX_PORT = Number(process.env.FREE_CODEX_PORT || 8785);
+const CODEX_STATIC = new Set(['/app.js', '/app.css', '/boot.js', '/command-center.js', '/command-center.css', '/transcript-view.js']);
+
+const CLAUDE_PORT = Number(process.env.FREE_CLAUDE_PORT || 8786);
+const KIMI_PORT = Number(process.env.FREE_KIMI_PORT || 8788);
+const GEMINI_PORT = Number(process.env.FREE_GEMINI_PORT || 8789);
+const QWEN_PORT = Number(process.env.FREE_QWEN_PORT || 8794);
+const CURSOR_PORT = Number(process.env.FREE_CURSOR_PORT || 8796);
+const SYC_API_PORT = Number(process.env.FREE_SYC_API_PORT || 8797);
+
+// The phone link and the app this panel hands out.
+const APP_DIR = resolve(ROOT, 'app');
+const deviceLink = createDeviceLink({ dataDir: DATA_DIR, appDir: APP_DIR });
+
+function proxyToApp(port, label, req, res, user, targetPath) {
+  // The panel language travels with every proxied request, so a panel can also
+  // answer in it — the profile value when the user saved one, otherwise the
+  // language this browser is showing.
+  const browserLang = /(?:^|;\s*)syc-lang=(en|zh|es|ar|ru|fa)\b/.exec(req.headers.cookie || '')?.[1];
+  const headers = {
+    ...req.headers,
+    host: `127.0.0.1:${port}`,
+    'x-syc-user': user.username,
+    'x-syc-lang': user.language || browserLang || '',
+  };
+  delete headers.cookie;
+  const upstream = httpRequest({ host: '127.0.0.1', port, method: req.method, path: targetPath, headers }, (up) => {
+    const out = { ...up.headers };
+    res.writeHead(up.statusCode || 502, out);
+    up.pipe(res);
+  });
+  upstream.on('error', () => {
+    if (!res.headersSent) json(res, 502, { error: `${label} is starting. Try again in a moment.` });
+    else res.end();
+  });
+  req.pipe(upstream);
+}
+
+const proxyToCodex = (req, res, user, targetPath) => proxyToApp(CODEX_PORT, 'Codex Web', req, res, user, targetPath);
+// Claude Web asks for everything relative to its own prefix, so the whole
+// subtree forwards with the prefix stripped.
+const proxyToClaude = (req, res, user, targetPath) => proxyToApp(CLAUDE_PORT, 'Claude Web', req, res, user, targetPath);
+// Kimi's frontend rewrites its own paths under /profage/<name>/ before the
+// request leaves the browser, so the prefix is stripped again here — the panel
+// itself serves everything at the root, exactly as on the main panel.
+const proxyToKimi = (req, res, user, targetPath) => proxyToApp(KIMI_PORT, 'Kimi Web', req, res, user, targetPath);
+const proxyToGemini = (req, res, user, targetPath) => proxyToApp(GEMINI_PORT, 'Gemini Web', req, res, user, targetPath);
+const proxyToQwen = (req, res, user, targetPath) => proxyToApp(QWEN_PORT, 'Qwen Web', req, res, user, targetPath);
+const proxyToCursor = (req, res, user, targetPath) => proxyToApp(CURSOR_PORT, 'Cursor Web', req, res, user, targetPath);
+const proxyToSycApi = (req, res, user, targetPath) => proxyToApp(SYC_API_PORT, 'SYC-API', req, res, user, targetPath);
+
+const TYPES = {
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
+  '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.json': 'application/json',
+};
+
+function secret() {
+  if (!existsSync(SECRET_FILE)) writeFileSync(SECRET_FILE, randomBytes(48).toString('hex'), { mode: 0o600 });
+  return readFileSync(SECRET_FILE, 'utf8').trim();
+}
+const SECRET = secret();
+
+// --- Two-factor authentication (TOTP, RFC 6238) -------------------------------
+// Secrets are stored AES-256-GCM encrypted with a key that lives only in data/.
+const TOTP_KEY_FILE = join(DATA_DIR, 'totp-key');
+const TOTP_KEY = (() => {
+  if (!existsSync(TOTP_KEY_FILE)) writeFileSync(TOTP_KEY_FILE, randomBytes(32).toString('base64url'), { mode: 0o600 });
+  return Buffer.from(readFileSync(TOTP_KEY_FILE, 'utf8').trim(), 'base64url');
+})();
+const B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function base32Encode(buffer) {
+  let bits = 0, value = 0, out = '';
+  for (const byte of buffer) { value = (value << 8) | byte; bits += 8; while (bits >= 5) { out += B32[(value >>> (bits - 5)) & 31]; bits -= 5; } }
+  if (bits > 0) out += B32[(value << (5 - bits)) & 31];
+  return out;
+}
+function base32Decode(input) {
+  let bits = 0, value = 0; const bytes = [];
+  for (const ch of String(input || '').toUpperCase().replace(/[^A-Z2-7]/g, '')) {
+    value = (value << 5) | B32.indexOf(ch); bits += 5;
+    if (bits >= 8) { bytes.push((value >>> (bits - 8)) & 255); bits -= 8; }
+  }
+  return Buffer.from(bytes);
+}
+function encryptSecret(value) {
+  const iv = randomBytes(12); const c = createCipheriv('aes-256-gcm', TOTP_KEY, iv);
+  const enc = Buffer.concat([c.update(String(value), 'utf8'), c.final()]);
+  return Buffer.concat([iv, c.getAuthTag(), enc]).toString('base64');
+}
+function decryptSecret(value) {
+  try {
+    const buf = Buffer.from(String(value || ''), 'base64');
+    const d = createDecipheriv('aes-256-gcm', TOTP_KEY, buf.subarray(0, 12)); d.setAuthTag(buf.subarray(12, 28));
+    return Buffer.concat([d.update(buf.subarray(28)), d.final()]).toString('utf8');
+  } catch { return null; }
+}
+function totpCode(secretValue, counter) {
+  const msg = Buffer.alloc(8); msg.writeBigUInt64BE(BigInt(counter));
+  const h = createHmac('sha1', base32Decode(secretValue)).update(msg).digest();
+  const o = h[h.length - 1] & 15;
+  return String((((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3]) % 1_000_000).padStart(6, '0');
+}
+function verifyTotp(secretValue, input, afterCounter = -1) {
+  const code = String(input || '').replace(/\D/g, '').slice(0, 6);
+  if (code.length !== 6 || !secretValue) return null;
+  const now = Math.floor(Date.now() / 30_000);
+  for (const offset of [0, -1, 1]) {
+    const counter = now + offset;
+    if (counter <= afterCounter) continue;
+    if (timingSafeEqual(Buffer.from(code), Buffer.from(totpCode(secretValue, counter)))) return counter;
+  }
+  return null;
+}
+const qrSvg = (text) => new Promise((ok, fail) => execFile('/usr/bin/qrencode', ['-t', 'SVG', '-m', '1', '-s', '6', '-o', '-', text], { timeout: 5000 }, (e, out) => (e ? fail(e) : ok(out))));
+
+const loadUsers = () => { try { return JSON.parse(readFileSync(USERS_FILE, 'utf8')); } catch { return { users: [] }; } };
+
+export function hashPassword(password, salt = randomBytes(16).toString('hex')) {
+  return { salt, hash: scryptSync(String(password), salt, 64).toString('hex') };
+}
+function verifyPassword(password, user) {
+  if (!user?.salt || !user?.hash) return false;
+  const a = Buffer.from(scryptSync(String(password), user.salt, 64).toString('hex'), 'hex');
+  const b = Buffer.from(user.hash, 'hex');
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+// Stateless signed session: username|expiry|nonce|hmac. A password change
+// rotates the user's `sessionEpoch`, which invalidates every earlier cookie.
+function sign(value) { return createHmac('sha256', SECRET).update(value).digest('base64url'); }
+function makeToken(user) {
+  const body = [user.username, Date.now() + SESSION_TTL, user.sessionEpoch || 0, randomBytes(9).toString('base64url')].join('|');
+  return `${Buffer.from(body).toString('base64url')}.${sign(body)}`;
+}
+function readToken(token) {
+  const [b64, mac] = String(token || '').split('.');
+  if (!b64 || !mac) return null;
+  const body = Buffer.from(b64, 'base64url').toString();
+  const expected = sign(body);
+  if (expected.length !== mac.length || !timingSafeEqual(Buffer.from(expected), Buffer.from(mac))) return null;
+  const [username, expires, epoch] = body.split('|');
+  if (Number(expires) < Date.now()) return null;
+  const user = loadUsers().users.find((u) => u.username === username);
+  if (!user || String(user.sessionEpoch || 0) !== epoch) return null;
+  return user;
+}
+function publicProfile(u) {
+  const { username, role, displayName, firstName, lastName, phone, address, avatar, avatarUrl, updatedAt, language } = u;
+  return { username, role, displayName, firstName, lastName, phone, address, avatar, avatarUrl, language: language || null, twoFactorEnabled: u.twoFactorEnabled === true, passwordChangedAt: updatedAt || null };
+}
+const cookieUser = (req) => readToken(/(?:^|;\s*)sycfree=([^;]+)/.exec(req.headers.cookie || '')?.[1]);
+
+// Simple per-IP login throttle on top of nginx's limit_req.
+const attempts = new Map();
+function throttled(ip) {
+  const now = Date.now();
+  const list = (attempts.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
+  attempts.set(ip, list);
+  return list.length >= 10;
+}
+
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'same-origin',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
+};
+
+function send(res, code, body, headers = {}) {
+  res.writeHead(code, { ...SECURITY_HEADERS, ...headers });
+  res.end(body);
+}
+const json = (res, code, value, headers = {}) => send(res, code, JSON.stringify(value), { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...headers });
+
+function serveFile(res, rel, extraHeaders = {}) {
+  const file = normalize(join(PUBLIC_DIR, rel));
+  if (!file.startsWith(PUBLIC_DIR) || !existsSync(file)) return send(res, 404, 'not found', { 'Content-Type': 'text/plain' });
+  const type = TYPES[extname(file)] || 'application/octet-stream';
+  const cache = extname(file) === '.html' ? 'no-store' : 'public, max-age=3600';
+  send(res, 200, readFileSync(file), { 'Content-Type': type, 'Cache-Control': cache, ...extraHeaders });
+}
+
+function readBody(req, limit = 10_000) {
+  return new Promise((resolveBody, reject) => {
+    let data = '';
+    req.on('data', (chunk) => { data += chunk; if (data.length > limit) { reject(new Error('too large')); req.destroy(); } });
+    req.on('end', () => { try { resolveBody(data ? JSON.parse(data) : {}); } catch (error) { reject(error); } });
+    req.on('error', reject);
+  });
+}
+
+const server = createServer(async (req, res) => {
+  const url = new URL(req.url, 'http://localhost');
+  const path = url.pathname;
+  const ip = String(req.headers['x-real-ip'] || req.socket.remoteAddress || '');
+
+  try {
+    if (onboarding && path.startsWith('/api/onboarding/')) {
+      const body = req.method === 'POST' ? await readBody(req, 64 * 1024).catch(() => null) : undefined;
+      if (req.method === 'POST' && body === null) return json(res, 400, { error: 'invalid_request' });
+      const result = await onboarding.dispatch({
+        method: req.method,
+        pathname: path,
+        headers: req.headers,
+        body,
+        clientAddress: ip,
+      });
+      if (!result) return json(res, 404, { error: 'not_found' });
+      const headers = result.setCookies?.length ? { 'Set-Cookie': result.setCookies } : {};
+      return json(res, result.status, result.body, headers);
+    }
+    if (onboarding && path === '/auth/me' && req.method === 'GET') {
+      const authorization = await onboarding.authorize({
+        cookieHeader: req.headers.cookie || '', clientAddress: ip,
+        userAgent: req.headers['user-agent'] || '', allowRestricted: true,
+      });
+      return authorization.authorized
+        ? json(res, 200, { user: authorization.user, access: authorization.access })
+        : json(res, 401, { error: authorization.reason });
+    }
+    if (onboarding && path === '/auth/profile' && req.method === 'GET') {
+      const authorization = await onboarding.authorize({
+        cookieHeader: req.headers.cookie || '', clientAddress: ip,
+        userAgent: req.headers['user-agent'] || '', allowRestricted: true,
+      });
+      return authorization.authorized
+        ? json(res, 200, { user: authorization.user, access: authorization.access })
+        : json(res, 401, { error: authorization.reason });
+    }
+    if (onboarding && path.startsWith('/auth/')) {
+      return json(res, 409, { error: 'central_account_required' });
+    }
+    if (path === '/auth/login' && req.method === 'POST') {
+      if (throttled(ip)) return json(res, 429, { error: 'Too many attempts. Try again in a few minutes.' });
+      const body = await readBody(req).catch(() => ({}));
+      const user = loadUsers().users.find((u) => u.username === String(body.username || '').trim());
+      if (!user || !verifyPassword(body.password, user)) {
+        attempts.get(ip).push(Date.now());
+        return json(res, 401, { error: 'Incorrect username or password.' });
+      }
+      if (user.twoFactorEnabled) {
+        const secretValue = decryptSecret(user.twoFactorSecret);
+        if (!String(body.otp || '').trim()) return json(res, 202, { requiresTwoFactor: true });
+        const counter = verifyTotp(secretValue, body.otp, user.twoFactorLastCounter ?? -1);
+        if (counter === null) { attempts.get(ip).push(Date.now()); return json(res, 401, { error: 'The one-time code is incorrect.' }); }
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        rec.twoFactorLastCounter = counter; writeUsers(data);
+      }
+      attempts.delete(ip);
+      return json(res, 200, { ok: true }, {
+        'Set-Cookie': `${COOKIE}=${makeToken(user)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_TTL / 1000}`,
+      });
+    }
+    if (path === '/auth/logout' && req.method === 'POST') {
+      return json(res, 200, { ok: true }, { 'Set-Cookie': `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0` });
+    }
+    if (path.startsWith('/auth/profile')) {
+      const user = cookieUser(req);
+      if (!user) return json(res, 401, { error: 'login_required' });
+      if (path === '/auth/profile' && req.method === 'GET') return json(res, 200, { user: publicProfile(user) });
+      // The language chosen in one browser follows the user to the next one.
+      if (path === '/auth/profile' && req.method === 'PATCH') {
+        const body = await readBody(req, 4_000).catch(() => null);
+        const language = String(body?.language || '');
+        if (!/^(en|zh|es|ar|ru|fa)$/.test(language)) return json(res, 400, { error: 'Unknown language.' });
+        const data = loadUsers();
+        const record = data.users.find((u) => u.username === user.username);
+        if (!record) return json(res, 404, { error: 'Unknown user.' });
+        record.language = language;
+        writeUsers(data);
+        return json(res, 200, { language });
+      }
+      if (path === '/auth/profile' && req.method === 'POST') {
+        const body = await readBody(req, 3_000_000).catch(() => null);
+        if (!body) return json(res, 400, { error: 'Invalid request.' });
+        const clean = (value, max) => String(value || '').trim().slice(0, max);
+        const data = loadUsers();
+        const record = data.users.find((u) => u.username === user.username);
+        Object.assign(record, {
+          displayName: clean(body.displayName, 60), firstName: clean(body.firstName, 50), lastName: clean(body.lastName, 60),
+          phone: clean(body.phone, 24), address: clean(body.address, 300), avatar: clean(body.avatar, 12),
+        });
+        if (body.avatarDataUrl) {
+          const m = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(body.avatarDataUrl));
+          if (!m || Buffer.from(m[2], 'base64').length > 2 * 1024 * 1024) return json(res, 400, { error: 'The picture must be PNG, JPG or WebP and at most 2 MB.' });
+          record.avatarUrl = body.avatarDataUrl;
+        }
+        writeUsers(data);
+        return json(res, 200, { user: publicProfile(record) });
+      }
+      if (path === '/auth/profile/password' && req.method === 'POST') {
+        const body = await readBody(req).catch(() => ({}));
+        if (!verifyPassword(body.currentPassword, user)) return json(res, 403, { error: 'The current password is incorrect.' });
+        const next = String(body.newPassword || '');
+        if (next.length < 8 || !/[A-Za-z]/.test(next) || !/\d/.test(next) || !/[^A-Za-z0-9]/.test(next)) {
+          return json(res, 400, { error: 'Use at least 8 characters with a letter, a number and a symbol.' });
+        }
+        const data = loadUsers();
+        const record = data.users.find((u) => u.username === user.username);
+        Object.assign(record, hashPassword(next), { sessionEpoch: (record.sessionEpoch || 0) + 1, updatedAt: new Date().toISOString() });
+        writeUsers(data);
+        // Other sessions die with the old epoch; this browser gets a fresh cookie.
+        return json(res, 200, { ok: true }, { 'Set-Cookie': `${COOKIE}=${makeToken(record)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_TTL / 1000}` });
+      }
+      if (path === '/auth/profile/sessions/revoke' && req.method === 'POST') {
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        rec.sessionEpoch = (rec.sessionEpoch || 0) + 1; writeUsers(data);
+        return json(res, 200, { ok: true }, { 'Set-Cookie': `${COOKIE}=${makeToken(rec)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_TTL / 1000}` });
+      }
+      if (path === '/auth/profile/2fa/start' && req.method === 'POST') {
+        const body = await readBody(req).catch(() => ({}));
+        if (user.twoFactorEnabled) return json(res, 409, { error: 'Two-factor authentication is already on.' });
+        if (!verifyPassword(body.currentPassword, user)) return json(res, 403, { error: 'The current password is incorrect.' });
+        const secretValue = base32Encode(randomBytes(20));
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        rec.twoFactorPendingSecret = encryptSecret(secretValue); rec.twoFactorPendingExpiresAt = Date.now() + 10 * 60_000; writeUsers(data);
+        return json(res, 200, { secret: secretValue, qrUrl: `/auth/profile/2fa/qr?v=${Date.now()}` });
+      }
+      if (path === '/auth/profile/2fa/qr' && req.method === 'GET') {
+        const pending = user.twoFactorPendingExpiresAt > Date.now() ? decryptSecret(user.twoFactorPendingSecret) : null;
+        if (!pending) return json(res, 404, { error: 'The setup request expired.' });
+        const uri = `otpauth://totp/${encodeURIComponent(`SYC:${user.username}`)}?secret=${pending}&issuer=SYC&algorithm=SHA1&digits=6&period=30`;
+        try { return send(res, 200, await qrSvg(uri), { 'Content-Type': 'image/svg+xml; charset=utf-8', 'Cache-Control': 'no-store' }); }
+        catch { return json(res, 500, { error: 'Could not create the QR code.' }); }
+      }
+      if (path === '/auth/profile/2fa/enable' && req.method === 'POST') {
+        const body = await readBody(req).catch(() => ({}));
+        const pending = user.twoFactorPendingExpiresAt > Date.now() ? decryptSecret(user.twoFactorPendingSecret) : null;
+        if (!pending) return json(res, 400, { error: 'The setup request expired. Start again.' });
+        const counter = verifyTotp(pending, body.code);
+        if (counter === null) return json(res, 400, { error: 'The code is incorrect.' });
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        Object.assign(rec, { twoFactorEnabled: true, twoFactorSecret: encryptSecret(pending), twoFactorLastCounter: counter });
+        delete rec.twoFactorPendingSecret; delete rec.twoFactorPendingExpiresAt; writeUsers(data);
+        return json(res, 200, { user: publicProfile(rec) });
+      }
+      if (path === '/auth/profile/2fa/disable' && req.method === 'POST') {
+        const body = await readBody(req).catch(() => ({}));
+        if (!user.twoFactorEnabled) return json(res, 409, { error: 'Two-factor authentication is already off.' });
+        if (!verifyPassword(body.currentPassword, user)) return json(res, 403, { error: 'The current password is incorrect.' });
+        if (verifyTotp(decryptSecret(user.twoFactorSecret), body.code) === null) return json(res, 400, { error: 'The code is incorrect.' });
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        for (const k of ['twoFactorEnabled', 'twoFactorSecret', 'twoFactorLastCounter']) delete rec[k];
+        writeUsers(data);
+        return json(res, 200, { user: publicProfile(rec) });
+      }
+      return json(res, 404, { error: 'not_found' });
+    }
+    if (onboarding && (path === '/api/device/login' || path === '/api/device/heartbeat')) {
+      const decision = centralRouteDecision({ pathname: path, authorization: null });
+      return json(res, decision.status, { error: decision.reason });
+    }
+    // --- The phone app's own endpoints ---------------------------------------
+    // No panel session here: the SYC Claw app signs in with the panel's own
+    // username and password, receives a device token, and authenticates with
+    // that token afterwards.
+    if (path === '/api/device/login' && req.method === 'POST') {
+      if (throttled(ip)) return json(res, 429, { error: 'Too many attempts. Try again in a few minutes.' });
+      const body = await readBody(req).catch(() => ({}));
+      const user = loadUsers().users.find((u) => u.username === String(body.username || '').trim());
+      if (!user || !verifyPassword(body.password, user)) {
+        attempts.get(ip).push(Date.now());
+        return json(res, 401, { error: 'Incorrect username or password.' });
+      }
+      if (user.twoFactorEnabled) {
+        const secretValue = decryptSecret(user.twoFactorSecret);
+        if (!String(body.otp || '').trim()) return json(res, 202, { requiresTwoFactor: true });
+        const counter = verifyTotp(secretValue, body.otp, user.twoFactorLastCounter ?? -1);
+        if (counter === null) { attempts.get(ip).push(Date.now()); return json(res, 401, { error: 'The one-time code is incorrect.' }); }
+        const data = loadUsers(); const rec = data.users.find((u) => u.username === user.username);
+        rec.twoFactorLastCounter = counter; writeUsers(data);
+      }
+      attempts.delete(ip);
+      const result = deviceLink.enroll({
+        owner: user.username,
+        name: body.name,
+        model: body.model,
+        androidVersion: body.androidVersion,
+      });
+      return json(res, 200, { token: result.token, device: result.device });
+    }
+    if (path === '/api/device/heartbeat' && req.method === 'POST') {
+      const token = String(req.headers['x-device-token'] || '');
+      const body = await readBody(req).catch(() => ({}));
+      const result = deviceLink.heartbeat(token, body || {});
+      return json(res, result.status, result.error ? { error: result.error } : { device: result.device, permissions: result.permissions });
+    }
+
+    if (path === '/auth/me') {
+      const user = cookieUser(req);
+      return user ? json(res, 200, { user: publicProfile(user) }) : json(res, 401, { error: 'login_required' });
+    }
+    if (path.startsWith('/auth/')) return json(res, 404, { error: 'not_found' });
+
+    if (path === '/login') return onboarding ? serveFile(res, 'login.html') : (cookieUser(req) ? send(res, 302, '', { Location: '/' }) : serveFile(res, 'login.html'));
+    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/free.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
+
+    // Everything else requires a session.
+    let user = cookieUser(req);
+    if (onboarding) {
+      const authorization = await onboarding.authorize({
+        cookieHeader: req.headers.cookie || '', clientAddress: ip,
+        userAgent: req.headers['user-agent'] || '', allowRestricted: true,
+      });
+      const decision = centralRouteDecision({ pathname: path, authorization });
+      user = decision.allow ? authorization.user : null;
+      if (!decision.allow && decision.status === 403) return json(res, 403, { error: decision.reason });
+    }
+    if (!user) return send(res, 302, '', { Location: `/login${path === '/' ? '' : `?next=${encodeURIComponent(path)}`}` });
+    if (path === '/' || path === '/index.html') return send(res, 302, '', { Location: '/main' });
+    if (path === '/main' || path === '/main/') return serveFile(res, 'main.html');
+    if (path === '/main.js') return serveFile(res, 'main.js');
+    if (path === '/profage' || path === '/profage/') return serveFile(res, 'profage.html');
+    if (path === '/profage.js') return serveFile(res, 'profage.js');
+    // Connection (phone, computers, servers) and Communications (social
+    // accounts). Only the Android part of Connection does anything today.
+    if (path === '/connection' || path === '/connection/') return serveFile(res, 'connection.html');
+    if (path === '/connection.js') return serveFile(res, 'connection.js');
+    if (path === '/connection/android' || path === '/connection/android/') return serveFile(res, 'connection-android.html');
+    if (path === '/connection-android.js') return serveFile(res, 'connection-android.js');
+    if (path === '/communications' || path === '/communications/') return serveFile(res, 'communications.html');
+    if (path === '/communications.js') return serveFile(res, 'communications.js');
+
+    // --- The panel's side of the phone link ----------------------------------
+    if (path === '/api/connection/android' && req.method === 'GET') return json(res, 200, deviceLink.status());
+    if (path === '/api/connection/android/permissions' && req.method === 'PUT') {
+      const body = await readBody(req).catch(() => ({}));
+      const result = deviceLink.setPermissions(body?.permissions || {});
+      return json(res, result.status, result.error ? { error: result.error } : { device: result.device });
+    }
+    if (path === '/api/connection/android/revoke' && req.method === 'POST') {
+      const result = deviceLink.revoke();
+      return json(res, result.status, result.error ? { error: result.error } : { ok: true });
+    }
+
+    // --- Professional accounts: install on demand ----------------------------
+    if (path === '/api/panels/status' && req.method === 'GET') return json(res, 200, panelsStatus());
+    if (path === '/api/panels/install' && req.method === 'GET') {
+      const id = url.searchParams.get('id') || '';
+      return installPanelStream(id, res);
+    }
+    if (path === '/connection/android/app.apk' && req.method === 'GET') {
+      const release = deviceLink.appRelease();
+      if (!release.available) return json(res, 404, { error: 'The app is not published on this panel yet.' });
+      const apk = join(APP_DIR, release.file);
+      return send(res, 200, readFileSync(apk), {
+        'Content-Type': 'application/vnd.android.package-archive',
+        'Content-Disposition': `attachment; filename="${release.file}"`,
+      });
+    }
+    // Codex Web (professional account)
+    if (path === '/profage/codex') return send(res, 302, '', { Location: `/profage/codex/${url.search}` });
+    // Codex's own page asks for its assets at the site root (CODEX_STATIC below),
+    // but files added next to the page — `i18n-panel.js` and `i18n/<lang>.json` —
+    // are requested relative to `/profage/codex/`, so the whole prefix proxies.
+    if (path.startsWith('/profage/codex/')) {
+      return proxyToCodex(req, res, user, req.url.slice('/profage/codex'.length) || '/');
+    }
+    if (path === '/codex' || path === '/codex/') return send(res, 302, '', { Location: '/profage/codex/' });
+    // Claude Web (professional account)
+    if (path === '/profage/claude') return send(res, 302, '', { Location: `/profage/claude/${url.search}` });
+    if (path.startsWith('/profage/claude/')) {
+      return proxyToClaude(req, res, user, req.url.slice('/profage/claude'.length) || '/');
+    }
+    if (path === '/claude' || path === '/claude/') return send(res, 302, '', { Location: '/profage/claude/' });
+    // Kimi Web (professional account)
+    if (path === '/profage/kimi') return send(res, 302, '', { Location: `/profage/kimi/${url.search}` });
+    if (path.startsWith('/profage/kimi/')) {
+      return proxyToKimi(req, res, user, req.url.slice('/profage/kimi'.length) || '/');
+    }
+    if (path === '/kimi' || path === '/kimi/') return send(res, 302, '', { Location: '/profage/kimi/' });
+    // Gemini Web (professional account)
+    if (path === '/profage/syc-api') return send(res, 302, '', { Location: `/profage/syc-api/${url.search}` });
+    if (path.startsWith('/profage/syc-api/')) {
+      return proxyToSycApi(req, res, user, req.url.slice('/profage/syc-api'.length) || '/');
+    }
+    if (path === '/profage/cursor') return send(res, 302, '', { Location: `/profage/cursor/${url.search}` });
+    if (path.startsWith('/profage/cursor/')) {
+      return proxyToCursor(req, res, user, req.url.slice('/profage/cursor'.length) || '/');
+    }
+    if (path === '/profage/qwen') return send(res, 302, '', { Location: `/profage/qwen/${url.search}` });
+    if (path.startsWith('/profage/qwen/')) {
+      return proxyToQwen(req, res, user, req.url.slice('/profage/qwen'.length) || '/');
+    }
+    if (path === '/profage/gemini') return send(res, 302, '', { Location: `/profage/gemini/${url.search}` });
+    if (path.startsWith('/profage/gemini/')) {
+      return proxyToGemini(req, res, user, req.url.slice('/profage/gemini'.length) || '/');
+    }
+    if (path === '/gemini' || path === '/gemini/') return send(res, 302, '', { Location: '/profage/gemini/' });
+    if (path.startsWith('/api/') || CODEX_STATIC.has(path)) return proxyToCodex(req, res, user, req.url);
+    return send(res, 404, 'not found', { 'Content-Type': 'text/plain' });
+  } catch (error) {
+    console.error(error);
+    return json(res, 500, { error: 'server_error' });
+  }
+});
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  server.listen(PORT, '127.0.0.1', () => console.log(`SYC-AI listening on 127.0.0.1:${PORT}`));
+  // On an installed copy (data/license.json present), register + heartbeat to
+  // the management panel. On our own build there is no license file, so this is
+  // a no-op and nothing phones home.
+  startLegacyEdgeClient({ centralOnboardingEnabled: Boolean(onboarding) }).catch(() => {});
+}
+
+export function writeUsers(value) {
+  const tmp = `${USERS_FILE}.tmp`;
+  writeFileSync(tmp, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 });
+  renameSync(tmp, USERS_FILE);
+}

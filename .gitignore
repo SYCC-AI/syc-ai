@@ -1,0 +1,19 @@
+# runtime CLIs and built packages ship as release assets, never in git
+runtime/
+installer/dist/
+*.tar.zst
+*.apk
+
+# per-installation data & secrets — never commit
+data/
+*.log
+.env
+.env.*
+node_modules/
+
+# build tooling / local
+.worktrees/
+i18n-work/
+android-app/build/
+android-app/.gradle/
+.DS_Store
