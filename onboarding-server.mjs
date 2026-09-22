@@ -105,8 +105,11 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
     const expired = access.mode !== 'active' && access.reason === 'entitlement_expired';
     if (!(expiring || expired) || nowMs < renewNotBefore || typeof activation.renew !== 'function') return access;
     renewNotBefore = nowMs + 60_000;
+    // The control plane double-submits CSRF; on a page view nobody sent the
+    // header, so the panel supplies the cookie's own value.
+    const csrfToken = /(?:^|;\s*)syc_csrf=([^;]+)/.exec(context.cookieHeader || '')?.[1] || '';
     try {
-      await activation.renew(context);
+      await activation.renew({ ...context, csrfToken });
       renewNotBefore = 0;
       return activation.access();
     } catch {

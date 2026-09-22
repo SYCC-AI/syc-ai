@@ -52,13 +52,14 @@ test('an expired lease is renewed with the signed-in owner session instead of lo
   const now = () => clock;
   const { directory, onboarding, issued } = await fixture({ leaseIssuedAt: clock - 7 * 3600_000, ttlSeconds: 6 * 3600, now });
 
-  const result = await onboarding.authorize({ cookieHeader: 'syc_session=abc', clientAddress: '203.0.113.9', userAgent: 'test' });
+  const result = await onboarding.authorize({ cookieHeader: 'syc_session=abc; syc_csrf=tok-1', clientAddress: '203.0.113.9', userAgent: 'test' });
 
   assert.equal(result.authorized, true);
   assert.equal(result.restricted, undefined);
   assert.equal(result.access.mode, 'active');
   assert.equal(issued.length, 1);
-  assert.equal(issued[0].cookieHeader, 'syc_session=abc');
+  assert.equal(issued[0].cookieHeader, 'syc_session=abc; syc_csrf=tok-1');
+  assert.equal(issued[0].csrfToken, 'tok-1', 'the double-submit header comes from the cookie the browser already holds');
   assert.equal(issued[0].body.installationId, 'install-1');
   const cached = JSON.parse(await readFile(join(directory, 'entitlement.json'), 'utf8'));
   assert.equal(cached.tokenId, 'lease-2');

@@ -3,9 +3,9 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "SYC-AI local publication candidate",
-  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-ab605d2f2b1237242a060dd2b67822b177812f2a6c2bd8c23571334518b1de68",
+  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-60b0524ee962cd6fb893223fe317a2f462eac4fb53c41934b1961f84ee14f0fc",
   "creationInfo": {
-    "created": "2026-09-22T07:56:37Z",
+    "created": "2026-09-22T08:10:54Z",
     "creators": [
       "Organization: SYC",
       "Tool: syc-ai-local-evidence/1"
@@ -282,7 +282,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "d6e5ecee24af513d54c73924f9c3f7113c22b3a1181dadfe2288aea097a9f06a"
+          "checksumValue": "52ab35c357ca37dc63a0f894bea68302f0ff2d7d2def6671ec6b778de713b558"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -318,7 +318,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "dae2b19fdba6e180de5086044922ef0b69e9a9ec3b78a9da5d3754156405e414"
+          "checksumValue": "3d617140ebf2196be39a3f81ef932dd9f0b5157fa1903058c2da9ba540e0866b"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -954,7 +954,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "132adad032b025b8927b4c44d039f16cac114a024a7ebde361d8675767318c57"
+          "checksumValue": "ec048ef97f2fad8e77e258fe1aa8d1a2b984f5b7122ba9400259941f6fb9c9bd"
         }
       ],
       "licenseConcluded": "NOASSERTION",
