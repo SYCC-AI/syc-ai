@@ -79,12 +79,12 @@ supposed to be.
 One command on a fresh Linux server:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/main/install.sh | \
+curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \
   SYC_SRC=https://dev.sycc.ir/install \
   SYC_CONTROL_URL=https://dev.sycc.ir \
   SYC_PUBLIC_ORIGIN=https://<your https origin> \
-  SYC_ENTITLEMENT_PUBLIC_KEY_B64=<published key> \
-  SYC_RELEASE_PUBLIC_KEY_B64=<published key> \
+  SYC_ENTITLEMENT_PUBLIC_KEY_B64=LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQWlKOE1rVHBJTThrdS9WU2ZlalRoNnZFUmE1VEtHai9WY21FUjJCOUlsZ3M9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo= \
+  SYC_RELEASE_PUBLIC_KEY_B64=LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQXcxK3prU0RTdkovWEdpbFhpRmFONXpJRVRLcWJndVh5U2g0VjVpeU9IZXM9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo= \
   SYC_ARTIFACT_SRC=https://dev.sycc.ir/artifacts \
   SYC_ARTIFACT_ACCESS=grant \
   bash
@@ -152,7 +152,7 @@ languages for this page are on the way.
 
 ## Support
 
-Open an issue on this repository. Inside the panel, use **Support** to open a
+Open an issue on [github.com/SYCC-AI/syc-ai](https://github.com/SYCC-AI/syc-ai/issues). Inside the panel, use **Support** to open a
 ticket that reaches the operators directly.
 
 ## License
