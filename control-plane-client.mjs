@@ -18,6 +18,7 @@ const OPERATIONS = Object.freeze({
   installationActivate: ['POST', '/api/user/installations/activate'],
   entitlementIssue: ['POST', '/api/user/entitlements/issue'],
   downloadGrant: ['POST', '/api/user/downloads/grant'],
+  announcements: ['GET', '/api/user/announcements'],
   ticketList: ['GET', '/api/user/tickets'],
   ticketCreate: ['POST', '/api/user/tickets'],
   ticketThread: ['GET', 'ticket'],

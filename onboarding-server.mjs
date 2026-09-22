@@ -7,6 +7,7 @@ const ROUTES = new Map([
   ['POST /api/onboarding/reset-password', 'resetPassword'],
   ['POST /api/onboarding/logout', 'logout'],
   ['GET /api/onboarding/export', 'accountExport'],
+  ['GET /api/onboarding/announcements', 'announcements'],
   ['GET /api/onboarding/tickets', 'ticketList'],
   ['POST /api/onboarding/tickets', 'ticketCreate'],
 ]);

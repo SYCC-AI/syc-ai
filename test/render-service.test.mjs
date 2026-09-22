@@ -28,3 +28,24 @@ test('core service loads protected central runtime configuration', async () => {
   assert.match(unit, new RegExp(`^EnvironmentFile=-${root}/data/runtime\\.env$`, 'm'));
   assert.match(unit, /^Environment=SYC_AI_PORT=28782$/m);
 });
+
+test('the core unit can write the parent directory, or a forced update dies with EROFS', async () => {
+  const base = await mkdtemp(join(tmpdir(), 'syc-render-parent-'));
+  const root = join(base, 'install');
+  const systemd = join(base, 'systemd');
+  await mkdir(root);
+  await mkdir(systemd);
+  const code = await new Promise((done) => {
+    const child = spawn(process.execPath, [renderer, root, 'syc-ai-test', 'core', '28783'], {
+      env: { ...process.env, SYC_SYSTEMD_DIR: systemd }, stdio: 'ignore',
+    });
+    child.on('close', done);
+  });
+  assert.equal(code, 0);
+  const unit = await readFile(join(systemd, 'syc-ai-test.service'), 'utf8');
+  const paths = (/^ReadWritePaths=(.*)$/m.exec(unit)?.[1] ?? '').split(' ');
+  // applyUpdate stages the new tree and backs the old one up *beside* the
+  // root, so without the parent every forced update fails with EROFS.
+  assert.ok(paths.includes(base), `the parent must be writable; got "${paths.join(' ')}"`);
+  assert.ok(paths.includes(root), 'the install root itself must stay writable');
+});

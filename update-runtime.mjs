@@ -70,21 +70,32 @@ export async function extractArchive(archive, stage) {
 // A release is healthy when the tree it unpacked can actually serve a page.
 // We start it on a loopback port of its own, ask it for the login screen, and
 // shut it down again; nothing about the live panel is touched.
-export function createHealthCheck({ port = 0, timeoutMs = HEALTH_TIMEOUT_MS } = {}) {
+export function createHealthCheck({ port = 0, timeoutMs = HEALTH_TIMEOUT_MS, logger = console } = {}) {
   return async function healthCheck({ root }) {
     const probePort = port || 20_000 + Math.floor(Math.random() * 20_000);
     const child = spawn(process.execPath, [join(root, 'server.mjs')], {
       cwd: root,
       env: { ...process.env, SYC_AI_PORT: String(probePort), FREE_WEB_PORT: String(probePort) },
-      stdio: 'ignore',
+      // Throwing the child's output away leaves "update_failed" and nothing
+      // else to go on; keep a bounded tail so the reason survives.
+      stdio: ['ignore', 'pipe', 'pipe'],
       detached: false,
     });
+    let transcript = '';
+    const keep = (chunk) => { transcript = (transcript + chunk).slice(-2000); };
+    child.stdout?.on('data', keep);
+    child.stderr?.on('data', keep);
     let exited = false;
-    child.once('exit', () => { exited = true; });
+    let exitCode = null;
+    child.once('exit', (code) => { exited = true; exitCode = code; });
     const deadline = Date.now() + timeoutMs;
     try {
       while (Date.now() < deadline) {
-        if (exited) return false;
+        if (exited) {
+          logger.error?.(`[update] the new panel exited with code ${exitCode} during the health check: `
+            + (transcript.trim().split('\n').slice(-6).join(' | ') || 'no output'));
+          return false;
+        }
         const alive = await new Promise((resolve) => {
           const request = get({ host: '127.0.0.1', port: probePort, path: '/login' }, (response) => {
             response.resume();
@@ -96,6 +107,8 @@ export function createHealthCheck({ port = 0, timeoutMs = HEALTH_TIMEOUT_MS } = 
         if (alive) return true;
         await delay(HEALTH_POLL_MS);
       }
+      logger.error?.(`[update] the new panel did not answer on 127.0.0.1:${probePort} within ${Math.round(timeoutMs / 1000)}s: `
+        + (transcript.trim().split('\n').slice(-6).join(' | ') || 'no output'));
       return false;
     } finally {
       if (!exited) child.kill('SIGKILL');

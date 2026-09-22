@@ -126,7 +126,9 @@ export function createUpdateService({
         reason: 'update_required',
         lastError: failureCode(error),
       };
-      logger.error?.(`[update] required release ${release.version} could not be applied: ${failureCode(error)}`);
+      // The code alone tells an operator nothing; carry the message too.
+      logger.error?.(`[update] required release ${release.version} could not be applied: `
+        + `${failureCode(error)} — ${String(error?.message || error).slice(0, 300)}`);
     }
     return snapshot();
   }

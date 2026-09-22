@@ -42,7 +42,11 @@ function unit({ desc, workdir, entry, env, mem, port, canInstall, environmentFil
   // starts them, so it (and only it) may write the whole install root and its
   // own unit files and drive systemctl. Every other service can write only its
   // data and keeps the rest of the disk read-only.
-  const rwx = canInstall ? `${root} /etc/systemd/system` : join(root, 'data');
+  // The core panel replaces its own tree when a release is forced on it, and
+  // that swap is two renames inside the parent directory — so the parent has
+  // to be writable or every forced update dies with EROFS. Provider panels get
+  // their data directory and nothing else.
+  const rwx = canInstall ? `${dirname(root)} ${root} /etc/systemd/system` : join(root, 'data');
   lines.push(
     `ExecStart=/usr/bin/node ${join(root, entry)}`,
     'Restart=always', 'RestartSec=3', 'UMask=0077',
