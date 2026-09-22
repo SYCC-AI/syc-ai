@@ -20,6 +20,8 @@ reach your phone, your servers and your channels.
 
 </div>
 
+<p align="center"><img src="screenshots/account-center.png" width="860" alt="Professional accounts: Claude, Codex, Qwen, Gemini, Cursor, Kimi and SYC-API side by side"></p>
+
 ---
 
 ## Tired of switching?
@@ -53,6 +55,11 @@ And that is only the beginning.
   Extra security lives in settings, never at the door.
 - **Support inside the panel.** Tickets and announcements where you work.
 - **Six interface languages.** English, 中文, Español, العربية, Русский, فارسی.
+
+<p align="center">
+<img src="screenshots/panels.png" width="420" alt="The main panel: professional accounts, connection, communications">&nbsp;
+<img src="screenshots/phone.png" width="420" alt="Connect your Android phone with SYC Claw">
+</p>
 
 ## And that is only the beginning
 
