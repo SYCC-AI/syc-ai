@@ -59,8 +59,11 @@ export function renderPlanCards(plans = [], currentPlanId = '') {
     const cost = original > effective
       ? `<s>${price(original, plan.currency)}</s> ${effective === 0 ? 'Free now' : price(effective, plan.currency)}`
       : price(effective, plan.currency) || 'Coming soon';
+    const until = plan.offerEndsAt && Date.parse(plan.offerEndsAt)
+      ? ` · free until ${new Date(plan.offerEndsAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}`
+      : '';
     return `<article class="upgrade-card${current ? ' current' : ''}">
-      <b>${escapeHtml(plan.displayName)}</b><small>${cost}</small>
+      <b>${escapeHtml(plan.displayName)}</b><small>${cost}${effective === 0 && original > effective ? until : ''}</small>
       <em>${current ? 'Active' : plan.available ? escapeHtml(plan.offerLabel || 'Available') : 'Coming soon'}</em>
     </article>`;
   }).join('');

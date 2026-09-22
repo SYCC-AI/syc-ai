@@ -49,3 +49,27 @@ test('the core unit can write the parent directory, or a forced update dies with
   assert.ok(paths.includes(base), `the parent must be writable; got "${paths.join(' ')}"`);
   assert.ok(paths.includes(root), 'the install root itself must stay writable');
 });
+
+test('a panel unit gets every data directory its environment names, before systemd ever starts it', async () => {
+  const base = await mkdtemp(join(tmpdir(), 'syc-render-dirs-'));
+  const root = join(base, 'install');
+  const systemd = join(base, 'systemd');
+  await mkdir(root);
+  await mkdir(systemd);
+  const code = await new Promise((done) => {
+    const child = spawn(process.execPath, [renderer, root, 'syc-ai-test', 'codex', '28785'], {
+      env: { ...process.env, SYC_SYSTEMD_DIR: systemd }, stdio: 'ignore',
+    });
+    child.on('close', done);
+  });
+  assert.equal(code, 0);
+  const { stat } = await import('node:fs/promises');
+  // codex app-server refuses to start when CODEX_HOME is missing; the same
+  // goes for HOME and the accounts directory the panel swaps identities in.
+  for (const dir of ['data/codex/home', 'data/codex/userhome', 'data/codex/accounts', 'data/codex/data']) {
+    const info = await stat(join(root, dir));
+    assert.ok(info.isDirectory(), `${dir} must exist`);
+    assert.equal(info.mode & 0o777, 0o700, `${dir} must be private`);
+  }
+  assert.ok((await stat(join(root, 'data/codex/workspace'))).isDirectory(), 'the working directory must exist');
+});

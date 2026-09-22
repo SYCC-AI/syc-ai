@@ -29,6 +29,16 @@ function unit({ desc, workdir, entry, env, mem, port, canInstall, environmentFil
   // systemd changes to WorkingDirectory before exec, so it must exist first.
   // Data dirs live under the writable data/ tree; create the whole path.
   mkdirSync(workAbs, { recursive: true });
+  // Every directory the environment points at inside data/ must exist too —
+  // codex's app-server exits when CODEX_HOME is missing, and a HOME that is
+  // not there breaks the provider CLIs' own state files. Only paths, never
+  // file names, and only under the writable data tree.
+  const dataTree = join(root, 'data');
+  for (const val of Object.values(env)) {
+    const target = subst(val);
+    if (!target.startsWith(`${dataTree}/`) || /\.[A-Za-z0-9]+$/.test(target.split('/').pop())) continue;
+    mkdirSync(target, { recursive: true, mode: 0o700 });
+  }
   const lines = [
     '[Unit]', `Description=${desc}`, 'After=network-online.target', 'Wants=network-online.target', '',
     '[Service]', 'Type=simple', 'User=root',

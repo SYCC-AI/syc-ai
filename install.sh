@@ -144,9 +144,23 @@ SYC_AI_VERSION=$RELEASE_VERSION
 ENV
 chmod 600 "$STAGE/data/runtime.env"
 
-# If the full bundle was installed, its accounts are already present.
+# If the full bundle was installed, its accounts are already present. Record
+# what each one came from so the panel can offer a newer archive later.
 if [ "$FLAVOR" = full ]; then
-  node -e 'const m=require("'"$STAGE"'/installer/panels.json");for(const id of m.bundled)require("fs").appendFileSync("'"$STAGE"'/data/installed-panels",id+"\n")'
+  node - "$STAGE" "$TMP/manifest.json" <<'NODE'
+const fs = require('fs'); const [stage, manifestFile] = process.argv.slice(2);
+const m = JSON.parse(fs.readFileSync(`${stage}/installer/panels.json`, 'utf8'));
+const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8'));
+fs.mkdirSync(`${stage}/data/panels`, { recursive: true, mode: 0o700 });
+for (const id of m.bundled) {
+  fs.appendFileSync(`${stage}/data/installed-panels`, `${id}\n`);
+  const d = manifest.panels?.[id];
+  if (!d) continue;
+  fs.writeFileSync(`${stage}/data/panels/${id}.json`, `${JSON.stringify({
+    sequence: manifest.sequence, version: manifest.version, sha256: d.sha256, installedAt: new Date().toISOString(),
+  })}\n`, { mode: 0o600 });
+}
+NODE
 fi
 
 log "Switching atomically and starting the panel …"

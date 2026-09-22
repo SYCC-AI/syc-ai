@@ -549,10 +549,10 @@ const server = createServer(async (req, res) => {
     }
 
     // --- Professional accounts: install on demand ----------------------------
-    if (path === '/api/panels/status' && req.method === 'GET') return json(res, 200, panelsStatus());
+    if (path === '/api/panels/status' && req.method === 'GET') return json(res, 200, await panelsStatus());
     if (path === '/api/panels/install' && req.method === 'GET') {
       const id = url.searchParams.get('id') || '';
-      return installPanelStream(id, res);
+      return installPanelStream(id, res, { update: url.searchParams.get('update') === '1' });
     }
     if (path === '/connection/android/app.apk' && req.method === 'GET') {
       const release = deviceLink.appRelease();

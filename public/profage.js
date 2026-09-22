@@ -45,13 +45,17 @@
   document.querySelectorAll('.professional-card[data-brand]').forEach((card) => {
     const id = card.dataset.brand;
     const p = byId[id];
-    if (!p || p.installed) return; // installed → normal link
+    if (!p || (p.installed && !p.updateAvailable)) return; // installed and current → normal link
     const link = card.querySelector('a.card');
     const footer = card.querySelector('.professional-card-footer');
     if (!link || !footer) return;
-    link.addEventListener('click', (e) => e.preventDefault());
-    link.setAttribute('aria-disabled', 'true');
-    footer.innerHTML = `<button class="professional-open-label install-btn" type="button">${t('Install')}</button>
+    const updating = Boolean(p.installed && p.updateAvailable);
+    if (!updating) {
+      link.addEventListener('click', (e) => e.preventDefault());
+      link.setAttribute('aria-disabled', 'true');
+    }
+    // An installed account keeps its open link; the update sits beside it.
+    footer.innerHTML = `${updating ? footer.innerHTML : ''}<button class="professional-open-label install-btn${updating ? ' update-btn' : ''}" type="button">${updating ? `${t('Update')} · ${p.update.version}` : t('Install')}</button>
       <div class="install-progress hidden"><div class="install-bar"><i></i></div><div class="install-step"></div></div>`;
     const btn = footer.querySelector('.install-btn');
     const prog = footer.querySelector('.install-progress');
@@ -62,9 +66,9 @@
       prog.classList.remove('hidden');
       card.classList.add('is-installing');
       step.textContent = t('starting…');
-      const es = new EventSource(`/api/panels/install?id=${encodeURIComponent(id)}`);
+      const es = new EventSource(`/api/panels/install?id=${encodeURIComponent(id)}${updating ? '&update=1' : ''}`);
       es.addEventListener('step', (ev) => { const d = JSON.parse(ev.data); if (d.pct != null) bar.style.width = d.pct + '%'; step.textContent = t(d.text || 'working…'); });
-      es.addEventListener('done', () => { bar.style.width = '100%'; step.textContent = t('Installed. Reloading…'); es.close(); setTimeout(() => location.reload(), 900); });
+      es.addEventListener('done', () => { bar.style.width = '100%'; step.textContent = t(updating ? 'Updated. Reloading…' : 'Installed. Reloading…'); es.close(); setTimeout(() => location.reload(), 900); });
       es.addEventListener('error', (ev) => {
         let msg = 'Install failed.'; try { msg = JSON.parse(ev.data).message || msg; } catch {}
         step.textContent = t(msg); step.classList.add('err'); card.classList.remove('is-installing');

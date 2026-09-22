@@ -51,31 +51,83 @@ export function createInstallerRuntime({
   const registryFile = join(root, 'installer', 'panels.json');
   const releaseFile = join(dataDirectory, 'release.json');
   const releaseKeyFile = join(dataDirectory, 'release-public.pem');
-  const releaseStateFile = join(dataDirectory, 'release-state.json');
   const registry = () => readJson(registryFile, { panels: {} });
   const prefix = () => {
     try { return readFileSync(join(dataDirectory, 'install-prefix'), 'utf8').trim(); }
     catch { return 'syc-ai'; }
   };
   const isInstalled = (id) => existsSync(join(root, 'apps', id, 'server.mjs'));
+  // What each professional account was installed from, so a newer signed
+  // archive can be offered as an update instead of only a first install.
+  const panelStateFile = (id) => join(dataDirectory, 'panels', `${id}.json`);
+  const panelState = (id) => readJson(panelStateFile(id), null);
+  const writePanelState = (id, state) => {
+    mkdirSync(join(dataDirectory, 'panels'), { recursive: true, mode: 0o700 });
+    const temporary = `${panelStateFile(id)}.tmp`;
+    writeFileSync(temporary, `${JSON.stringify(state)}\n`, { mode: 0o600 });
+    renameSync(temporary, panelStateFile(id));
+  };
 
-  function panelsStatus() {
-    const panels = Object.entries(registry().panels || {})
-      .sort((a, b) => a[1].order - b[1].order)
-      .map(([id, panel]) => ({
-        id, name: panel.name, order: panel.order, port: panel.port, installed: isInstalled(id),
-      }));
-    return { installable: Boolean(readJson(releaseFile)?.source && existsSync(releaseKeyFile)), panels };
+  // The signed manifest is public and small; fetching it once every few
+  // minutes is how installed accounts learn that a newer archive exists.
+  const MANIFEST_CACHE_MS = 10 * 60_000;
+  let manifestCache = { at: 0, value: null };
+  async function currentManifest() {
+    if (Date.now() - manifestCache.at < MANIFEST_CACHE_MS) return manifestCache.value;
+    const configuration = readJson(releaseFile);
+    let value = null;
+    try {
+      const source = verifiedSource(configuration?.source);
+      const [metadataText, signature] = await Promise.all([
+        fetchImpl(`${source}/manifest.json`, { signal: AbortSignal.timeout(20_000) }).then(boundedText),
+        fetchImpl(`${source}/manifest.sig`, { signal: AbortSignal.timeout(20_000) }).then(boundedText),
+      ]);
+      value = { metadata: JSON.parse(metadataText), signature: signature.trim() };
+    } catch { value = null; }
+    manifestCache = { at: Date.now(), value };
+    return value;
   }
 
-  async function installPanelStream(id, res) {
+  function offeredUpdate(id, manifest) {
+    const state = panelState(id);
+    if (!manifest || !state?.sha256) return null;
+    try {
+      const selected = selectPanelRelease({
+        metadata: manifest.metadata, signature: manifest.signature,
+        publicKey: createPublicKey(readFileSync(releaseKeyFile, 'utf8')),
+        panelId: id, priorSequence: state.sequence || 0,
+      });
+      if (selected.descriptor.sha256 === state.sha256) return null;
+      return { sequence: selected.sequence, version: selected.version };
+    } catch { return null; }
+  }
+
+  async function panelsStatus({ refresh = true } = {}) {
+    const installable = Boolean(readJson(releaseFile)?.source && existsSync(releaseKeyFile));
+    const manifest = installable && refresh ? await currentManifest() : null;
+    const panels = Object.entries(registry().panels || {})
+      .sort((a, b) => a[1].order - b[1].order)
+      .map(([id, panel]) => {
+        const installed = isInstalled(id);
+        const update = installed ? offeredUpdate(id, manifest) : null;
+        return {
+          id, name: panel.name, order: panel.order, port: panel.port, installed,
+          installedVersion: installed ? panelState(id)?.version || null : null,
+          updateAvailable: Boolean(update), update,
+        };
+      });
+    return { installable, panels };
+  }
+
+  async function installPanelStream(id, res, { update = false } = {}) {
     const emit = sse(res);
     const fail = (message) => { emit('error', { message }); res.end(); };
     let packageFile = '';
     try {
       const panel = registry().panels?.[id];
       if (!panel) return fail('unknown panel');
-      if (isInstalled(id)) { emit('done', { id, already: true }); res.end(); return; }
+      if (isInstalled(id) && !update) { emit('done', { id, already: true }); res.end(); return; }
+      if (update && !isInstalled(id)) return fail('panel is not installed');
       const configuration = readJson(releaseFile);
       const source = verifiedSource(configuration?.source);
       // The signed manifest is public — a machine needs it before it has an
@@ -98,8 +150,11 @@ export function createInstallerRuntime({
         signature: signature.trim(),
         publicKey: createPublicKey(readFileSync(releaseKeyFile, 'utf8')),
         panelId: id,
-        priorSequence: readJson(releaseStateFile, { sequence: 0 }).sequence,
+        priorSequence: panelState(id)?.sequence || 0,
       });
+      if (update && selected.descriptor.sha256 === panelState(id)?.sha256) {
+        emit('done', { id, already: true }); res.end(); return;
+      }
 
       mkdirSync(join(dataDirectory, 'tmp'), { recursive: true, mode: 0o700 });
       packageFile = join(dataDirectory, 'tmp', selected.descriptor.file);
@@ -169,12 +224,16 @@ export function createInstallerRuntime({
         child.once('error', reject);
       });
       if (code !== 0) throw new Error(`installer exited with code ${code}`);
-      const temporaryState = `${releaseStateFile}.tmp`;
-      writeFileSync(temporaryState, `${JSON.stringify({
+      // Per-panel, never the core's release-state.json: that file is the
+      // update channel's record of the *panel shell*, and a professional
+      // account landing at a later sequence must not make the shell look
+      // updated when it was not.
+      writePanelState(id, {
         sequence: selected.sequence, version: selected.version,
-      })}\n`, { mode: 0o600 });
-      renameSync(temporaryState, releaseStateFile);
-      emit('done', { id, pct: 100 });
+        sha256: selected.descriptor.sha256, installedAt: new Date().toISOString(),
+      });
+      manifestCache = { at: 0, value: null };
+      emit('done', { id, pct: 100, updated: update });
       res.end();
     } catch (error) {
       fail(error?.message || 'panel installation failed');
