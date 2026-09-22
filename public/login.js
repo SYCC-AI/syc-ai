@@ -55,11 +55,15 @@ function render() {
     form.dataset.action = reset ? 'reset-password' : 'recover-username';
     document.getElementById('submitLabel').textContent = reset ? 'Reset password' : 'Recover username';
   } else if (state.step === 'plan_selection') {
-    title.textContent = 'Choose your plan'; subtitle.textContent = 'Main is free during the launch offer';
+    const offer = state.catalog.plans.find((plan) => plan.id === 'main')?.offerEndsAt;
+    const daysLeft = offer ? Math.max(0, Math.ceil((Date.parse(offer) - Date.now()) / 86_400_000)) : null;
+    const offerDate = offer ? new Date(offer).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    title.textContent = 'Choose your plan';
+    subtitle.textContent = offer ? `Main is free until ${offerDate}` : 'Main is free during the launch offer';
     fields.innerHTML = `<div class="plan-grid">${state.catalog.plans.map((plan) => `
       <button type="button" class="plan-card" data-plan="${plan.id}" ${plan.selectable ? '' : 'disabled'}>
       <strong>${plan.displayName}</strong><span>${plan.id === 'main' ? '<s>1.75 USDT</s> Free now' : 'Coming soon'}</span>
-      ${plan.remainingSeconds === null ? '' : `<small>${plan.remainingSeconds}s remaining</small>`}</button>`).join('')}</div>`;
+      ${plan.id === 'main' && daysLeft !== null ? `<small>${daysLeft} day${daysLeft === 1 ? '' : 's'} left in the launch offer</small>` : ''}</button>`).join('')}</div>`;
     form.dataset.action = 'activate'; document.getElementById('submitLabel').textContent = 'Activate Main';
     const main = state.catalog.plans.find((plan) => plan.id === 'main' && plan.selectable);
     if (main) flow.dispatch('select_plan', { planId: 'main' });

@@ -53,6 +53,7 @@ export function createInstallationActivation({
   const entitlementPath = join(dataDirectory, 'entitlement.json');
   let identityPromise;
   let activationPromise;
+  let renewalPromise;
 
   async function identity() {
     if (!identityPromise) identityPromise = (async () => {
@@ -134,8 +135,38 @@ export function createInstallationActivation({
     return { ...cached, claims };
   }
 
+  // A lease is six hours; the panel has to ask for the next one itself while
+  // the owner is signed in, or a paid-up installation locks itself out.
+  async function renewInternal(requestContext = {}) {
+    await identity();
+    const local = await identityPromise;
+    if (!local.installationId) throw new InstallationActivationError('installation_not_registered');
+    const issued = data(await controlClient.call('entitlementIssue', {
+      ...requestContext, body: { installationId: local.installationId },
+    }), 'entitlement_issue');
+    const claims = verifyEntitlement(issued.token, {
+      publicKey: entitlementPublicKey,
+      installationId: local.installationId,
+      now,
+    });
+    const cached = {
+      installationId: local.installationId,
+      token: issued.token,
+      tokenId: issued.tokenId,
+      expiresAt: issued.expiresAt,
+    };
+    await atomicPrivateWrite(entitlementPath, `${JSON.stringify(cached)}\n`);
+    return { ...cached, claims };
+  }
+
   return Object.freeze({
     identity,
+    renew(requestContext) {
+      if (!renewalPromise) {
+        renewalPromise = renewInternal(requestContext).finally(() => { renewalPromise = null; });
+      }
+      return renewalPromise;
+    },
     // Everything the update channel needs to speak for this installation
     // without a user session, and nothing more: the private key stays here.
     async signer() {

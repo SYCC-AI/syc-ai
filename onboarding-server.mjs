@@ -43,7 +43,7 @@ function securityContext(request) {
   };
 }
 
-export function createOnboardingServer({ controlClient, activation, productOrigin } = {}) {
+export function createOnboardingServer({ controlClient, activation, productOrigin, now = Date.now } = {}) {
   if (!controlClient?.call || !activation?.activate || !activation?.access) {
     throw new TypeError('onboarding dependencies are required');
   }
@@ -93,12 +93,33 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
     });
   }
 
+  // Renew the lease an hour before it runs out, or as soon as it has, using
+  // the signed-in owner's session. A failed attempt is not retried for a
+  // minute so a dark control plane does not turn every page view into a call.
+  const RENEW_AHEAD_MS = 60 * 60_000;
+  let renewNotBefore = 0;
+  async function renewed(context, access) {
+    const nowMs = now();
+    const expiring = access.mode === 'active' && Number.isInteger(access.claims?.exp)
+      && access.claims.exp * 1000 - nowMs < RENEW_AHEAD_MS;
+    const expired = access.mode !== 'active' && access.reason === 'entitlement_expired';
+    if (!(expiring || expired) || nowMs < renewNotBefore || typeof activation.renew !== 'function') return access;
+    renewNotBefore = nowMs + 60_000;
+    try {
+      await activation.renew(context);
+      renewNotBefore = 0;
+      return activation.access();
+    } catch {
+      return access;
+    }
+  }
+
   async function authorize({ cookieHeader = '', clientAddress = '', userAgent = '', allowRestricted = false } = {}) {
     const response = await controlClient.call('session', { cookieHeader, clientAddress, userAgent });
     if (response.status !== 200 || !response.body?.data?.user) {
       return { authorized: false, reason: 'login_required' };
     }
-    const access = await activation.access();
+    const access = await renewed({ cookieHeader, clientAddress, userAgent }, await activation.access());
     if (access.mode !== 'active' && !allowRestricted) {
       return { authorized: false, reason: access.reason || 'entitlement_required', access };
     }

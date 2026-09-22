@@ -14,7 +14,7 @@ reach your phone, your servers and your channels.
 [![Platform](https://img.shields.io/badge/platform-Linux%20%C2%B7%20systemd-informational.svg)](#requirements)
 [![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)
 [![Languages](https://img.shields.io/badge/UI-6%20languages-brightgreen.svg)](#languages)
-[![Edition](https://img.shields.io/badge/Main-free%20during%20launch-ff6b00.svg)](#editions)
+[![Edition](https://img.shields.io/badge/Main-free%20until%2014%20Oct%202026-ff6b00.svg)](#editions)
 
 [Install](#install) · [What you get](#what-you-get-today) · [Editions](#editions) · [Security](#security) · [Support](#support)
 
@@ -36,7 +36,7 @@ And that is only the beginning.
 
 ## What you get today
 
-**SYC-AI (Main)** — free for everyone during launch.
+**SYC-AI (Main)** — free for everyone until **14 October 2026**.
 
 - **Every account in one place.** Claude, Codex, Gemini, Qwen, Cursor, Kimi and
   API-key providers, each in its own panel, all behind one sign-in.
@@ -91,7 +91,8 @@ curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \
 ```
 
 Then open your origin, create your account and pick **Main**. Add
-`SYC_FLAVOR=full` to ship Claude and Codex in the same download.
+`SYC_FLAVOR=full` to ship Claude and Codex in the same download, and
+`SYC_YES=1` to skip the prompts on an unattended server.
 
 The installer is deliberately fail-closed: it needs the signed release manifest,
 the release and entitlement public keys and an HTTPS control URL, or it stops
@@ -110,11 +111,14 @@ the previous installation back.
 
 | Edition | Status | Price |
 |---|---|---|
-| **SYC-AI (Main)** | available now | ~~1.75 USDT~~ **free during launch** |
+| **SYC-AI (Main)** | available now | ~~1.75 USDT~~ **free until 14 October 2026** |
 | Plus | next | — |
 | Pro | next | — |
-| Team | next | — |
-| Enterprise | next | — |
+| Immortal Edition | next | — |
+
+The launch offer runs for 22 days from release day (22 September → 14 October
+2026). After that, Main is 1.75 USDT — the panel shows the exact end date on
+its plan page.
 
 Professional accounts are delivered only against a short-lived, single-use
 grant bound to your installation — never from a public download.
