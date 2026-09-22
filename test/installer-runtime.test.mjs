@@ -9,7 +9,7 @@ import test from 'node:test';
 import { createInstallerRuntime } from '../installer-runtime.mjs';
 import { canonicalReleaseBytes } from '../release-metadata.mjs';
 
-async function fixture({ tamper = false, artifactAccess } = {}) {
+async function fixture({ tamper = false, artifactAccess, artifactSource } = {}) {
   const root = await mkdtemp(join(tmpdir(), 'syc-panel-runtime-'));
   await mkdir(join(root, 'installer'), { recursive: true });
   await mkdir(join(root, 'data'), { recursive: true });
@@ -18,7 +18,7 @@ async function fixture({ tamper = false, artifactAccess } = {}) {
   }));
   await writeFile(join(root, 'installer', 'panel-install.sh'), '# test installer\n');
   await writeFile(join(root, 'data', 'release.json'), JSON.stringify({
-    source: 'https://releases.example/v0.5.0', flavor: 'core', channel: 'direct', artifactAccess,
+    source: 'https://releases.example/v0.5.0', flavor: 'core', channel: 'direct', artifactAccess, artifactSource,
   }));
   const keys = generateKeyPairSync('ed25519');
   await writeFile(join(root, 'data', 'release-public.pem'), keys.publicKey.export({ type: 'spki', format: 'pem' }));
@@ -141,4 +141,21 @@ test('a grant for different bytes, hash, panel or sequence is rejected before do
     assert.equal(f.spawned.length, 0);
     assert.match(f.events.join(''), /event: error/);
   }
+});
+
+test('the manifest may be public while the archives come from an authenticated origin', async () => {
+  const f = await fixture({ artifactAccess: 'grant', artifactSource: 'https://control.example/artifacts' });
+  const runtime = createInstallerRuntime({
+    root: f.root, fetchImpl: f.fetchImpl, spawnImpl: f.spawnImpl,
+    requestDownloadGrant: async () => ({
+      token: 'g'.repeat(43), installationId: '55555555-5555-4555-8555-555555555555',
+      asset: { panelId: 'claude', releaseSequence: 21, ...f.descriptor },
+    }),
+  });
+  await runtime.installPanelStream('claude', f.res);
+  // The manifest still comes from the public source...
+  assert.match(f.requests[0].url, /^https:\/\/releases\.example\/v0\.5\.0\/manifest\.json$/);
+  // ...and the archive from the private one.
+  assert.equal(f.requests[2].url, 'https://control.example/artifacts/panel-claude.tar.zst');
+  assert.match(f.requests[2].options.headers.authorization, /^Bearer /);
 });

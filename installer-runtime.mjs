@@ -78,6 +78,12 @@ export function createInstallerRuntime({
       if (isInstalled(id)) { emit('done', { id, already: true }); res.end(); return; }
       const configuration = readJson(releaseFile);
       const source = verifiedSource(configuration?.source);
+      // The signed manifest is public — a machine needs it before it has an
+      // identity. The archives it describes are not, so they may come from a
+      // different, authenticated origin.
+      const artifactSource = configuration?.artifactSource
+        ? verifiedSource(configuration.artifactSource)
+        : source;
       if (!existsSync(releaseKeyFile)) return fail('release verification key is unavailable');
 
       emit('step', { text: 'checking signed release', pct: 2 });
@@ -121,7 +127,7 @@ export function createInstallerRuntime({
         };
         download.redirect = 'error';
       }
-      const response = await fetchImpl(`${source}/${selected.descriptor.file}`, download);
+      const response = await fetchImpl(`${artifactSource}/${selected.descriptor.file}`, download);
       if (!response.ok || !response.body) throw new Error('panel download failed');
       const declared = Number(response.headers.get('content-length'));
       if (Number.isFinite(declared) && declared !== selected.descriptor.bytes) {

@@ -119,10 +119,15 @@ elif [ "$MIGRATING" = 1 ]; then
 fi
 echo "$PREFIX" > "$STAGE/data/install-prefix"
 # Signed package source used by the in-panel professional-account installer.
-node - "$STAGE/data/release.json" "$SRC" "$FLAVOR" "$SOURCE" <<'NODE'
+node - "$STAGE/data/release.json" "$SRC" "$FLAVOR" "$SOURCE" "${SYC_ARTIFACT_SRC:-}" "${SYC_ARTIFACT_ACCESS:-}" <<'NODE'
 const { writeFileSync } = require('node:fs');
-const [path, source, flavor, channel] = process.argv.slice(2);
-writeFileSync(path, `${JSON.stringify({ source, flavor, channel })}\n`, { mode: 0o600 });
+const [path, source, flavor, channel, artifactSource, artifactAccess] = process.argv.slice(2);
+const release = { source, flavor, channel };
+// Professional-account archives are private: they come from an authenticated
+// origin with a per-installation grant, while the manifest stays public.
+if (artifactSource) release.artifactSource = artifactSource;
+if (artifactAccess) release.artifactAccess = artifactAccess;
+writeFileSync(path, `${JSON.stringify(release)}\n`, { mode: 0o600 });
 NODE
 node - "$STAGE/data/entitlement-public.pem" "$SYC_ENTITLEMENT_PUBLIC_KEY_B64" "$STAGE/data/release-public.pem" "$SYC_RELEASE_PUBLIC_KEY_B64" <<'NODE'
 const { writeFileSync } = require('node:fs');

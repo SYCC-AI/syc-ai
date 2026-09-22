@@ -20,17 +20,23 @@ manage, better integrated and less wasteful.
 
 ## Verified in this release candidate
 
-- Central account access with Gmail OTP sign-in, recovery and signed entitlements.
+- Central account access with email sign-up, username-and-password sign-in,
+  username and password recovery, and signed entitlements. There is no second
+  factor in the way: it is an option in settings, never a demand at the door.
 - Five visible plans, with only the launch plan (**Main**) selectable.
 - Account profile, plan/upgrade view and owned support-ticket conversations.
-- Signed installation/update metadata with rollback and data preservation.
+- Signed releases with hash and size verification, applied transactionally with
+  a health check, automatic rollback and data preservation. A release the panel
+  cannot apply leaves it in restricted mode rather than silently out of date.
+- Professional accounts delivered only against a short-lived, single-use grant
+  bound to one installation.
 - Repair, safe uninstall and migration from the earlier `syc-free` service.
 - Restricted-mode access to the account and support areas.
 - English, 中文, Español, العربية, Русский and فارسی interfaces.
 
 The following are **not claimed as production-ready** in this candidate:
-automatic production updates, Android/Windows/iPhone clients, bundled provider
-runtimes, paid-plan checkout and live production email delivery.
+Android, Windows and iPhone clients, bundled provider runtimes, and paid-plan
+checkout.
 
 ## Installation model
 
