@@ -87,12 +87,12 @@ One command on a fresh Linux server:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \
-  SYC_SRC=https://dev.sycc.ir/install \
-  SYC_CONTROL_URL=https://dev.sycc.ir \
+  SYC_SRC=https://control.syc-ai.com/install \
+  SYC_CONTROL_URL=https://control.syc-ai.com \
   SYC_PUBLIC_ORIGIN=https://<your https origin> \
   SYC_ENTITLEMENT_PUBLIC_KEY_B64=LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQWlKOE1rVHBJTThrdS9WU2ZlalRoNnZFUmE1VEtHai9WY21FUjJCOUlsZ3M9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo= \
   SYC_RELEASE_PUBLIC_KEY_B64=LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ3QXlFQXcxK3prU0RTdkovWEdpbFhpRmFONXpJRVRLcWJndVh5U2g0VjVpeU9IZXM9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo= \
-  SYC_ARTIFACT_SRC=https://dev.sycc.ir/artifacts \
+  SYC_ARTIFACT_SRC=https://control.syc-ai.com/artifacts \
   SYC_ARTIFACT_ACCESS=grant \
   bash
 ```
