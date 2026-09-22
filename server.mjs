@@ -506,7 +506,7 @@ const server = createServer(async (req, res) => {
     if (path.startsWith('/auth/')) return json(res, 404, { error: 'not_found' });
 
     if (path === '/login') return onboarding ? serveFile(res, 'login.html') : (cookieUser(req) ? send(res, 302, '', { Location: '/' }) : serveFile(res, 'login.html'));
-    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/free.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
+    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
 
     // Everything else requires a session.
     let user = cookieUser(req);

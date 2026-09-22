@@ -1,56 +1,102 @@
 <div align="center">
 
+<img src="public/assets/syc-logo.svg" width="96" alt="SYC-AI">
+
 # SYC-AI
 
-**A simpler control plane for AI accounts, agents, devices and automation.**
+**Every AI account you own. One panel. Your server.**
+
+Stop switching between Claude, Codex, Gemini, Cursor, Kimi and three ChatGPT
+logins. Sign in once, work with all of them side by side — and let your agents
+reach your phone, your servers and your channels.
 
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%C2%B7%20systemd-informational.svg)](#requirements)
+[![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)
 [![Languages](https://img.shields.io/badge/UI-6%20languages-brightgreen.svg)](#languages)
-[![Platform](https://img.shields.io/badge/platform-Linux-informational.svg)](#requirements)
+[![Edition](https://img.shields.io/badge/Main-free%20during%20launch-ff6b00.svg)](#editions)
+
+[Install](#install) · [What you get](#what-you-get-today) · [Editions](#editions) · [Security](#security) · [Support](#support)
 
 </div>
 
-SYC is the parent brand; SYC-AI is its AI product. SYC-AI is being built as an
-all-in-one control plane that makes AI accounts and infrastructure easier to
-manage, better integrated and less wasteful.
+---
 
-> **Status:** local release candidate. No public install URL is available until
-> the release configuration, security, history and legal reviews are complete
-> and the owner explicitly approves publication.
+## Tired of switching?
 
-## Verified in this release candidate
+Codex for one job. Claude for the next. Gemini for a third, Cursor for the rest
+— and a handful of ChatGPT accounts you keep logging in and out of because each
+one hits its limit at a different hour.
 
-- Central account access with email sign-up, username-and-password sign-in,
-  username and password recovery, and signed entitlements. There is no second
-  factor in the way: it is an option in settings, never a demand at the door.
-- Five visible plans, with only the launch plan (**Main**) selectable.
-- Account profile, plan/upgrade view and owned support-ticket conversations.
-- Signed releases with hash and size verification, applied transactionally with
-  a health check, automatic rollback and data preservation. A release the panel
-  cannot apply leaves it in restricted mode rather than silently out of date.
-- Professional accounts delivered only against a short-lived, single-use grant
-  bound to one installation.
-- Repair, safe uninstall and migration from the earlier `syc-free` service.
-- Restricted-mode access to the account and support areas.
-- English, 中文, Español, العربية, Русский and فارسی interfaces.
+**SYC-AI is the answer to that.** Install it once on your own server, sign in to
+your accounts once, and run every account, every model and every agent from a
+single panel that is yours.
 
-The following are **not claimed as production-ready** in this candidate:
-Android, Windows and iPhone clients, bundled provider runtimes, and paid-plan
-checkout.
+And that is only the beginning.
 
-## Installation model
+## What you get today
 
-The release installer is intentionally fail-closed. It requires:
+**SYC-AI (Main)** — free for everyone during launch.
 
-- a signed release manifest and matching asset;
-- the production release verification public key;
-- the central entitlement verification public key;
-- the HTTPS SYC-AI control URL and public origin.
+- **Every account in one place.** Claude, Codex, Gemini, Qwen, Cursor, Kimi and
+  API-key providers, each in its own panel, all behind one sign-in.
+- **Your agents in your pocket.** Pair your Android phone with the **SYC Claw**
+  app in minutes. The panel hands you the app; you sign in on the phone; your
+  agents can act on it — with permissions *you* switch on, one by one.
+- **Your server, your data.** Self-hosted. Nothing leaves your machine except
+  your own requests to your own providers.
+- **Updates you can trust.** Every release is signed. The panel verifies hash
+  and size before it writes a byte, applies the update transactionally,
+  health-checks itself and rolls back on failure. Your data survives either way.
+- **A real account, not a local password.** Central sign-up, username and
+  password recovery, signed entitlements — and no second factor forced on you.
+  Extra security lives in settings, never at the door.
+- **Support inside the panel.** Tickets and announcements where you work.
+- **Six interface languages.** English, 中文, Español, العربية, Русский, فارسی.
 
-It creates the service and preserves application data across verified upgrades.
-Central authentication is used; the installer does not create a local admin
-password. The final one-line install command will be added only after an exact
-repository, branch, content and visibility are approved for publication.
+## And that is only the beginning
+
+Main is the front door. Behind it, SYC-AI already does this — the professional
+editions bring it to you:
+
+- **Every server, one mesh.** Link all your servers and let your agents work
+  across them as one.
+- **Your channels, your agents.** Connect the social platforms and services you
+  already use to the agents on your accounts.
+- **Agents that spend less.** Token saving built into the agent itself —
+  nothing extra to install.
+- **Agents that think your way.** Personal configuration for how each agent
+  reasons, sees and answers.
+- **Agent Surgery.** For professionals who need to see exactly what an agent is
+  doing — and change it.
+
+You are a professional; the next editions are built for you. Until then, Main
+is free. Install it and find out how much easier your monthly accounts were
+supposed to be.
+
+## Install
+
+One command on a fresh Linux server:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/main/install.sh | \
+  SYC_SRC=https://dev.sycc.ir/install \
+  SYC_CONTROL_URL=https://dev.sycc.ir \
+  SYC_PUBLIC_ORIGIN=https://<your https origin> \
+  SYC_ENTITLEMENT_PUBLIC_KEY_B64=<published key> \
+  SYC_RELEASE_PUBLIC_KEY_B64=<published key> \
+  SYC_ARTIFACT_SRC=https://dev.sycc.ir/artifacts \
+  SYC_ARTIFACT_ACCESS=grant \
+  bash
+```
+
+Then open your origin, create your account and pick **Main**. Add
+`SYC_FLAVOR=full` to ship Claude and Codex in the same download.
+
+The installer is deliberately fail-closed: it needs the signed release manifest,
+the release and entitlement public keys and an HTTPS control URL, or it stops
+before touching your server. Upgrades keep your data; a failed activation puts
+the previous installation back.
 
 ### Requirements
 
@@ -58,34 +104,37 @@ repository, branch, content and visibility are approved for publication.
 - Node.js 20 or newer
 - `zstd`, `curl` and `tar`
 - root access for service installation
-- an HTTPS reverse proxy for non-local use
+- an HTTPS reverse proxy (nginx, Caddy) in front of the panel
 
-## Security model
+## Editions
 
-- Release and entitlement documents are verified before use.
+| Edition | Status | Price |
+|---|---|---|
+| **SYC-AI (Main)** | available now | ~~1.75 USDT~~ **free during launch** |
+| Plus | next | — |
+| Pro | next | — |
+| Team | next | — |
+| Enterprise | next | — |
+
+Professional accounts are delivered only against a short-lived, single-use
+grant bound to your installation — never from a public download.
+
+## Security
+
+- Release and entitlement documents are verified before use; the release key
+  never leaves SYC.
 - Central sessions use secure cookies, CSRF protection, step-up checks and
-  role-based authorization for administrative release operations.
-- Sensitive runtime configuration is external to release archives and must be
-  owner-readable only.
-- Backup archives are authenticated and encrypted; restores retain the previous
-  database and validate integrity before activation.
-- Provider credentials and private signing keys must never be committed to this
-  repository or included in release artifacts.
+  role-based authorization.
+- Runtime secrets live outside the release archives, owner-readable only.
+- Backups are authenticated and encrypted; restores validate before activation.
+- A release the panel cannot apply leaves it in **restricted mode**: account and
+  support stay reachable, nothing is silently out of date, nothing is deleted.
+- The phone app connects by signing in to *your* panel; every capability starts
+  off and is switched on by you.
 
-See [SECURITY.md](SECURITY.md) for the private-reporting policy. The public
-reporting address must not be advertised until its end-to-end transport test has
-passed.
-
-## Professional capabilities
-
-`Agent Surgery` is the advanced professional capability for controlled agent
-inspection and intervention. It remains server-side and must not be advertised
-as generally available until its complete production path is independently
-verified.
+Private reporting: see [SECURITY.md](SECURITY.md).
 
 ## Operations
-
-After installation, the local lifecycle tool supports:
 
 ```bash
 sudo /opt/syc-ai/manage-installation.sh repair
@@ -93,16 +142,20 @@ sudo /opt/syc-ai/manage-installation.sh uninstall
 ```
 
 Uninstall is recoverable: the installation is moved to a timestamped backup and
-only the service units recorded by that installation are removed. User data is
-not silently erased.
+only its own service units are removed. User data is never silently erased.
+Migration from the earlier `syc-free` service is handled by the installer.
 
 ## Languages
 
-English (default), 中文, Español, العربية, Русский and فارسی.
+English (default), 中文, Español, العربية, Русский and فارسی. Other
+languages for this page are on the way.
+
+## Support
+
+Open an issue on this repository. Inside the panel, use **Support** to open a
+ticket that reaches the operators directly.
 
 ## License
 
-SYC-AI is source-available under the Business Source License 1.1. Review the
-exact use grant, additional-use terms and change-license parameters in
-[LICENSE](LICENSE) before use or distribution. `SYC` and `SYC-AI` are trademarks
-of SYC.
+Source-available under the Business Source License 1.1 — see [LICENSE](LICENSE)
+for the use grant and change date. `SYC` and `SYC-AI` are trademarks of SYC.

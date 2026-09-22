@@ -193,7 +193,11 @@ if [ "$MIGRATING" = 1 ]; then systemctl disable "$LEGACY_PREFIX" >/dev/null 2>&1
 if [ "$FLAVOR" = full ]; then systemctl restart "$PREFIX-claude" "$PREFIX-codex" 2>/dev/null || true; fi
 
 IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
-printf '\n\033[32m✓ SYC-AI is installed.\033[0m\n'
-printf '  URL:      http://%s:%s\n' "${IP:-your-server}" "$PORT"
+printf '\n\033[32m✓ SYC-AI is installed.\033[0m\n\n'
+printf '  Panel:    http://%s:%s\n' "${IP:-your-server}" "$PORT"
 printf '  Service:  %s\n' "$PREFIX"
-printf '  Put it behind HTTPS (a reverse proxy) before real use.\n\n'
+printf '  Manage:   sudo /opt/syc-ai/manage-installation.sh repair | uninstall\n\n'
+printf '  Next steps\n'
+printf '   1. Put the panel behind HTTPS (nginx or Caddy) — sign-in needs a secure origin.\n'
+printf '   2. Open it, create your account and choose Main.\n'
+printf '   3. Sign in to your AI accounts, then pair your phone from Connection → Android.\n\n'
