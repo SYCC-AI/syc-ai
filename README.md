@@ -4,19 +4,19 @@
 
 # SYC-AI
 
-**Every AI account you own. One panel. Your server.**
+**Every AI account you own. One panel. Your own device.**
 
 Stop switching between Claude, Codex, Gemini, Cursor, Kimi and three ChatGPT
 logins. Sign in once, work with all of them side by side — and let your agents
 reach your phone, your servers and your channels.
 
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%C2%B7%20systemd-informational.svg)](#requirements)
+[![Devices](https://img.shields.io/badge/devices-Linux%20%C2%B7%20Windows-informational.svg)](#get-started)
 [![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)
 [![Languages](https://img.shields.io/badge/UI-6%20languages-brightgreen.svg)](#languages)
 [![Edition](https://img.shields.io/badge/Main-free%20until%2014%20Oct%202026-ff6b00.svg)](#editions)
 
-[Install](#install) · [What you get](#what-you-get-today) · [Editions](#editions) · [Security](#security) · [Support](#support)
+[Get started](#get-started) · [Self-host](#install) · [What you get](#what-you-get-today) · [Editions](#editions) · [Security](#security) · [Support](#support)
 
 </div>
 
@@ -81,9 +81,33 @@ You are a professional; the next editions are built for you. Until then, Main
 is free. Install it and find out how much easier your monthly accounts were
 supposed to be.
 
+## Get started
+
+No server needed. Use the panel at **[syc-ai.com](https://syc-ai.com)** — your
+professional accounts run on your own computer, so your AI logins and files
+never leave it.
+
+1. **Sign up** at [app.syc-ai.com](https://app.syc-ai.com/login) with your email,
+   a username and a password, and activate **Main** (free until 14 Oct 2026).
+2. **Connect your device** with SYC Node:
+
+   ```bash
+   # Linux / macOS (beta)
+   curl -fsSL https://syc-ai.com/node/install.sh | bash
+   ```
+   ```powershell
+   # Windows (PowerShell)
+   irm https://syc-ai.com/node/install.ps1 | iex
+   ```
+3. **Install your accounts** — open *Professional accounts*, press **Install**
+   on Claude or Codex, then **Sign in**. They install and sign in on your
+   device; the panel drives them from syc-ai.com.
+
+Claude and Codex run on your device today; the other accounts follow.
+
 ## Install
 
-One command on a fresh Linux server:
+Prefer to host the whole panel yourself? One command on a fresh Linux server:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \

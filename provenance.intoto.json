@@ -4,7 +4,7 @@
     {
       "name": "syc-ai-publication-candidate",
       "digest": {
-        "sha256": "934ec28d41a546896b60a68dd2a9df04de9f252a2aac1fe7d7b6d8f5168b62a3"
+        "sha256": "54399c18bac15670103feefc336012a28816a4e4e56c781a86a5d8d803768542"
       }
     }
   ],
@@ -32,9 +32,9 @@
         "id": "https://sycc.ir/builders/local-review/v1"
       },
       "metadata": {
-        "invocationId": "local-934ec28d41a54689",
-        "startedOn": "2026-09-22T15:43:49Z",
-        "finishedOn": "2026-09-22T15:43:49Z"
+        "invocationId": "local-54399c18bac15670",
+        "startedOn": "2026-09-23T00:43:29Z",
+        "finishedOn": "2026-09-23T00:43:29Z"
       }
     }
   }
