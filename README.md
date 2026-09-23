@@ -21,7 +21,7 @@ reach your phone, your servers and your channels.
 
 </div>
 
-<p align="center"><img src="screenshots/account-center.png" width="860" alt="Professional accounts: Claude, Codex, Qwen, Gemini, Cursor, Kimi and SYC-API side by side"></p>
+<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI in 15 seconds: sign in, the main panel, professional accounts, connection, the four ways in, and the phone connector"></p>
 
 ---
 
