@@ -6,8 +6,9 @@
   <meta name="theme-color" content="#020817">
   <title>Sign in — SYC-AI</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
-  <script src="/i18n.js?v=5"></script>
-  <link rel="stylesheet" href="/main.css?v=9">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=14"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
 </head>
 <body class="login-body">
   <div class="login-scene" aria-hidden="true">
@@ -68,16 +69,16 @@
       <small id="error" role="alert" aria-live="polite"></small>
 
       <nav id="onboardingNav" aria-label="Account options">
-        <button type="button" data-mode="signin">Sign in</button>
-        <button type="button" data-mode="signup">Create account</button>
-        <button type="button" data-mode="username">Recover username</button>
-        <button type="button" data-mode="password">Reset password</button>
+        <button type="button" data-mode="signin" data-i18n>Sign in</button>
+        <button type="button" data-mode="signup" data-i18n>Create account</button>
+        <button type="button" data-mode="username" data-i18n>Recover username</button>
+        <button type="button" data-mode="password" data-i18n>Reset password</button>
       </nav>
 
       <div class="login-secure"><i></i><span data-i18n>Secure, encrypted connection</span></div>
     </form>
   </main>
 
-  <script type="module" src="/login.js?v=4"></script>
+  <script type="module" src="/login.js?v=6"></script>
 </body>
 </html>

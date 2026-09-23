@@ -89,13 +89,6 @@
   let state;
   try { state = await get('/api/hosted/accounts'); } catch { return; } // self-host install: nothing to do here
   document.body.classList.add('hosted-panel');
-  const style = document.createElement('style');
-  style.textContent = `.device-bar{margin:0 0 18px;padding:14px 16px;border-radius:14px;background:rgba(127,127,127,.08);border:1px solid rgba(127,127,127,.18)}
-.device-bar h3{margin:0 0 6px;font-size:15px}.device-bar code{display:block;margin:6px 0;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.25);font-size:12px;overflow-x:auto;white-space:nowrap;user-select:all}
-.device-bar select{margin-inline-start:8px}.hosted-actions{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}#hostedFlow .hosted-actions{display:flex;width:100%}.hidden{display:none!important}
-.hosted-actions button{cursor:pointer}.hosted-state{font-size:12px;opacity:.8;width:100%}.hosted-log{font-size:11px;max-height:90px;overflow:auto;white-space:pre-wrap;opacity:.7;width:100%;direction:ltr}
-.hosted-login{width:100%;font-size:12px}.hosted-login a{word-break:break-all}.hosted-login input{width:100%;margin:6px 0}`;
-  document.head.append(style);
   const HOSTED_APPS = Object.keys(state.apps || {});
   const bar = document.createElement('section');
   bar.className = 'device-bar';
@@ -103,6 +96,10 @@
   let deviceId = (() => { try { return localStorage.getItem('syc.device') || ''; } catch { return ''; } })();
 
   // Accounts that do not run on devices yet stay visible but closed.
+  // Only Claude and Codex have a panel here yet; other cards have no settings to open.
+  document.querySelectorAll('.professional-card[data-brand]').forEach((card) => {
+    if (!['claude', 'codex'].includes(card.dataset.brand)) card.querySelector('.card-gear')?.remove();
+  });
   document.querySelectorAll('.professional-card[data-brand]').forEach((card) => {
     if (HOSTED_APPS.includes(card.dataset.brand)) return;
     const link = card.querySelector('a.card');
@@ -146,8 +143,10 @@
       link.classList.toggle('disabled', !ready);
       if (ready) link.setAttribute('href', `/profage/${app}/`); else link.removeAttribute('href');
       if (!device) { box.innerHTML = ''; note(t('connect a device first')); continue; }
+      if (st?.checking) { box.innerHTML = ''; note(t('checking…')); continue; }
       if (!st || st.error) { box.innerHTML = ''; note(t('device not answering')); continue; }
       if (!st.installed) { box.innerHTML = `<button type="button" class="professional-open-label install-btn" data-do="install">${esc(t('Install'))}</button>`; note(t('not installed')); }
+      else if (st.installOnly) { box.innerHTML = ''; note(t('installed · sign-in coming soon')); }
       else if (!st.loggedIn) { box.innerHTML = `<button type="button" class="professional-open-label install-btn" data-do="login">${esc(t('Sign in'))}</button>`; note(t('installed, not signed in')); }
       else { box.innerHTML = `<a class="professional-open-label" href="/profage/${app}/">${esc(t('Open'))}</a>`; note(t('ready')); }
       box.querySelector('[data-do="install"]')?.addEventListener('click', () => install(app, flowBox(app)));
@@ -166,9 +165,15 @@
     return flow.querySelector('.hosted-actions');
   }
 
+  let recheck = null;
   async function refresh(fresh) {
     try { state = await get(`/api/hosted/accounts${fresh ? '?fresh=1' : ''}`); } catch { return; }
-    renderBar(); renderCards();
+    renderBar(); renderCards(); scheduleRecheck();
+  }
+  function scheduleRecheck() {
+    const pending = (state.devices || []).some((d) => Object.values(d.accounts || {}).some((a) => a?.checking));
+    clearTimeout(recheck);
+    if (pending) recheck = setTimeout(() => refresh(false), 3000);
   }
 
   async function install(app, box) {
@@ -189,7 +194,7 @@
       }
       if (failed) throw Object.assign(new Error(failed.error), failed);
     } catch (e) {
-      const msg = e.message === 'npm_missing' ? t('Node.js/npm is missing on this device. Install Node.js 20+ from nodejs.org and try again.') : `${t('Install failed')}: ${e.message}`;
+      const msg = e.message === 'npm_missing' ? t('Node.js/npm is missing on this device. Install Node.js 20+ from nodejs.org and try again.') : e.message === 'not_available_on_this_platform' ? t('Not available for this device yet (Linux and macOS only).') : `${t('Install failed')}: ${e.message}`;
       box.innerHTML = `<button type="button" data-do="install">${esc(t('Try again'))}</button><span class="hosted-state">${esc(msg)}</span><div class="hosted-log">${esc(e.detail || '')}</div>`;
       box.querySelector('[data-do="install"]').onclick = () => install(app, box);
       return;
@@ -213,7 +218,7 @@
         catch (e) { note.textContent = e.message; }
       };
     } else {
-      box.innerHTML = `<div class="hosted-login">1. <a href="${esc(started.url)}" target="_blank" rel="noopener">${esc(t('Open the sign-in page'))}</a><br>2. ${esc(t('Enter this code:'))} <b style="user-select:all">${esc(started.userCode || '')}</b><span class="hosted-state">${esc(t('Waiting for you to finish…'))}</span></div>`;
+      box.innerHTML = `<div class="hosted-login">1. <a href="${esc(started.url)}" target="_blank" rel="noopener">${esc(t('Open the sign-in page'))}</a><br>2. ${esc(t('Enter this code:'))} <b class="hosted-code">${esc(started.userCode || '')}</b><span class="hosted-state">${esc(t('Waiting for you to finish…'))}</span></div>`;
       for (let i = 0; i < 200; i += 1) {
         await new Promise((r) => setTimeout(r, 3000));
         const r = await get(`/api/hosted/logins/${started.loginId}`).catch(() => null);
@@ -222,7 +227,7 @@
     }
   }
 
-  renderBar(); renderCards();
+  renderBar(); renderCards(); scheduleRecheck();
   // A device that is being set up appears on its own.
   setInterval(() => { if (!(state.devices || []).length) refresh(false); }, 10_000);
 })();

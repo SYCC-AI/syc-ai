@@ -167,7 +167,7 @@ const proxyToSycApi = (req, res, user, targetPath) => proxyToApp(SYC_API_PORT, '
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
-  '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.json': 'application/json',
+  '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
 };
 
 function secret() {
@@ -305,6 +305,53 @@ function readBody(req, limit = 10_000) {
   });
 }
 
+// Hosted panel: the phone (SYC Claw) is a device of the central account, signed
+// in at syc-ai.com; its state lives in the control plane.
+const hostedControl = HOSTED_CONTROL_CLIENT();
+function HOSTED_CONTROL_CLIENT() { return CONTROL_URL ? createControlPlaneClient({ baseUrl: CONTROL_URL }) : null; }
+async function hostedPhoneRoute(req, res, path) {
+  // Changes come only from this panel's own pages (the control plane's CSRF
+  // check sees the token we forward, so the origin is checked here).
+  if (req.method !== 'GET' && req.headers.origin !== new URL(PUBLIC_ORIGIN).origin) return json(res, 403, { error: 'origin_forbidden' });
+  const context = {
+    cookieHeader: req.headers.cookie || '',
+    csrfToken: /(?:^|;\s*)syc_csrf=([^;]+)/.exec(req.headers.cookie || '')?.[1] || '',
+    clientAddress: String(req.headers['x-real-ip'] || req.socket.remoteAddress || ''),
+    userAgent: req.headers['user-agent'] || '',
+  };
+  const list = await hostedControl.call('devices', context);
+  const phones = (list.body?.data || []).filter((d) => d.platform === 'android' && !d.revokedAt);
+  const phone = phones[phones.length - 1] || null;
+  if (path === '/api/connection/android' && req.method === 'GET') {
+    const requests = phone ? await hostedControl.call('phoneRequests', context).catch(() => null) : null;
+    const permissions = await hostedControl.call('phonePermissions', context).catch(() => null);
+    return json(res, 200, {
+      app: deviceLink.appRelease(),
+      device: phone && { id: phone.id, name: phone.name, online: phone.online, app: String(phone.agentVersion || '').startsWith('app'), accessibility: String(phone.agentVersion || '').includes('+a11y'), permissions: permissions?.body?.data || {}, lastSeenAt: phone.lastSeenAt },
+      requests: requests?.body?.data || [],
+      hosted: true,
+    });
+  }
+  if (path === '/api/connection/android/revoke' && req.method === 'POST') {
+    if (!phone) return json(res, 404, { error: 'No phone is connected.' });
+    const result = await hostedControl.call('deviceRevoke', { ...context, body: { deviceId: phone.id } });
+    return json(res, result.status === 200 ? 200 : result.status, result.status === 200 ? { ok: true } : result.body);
+  }
+  // The SYC-AI Android app links the phone it runs on (from this signed-in page).
+  if (path === '/api/connection/android/link' && req.method === 'POST') {
+    const body = await readBody(req).catch(() => ({}));
+    const result = await hostedControl.call('phoneLink', { ...context, body: { name: String(body.name || 'Phone').slice(0, 60), androidVersion: String(body.androidVersion || '').slice(0, 12) } });
+    return json(res, result.status === 200 ? 200 : result.status, result.status === 200 ? result.body.data : result.body);
+  }
+  // The user decides what agents may hand to the phone (Connection → Android).
+  if (path === '/api/connection/android/permissions' && req.method === 'PUT') {
+    const body = await readBody(req).catch(() => ({}));
+    const result = await hostedControl.call('phonePermissionsSet', { ...context, body: { permissions: body.permissions || {} } });
+    return json(res, result.status === 200 ? 200 : result.status, result.status === 200 ? { permissions: result.body.data } : result.body);
+  }
+  return json(res, 404, { error: 'not_found' });
+}
+
 async function hostedAccountsRoute(req, res, url, user) {
   const path = url.pathname;
   const fail = (error) => json(res, error.status || 502, { error: error.message || 'failed', ...(error.detail ? { detail: error.detail } : {}) });
@@ -316,7 +363,7 @@ async function hostedAccountsRoute(req, res, url, user) {
       const list = await Promise.all(devices.map(async (d) => {
         const accounts = {};
         await Promise.all(Object.keys(deviceAccounts.DEVICE_ACCOUNTS).map(async (app) => {
-          accounts[app] = await deviceAccounts.accountStatus(user.username, d.deviceId, app, { fresh }).catch((e) => ({ app, error: e.message }));
+          accounts[app] = await (fresh ? deviceAccounts.accountStatus(user.username, d.deviceId, app, { fresh }) : deviceAccounts.accountStatusQuick(user.username, d.deviceId, app)).catch((e) => ({ app, error: e.message }));
         }));
         return { deviceId: d.deviceId, name: d.name, platform: d.platform, accounts };
       }));
@@ -594,11 +641,14 @@ const server = createServer(async (req, res) => {
     if (path === '/connection' || path === '/connection/') return serveFile(res, 'connection.html');
     if (path === '/connection.js') return serveFile(res, 'connection.js');
     if (path === '/connection/android' || path === '/connection/android/') return serveFile(res, 'connection-android.html');
+    if (path === '/connection/get' || path === '/connection/get/') return serveFile(res, 'connection-get.html');
     if (path === '/connection-android.js') return serveFile(res, 'connection-android.js');
+    if (path === '/connection-get.js') return serveFile(res, 'connection-get.js');
     if (path === '/communications' || path === '/communications/') return serveFile(res, 'communications.html');
     if (path === '/communications.js') return serveFile(res, 'communications.js');
 
     // --- The panel's side of the phone link ----------------------------------
+    if (HOSTED && path.startsWith('/api/connection/')) return hostedPhoneRoute(req, res, path);
     if (path === '/api/connection/android' && req.method === 'GET') return json(res, 200, deviceLink.status());
     if (path === '/api/connection/android/permissions' && req.method === 'PUT') {
       const body = await readBody(req).catch(() => ({}));
@@ -614,9 +664,7 @@ const server = createServer(async (req, res) => {
     // Hosted panel: professional accounts are installed and signed in on the customer's own device.
     if (HOSTED && path.startsWith('/api/hosted/')) return hostedAccountsRoute(req, res, url, user);
     // Hosted panel: nothing is installed on our server and the phone link is single-tenant.
-    if (HOSTED && (path === '/api/panels/install' || path.startsWith('/api/connection/'))) {
-      return json(res, 409, { error: 'hosted_device_required' });
-    }
+    if (HOSTED && path === '/api/panels/install') return json(res, 409, { error: 'hosted_device_required' });
     if (HOSTED && /^\/profage\/(qwen|gemini|cursor|kimi|syc-api)(\/|$)/.test(path)) {
       return path.startsWith('/profage/') && !path.includes('/api/') ? send(res, 302, '', { Location: '/profage' }) : json(res, 409, { error: 'not_available_on_hosted_yet' });
     }

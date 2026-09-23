@@ -11,7 +11,7 @@
       const box = document.createElement('section');
       box.className = 'access-notice announcement';
       box.setAttribute('role', 'status');
-      box.innerHTML = `<strong>${esc(a.title)}</strong><span>${esc(a.body)}</span><button type="button" class="announce-close" aria-label="Close" style="all:unset;margin-inline-start:auto;font-size:20px;line-height:1;cursor:pointer;padding:0 4px">×</button>`;
+      box.innerHTML = `<strong>${esc(a.title)}</strong><span>${esc(a.body)}</span><button type="button" class="announce-close" aria-label="Close">×</button>`;
       box.querySelector('button').onclick = () => { box.remove(); try { localStorage.setItem('syc.announce.seen', JSON.stringify([...seen, a.id])); } catch {} };
       document.querySelector('.dash')?.prepend(box);
     }

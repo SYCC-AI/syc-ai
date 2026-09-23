@@ -6,8 +6,9 @@
   <meta name="theme-color" content="#0a0f1c">
   <title>SYC</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
-  <script src="/i18n.js?v=5"></script>
-  <link rel="stylesheet" href="/main.css?v=9">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=14"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
 </head>
 <body class="profage-section">
   <div class="ambient"></div>
@@ -32,12 +33,24 @@
     <section class="device-card">
       <h2 data-i18n>1 · Install SYC Claw</h2>
       <p class="muted" data-i18n>SYC Claw connects one phone to this panel. It does nothing else — the agents in your professional accounts act on the phone through it.</p>
+      <p class="muted" data-i18n>On the phone, open this page and tap Download. If Android asks, allow your browser to install apps (Install unknown apps), then tap Install.</p>
       <div class="device-app" id="appBox"></div>
     </section>
 
     <section class="device-card">
       <h2 data-i18n>2 · Sign in on the phone</h2>
       <p class="muted" data-i18n>Open SYC Claw, enter this panel’s address and your own username and password, then turn on access for SYC Claw when Android asks. The phone appears below once it is connected.</p>
+    </section>
+
+    <section class="device-card" id="accessGuide">
+      <h2 data-i18n>3 · Turn on access on the phone</h2>
+      <p class="muted" data-i18n>Android asks for this once. If SYC Claw is greyed out there, Android is protecting an app installed from a download — steps 1 and 2 unlock it.</p>
+      <ol class="device-steps">
+        <li data-i18n>Open Settings → Accessibility (on Xiaomi: Settings → Additional settings → Accessibility) → Downloaded apps, and tap SYC Claw once. If Android shows “Restricted setting”, tap OK.</li>
+        <li data-i18n>Open Settings → Apps → SYC Claw (on Xiaomi: Apps → Manage apps → SYC Claw). Tap ⋮ at the top right → Allow restricted settings, and confirm with your fingerprint or PIN.</li>
+        <li data-i18n>Go back to Accessibility → Downloaded apps → SYC Claw, turn it on and tap Allow.</li>
+        <li data-i18n>Open SYC Claw once more. Within a minute the phone below shows that access is granted.</li>
+      </ol>
     </section>
 
     <section class="device-card">
@@ -50,6 +63,6 @@
 
   <script src="/theme.js?v=1"></script>
   <script src="/profile.js?v=3"></script>
-  <script src="/connection-android.js?v=2"></script>
+  <script src="/connection-android.js?v=9"></script>
 </body>
 </html>

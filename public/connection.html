@@ -6,8 +6,9 @@
   <meta name="theme-color" content="#0a0f1c">
   <title>SYC</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
-  <script src="/i18n.js?v=5"></script>
-  <link rel="stylesheet" href="/main.css?v=9">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=14"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
 </head>
 <body class="profage-section">
   <div class="ambient"></div>
@@ -36,18 +37,18 @@
         <small data-i18n>One phone, paired with the panel app</small>
         <em id="androidState" data-i18n>No phone connected</em>
       </a>
-      <div class="card locked" role="button" tabindex="0" data-soon>
+      <a class="card" href="/connection/get">
+        <span class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+        <b data-i18n>Get SYC-AI</b>
+        <small data-i18n>Web, Android, Linux and desktop</small>
+        <em data-i18n>Four ways, one account</em>
+      </a>
+      <a class="card" href="/connection/get#computers">
         <span class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
-        <b data-i18n>Windows</b>
-        <small data-i18n>Up to 10 computers</small>
-        <em data-i18n>Panel upgrade</em>
-      </div>
-      <div class="card locked" role="button" tabindex="0" data-soon>
-        <span class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
-        <b data-i18n>Linux</b>
-        <small data-i18n>Up to 10 servers</small>
-        <em data-i18n>Panel upgrade</em>
-      </div>
+        <b data-i18n>Computers</b>
+        <small data-i18n>Linux and Windows run your accounts through SYC Node</small>
+        <em data-i18n>One-line install</em>
+      </a>
       <div class="card locked" role="button" tabindex="0" data-soon>
         <span class="card-icon"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M9 5h6M11 18h2"/><path d="M2 9v6M22 9v6"/></svg></span>
         <b data-i18n>Android emulator</b>

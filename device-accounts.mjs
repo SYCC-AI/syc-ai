@@ -21,6 +21,13 @@ export const DEVICE_ACCOUNTS = Object.freeze({
     codeRe: /\b([A-Z0-9]{4}-[A-Z0-9]{4,6})\b/,
     needsCode: false,
   },
+  // Install only for now: sign-in and the panel for these come later.
+  gemini: { name: 'Gemini', bin: 'gemini', pkg: '@google/gemini-cli', installOnly: true },
+  cursor: {
+    name: 'Cursor', bin: 'cursor-agent', installOnly: true,
+    installer: (platform) => (platform === 'windows' ? null : { bin: 'bash', args: ['-lc', 'curl -fsSL https://cursor.com/install | bash'] }),
+  },
+  kimi: { name: 'Kimi', bin: 'kimi', pkg: '@moonshot-ai/kimi-code', installOnly: true },
 });
 
 const strip = (text) => String(text).replace(/\u001b\[[0-9;?]*[A-Za-z]/g, '');
@@ -58,17 +65,33 @@ function account(app) {
 
 const statusCache = new Map(); // `${deviceId}/${app}` → { at, value }
 
+const probing = new Map(); // key → Promise
+
+// Page loads never wait on the device: a cached answer (even an old one) comes
+// back at once and a fresh probe runs behind it; with nothing cached the answer
+// is {checking:true} and the page asks again.
+export async function accountStatusQuick(username, deviceId, app) {
+  const key = `${deviceId}/${app}`;
+  const hit = statusCache.get(key);
+  if (!hit || Date.now() - hit.at > 5 * 60_000) {
+    if (!probing.has(key)) probing.set(key, accountStatus(username, deviceId, app, { fresh: true }).catch(() => null).finally(() => probing.delete(key)));
+  }
+  return hit ? hit.value : { app, checking: true };
+}
+
 export async function accountStatus(username, deviceId, app, { fresh = false } = {}) {
   await ownedDevice(username, deviceId);
   const spec = account(app);
   const key = `${deviceId}/${app}`;
   const hit = statusCache.get(key);
-  if (!fresh && hit && Date.now() - hit.at < 60_000) return hit.value;
+  if (!fresh && hit && Date.now() - hit.at < 5 * 60_000) return hit.value;
   const version = await runOnDevice(deviceId, spec.bin, ['--version'], { timeoutMs: 30_000 });
   let value;
   if (version.error && !version.missing) value = { app, installed: null, loggedIn: null, error: version.error };
   else if (version.missing || version.code !== 0) value = { app, installed: false, loggedIn: false };
-  else {
+  else if (spec.installOnly) {
+    value = { app, installed: true, version: version.out.trim().split('\n')[0].slice(0, 60), loggedIn: null, installOnly: true };
+  } else {
     const status = await runOnDevice(deviceId, spec.bin, spec.status, { timeoutMs: 30_000 });
     value = { app, installed: true, version: version.out.trim().split('\n')[0].slice(0, 60), loggedIn: spec.loggedIn(status.out, status.code) };
   }
@@ -78,9 +101,16 @@ export async function accountStatus(username, deviceId, app, { fresh = false } =
 
 // npm into ~/.syc-node/npm (no root needed; SYC Node 0.4+ puts it on PATH).
 export async function installAccount(username, deviceId, app, onOutput) {
-  await ownedDevice(username, deviceId);
+  const device = await ownedDevice(username, deviceId);
   const spec = account(app);
   statusCache.delete(`${deviceId}/${app}`);
+  if (spec.installer) {
+    const command = spec.installer(device.platform);
+    if (!command) throw Object.assign(new Error('not_available_on_this_platform'), { status: 409 });
+    const done = await runOnDevice(deviceId, command.bin, command.args, { timeoutMs: 15 * 60_000, onOutput });
+    if (done.code !== 0) throw Object.assign(new Error(done.error || 'install_failed'), { status: 502, detail: done.out.slice(-800) });
+    return accountStatus(username, deviceId, app, { fresh: true });
+  }
   const npm = await runOnDevice(deviceId, 'npm', ['--version'], { timeoutMs: 30_000 });
   if (npm.missing) throw Object.assign(new Error('npm_missing'), { status: 409 });
   const result = await runOnDevice(deviceId, 'npm', ['install', '-g', '--prefix', '~/.syc-node/npm', `${spec.pkg}@latest`], { timeoutMs: 15 * 60_000, onOutput });
@@ -93,6 +123,7 @@ const logins = new Map(); // loginId → { username, deviceId, app, child, out, 
 export async function startLogin(username, deviceId, app) {
   await ownedDevice(username, deviceId);
   const spec = account(app);
+  if (spec.installOnly) throw Object.assign(new Error('sign_in_not_available_yet'), { status: 409 });
   statusCache.delete(`${deviceId}/${app}`);
   const child = spawnOnDevice(deviceId, { bin: spec.bin, args: spec.login, timeoutMs: 15 * 60_000 });
   const loginId = crypto.randomUUID();

@@ -91,7 +91,7 @@ never leave it. One account, four ways in:
 | | Where | How |
 |---|---|---|
 | 🌐 **Web** | any browser | open **[app.syc-ai.com](https://app.syc-ai.com/login)** |
-| 📱 **Android** | the SYC-AI app | **[Download SYC-AI for Android](https://syc-ai.com/download/syc-ai.apk)** (APK) |
+| 📱 **Android** | the SYC-AI app — the panel, and your phone's link to your agents | **[Download SYC-AI for Android](https://syc-ai.com/download/syc-ai.apk)** (APK) |
 | 🐧 **Linux** | your computer or server | `curl -fsSL https://syc-ai.com/node/install.sh \| bash` |
 | 🖥️ **Desktop** | Windows / macOS | open app.syc-ai.com in Chrome or Edge → **Install SYC-AI**; on Windows also run `irm https://syc-ai.com/node/install.ps1 \| iex` |
 
@@ -110,11 +110,9 @@ never leave it. One account, four ways in:
 3. **Install your accounts** — open *Professional accounts*, press **Install**
    on Claude or Codex, then **Sign in**. They install and sign in on your
    device; the panel drives them from syc-ai.com.
-4. **Link your phone (optional)** — install
-   **[SYC Claw](https://syc-ai.com/download/syc-claw.apk)**, a separate small
-   connector app, and sign in with the same account. In *Connection → Android*
-   you choose what your agents may send it (notifications, text, links); nothing
-   opens until you tap it.
+4. **Connect your phone (optional)** — in the SYC-AI Android app open
+   *Connection → Android* and tap **Connect this phone**. You choose what your
+   agents may send it (notifications, text, links); nothing opens until you tap it.
 
 Claude and Codex run on your device today; the other accounts follow.
 

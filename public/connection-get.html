@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f1c">
+  <title>SYC</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=14"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
+</head>
+<body class="profage-section">
+  <div class="ambient"></div>
+  <div class="watermark" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/connection" aria-label="Back" data-i18n-attr="aria-label">
+        <svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg>
+      </a>
+      <div>
+        <strong data-i18n>Get SYC-AI</strong>
+        <span data-i18n>Four ways, one account</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar-menu" id="avatarMenu"></div>
+    </div>
+  </header>
+
+  <main class="dash device-page">
+    <section class="device-card">
+      <h2 data-i18n>1 · Web</h2>
+      <p class="muted" data-i18n>Open the panel in any browser, on any device.</p>
+      <p><a class="get-link" href="https://app.syc-ai.com/">app.syc-ai.com</a></p>
+    </section>
+
+    <section class="device-card">
+      <h2 data-i18n>2 · Android</h2>
+      <p class="muted" data-i18n>The SYC-AI app is this panel on your phone.</p>
+      <p><a class="get-button" href="https://syc-ai.com/download/syc-ai.apk" data-i18n>Download SYC-AI for Android</a></p>
+      <p class="muted" data-i18n>The SYC-AI app is this panel on your phone, and it also connects the phone to your account.</p>
+      <p><a class="get-link" href="/connection/android" data-i18n>2 · Connect the phone</a></p>
+    </section>
+
+    <section class="device-card" id="computers">
+      <h2 data-i18n>3 · Linux</h2>
+      <p class="muted" data-i18n>Installs SYC Node, so this panel runs your Claude and Codex accounts on that computer. Run it in a terminal:</p>
+      <div class="get-command"><code>curl -fsSL https://syc-ai.com/node/install.sh | bash</code><button type="button" class="ghost" data-copy data-i18n>Copy</button></div>
+    </section>
+
+    <section class="device-card">
+      <h2 data-i18n>4 · Desktop (Windows / macOS)</h2>
+      <p class="muted" data-i18n>Open app.syc-ai.com in Chrome or Edge and choose “Install SYC-AI” (the install icon in the address bar). It opens in its own window with its own icon.</p>
+      <p><button type="button" class="get-button" id="installApp" hidden data-i18n>Install SYC-AI on this computer</button></p>
+      <p class="muted" data-i18n>To run your accounts on a Windows computer, also install SYC Node. Run it in PowerShell:</p>
+      <div class="get-command"><code>irm https://syc-ai.com/node/install.ps1 | iex</code><button type="button" class="ghost" data-copy data-i18n>Copy</button></div>
+    </section>
+  </main>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=3"></script>
+  <script src="/connection-get.js?v=1"></script>
+</body>
+</html>

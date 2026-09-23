@@ -2,6 +2,14 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.6.1 — 2026-09-23
+- **One Android app:** SYC-AI for Android is the panel on your phone and also links the phone to your account (*Connection → Android → Connect this phone*) — no second app, no second password, no Accessibility permission.
+- **Agents can hand your phone a notification, a link or a piece of text.** Each kind is off until you switch it on; links are marked as risky; nothing opens until you tap it; the server refuses anything that is off.
+- **Four ways in:** web, Android, Linux and desktop (install the panel as an app from Chrome or Edge) — *Connection → Get SYC-AI*.
+- **Central updates:** SYC Node updates itself with release-key-signed builds; the Android app offers new versions; web and desktop follow the panel.
+- New sign-in page: larger logo, icons, show-password, compact account links.
+- Sign-in rate limits now count per address *and* username, so people sharing a VPN or office address no longer lock each other out.
+
 ## 0.6.0 — 2026-09-23
 - Use SYC-AI at [syc-ai.com](https://syc-ai.com) without a server: sign up, activate Main, connect your computer with SYC Node.
 - Professional accounts install and sign in Claude and Codex **on your device** from the panel.

@@ -8,10 +8,32 @@
 // An idle instance costs ~70 MB, so hundreds of users fit on one box.
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
-import { existsSync, mkdirSync } from 'node:fs';
+import { chmodSync, existsSync, lchownSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const IDLE_MS = 30 * 60 * 1000;
+// Each user's app processes run under their own numeric uid (no passwd entry
+// needed), so one customer's process cannot read another customer's files or
+// the panel's secrets. Only when the panel itself runs as root.
+const ISOLATE = typeof process.getuid === 'function' && process.getuid() === 0 && process.env.SYC_TENANT_SAME_UID !== '1';
+const UID_BASE = 200000;
+const SETPRIV = '/usr/bin/setpriv';
+// Per-user storage on our server (transcripts, settings). Files live on the device.
+const QUOTA_BYTES = Number(process.env.SYC_TENANT_QUOTA_MB || 500) * 1024 * 1024;
+
+function treeBytes(path) {
+  let st; try { st = lstatSync(path); } catch { return 0; }
+  if (!st.isDirectory()) return st.size;
+  let total = 0; for (const name of readdirSync(path)) total += treeBytes(join(path, name));
+  return total;
+}
+
+function chownTree(path, uid) {
+  let st;
+  try { st = lstatSync(path); } catch { return; }
+  if (st.uid !== uid) { try { lchownSync(path, uid, uid); } catch { /* best effort */ } }
+  if (st.isDirectory()) for (const name of readdirSync(path)) chownTree(join(path, name), uid);
+}
 const READY_TIMEOUT_MS = 25_000;
 const SAFE_NAME = /^[a-z0-9][a-z0-9._-]{0,63}$/i;
 
@@ -73,6 +95,34 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
   // key `${username}/${app}` → { port, child, lastUsed, inflight, ready: Promise }
   const instances = new Map();
 
+  // Traverse-only on the parents: a tenant can reach its own directory by path but list nothing.
+  // The app code itself must be readable (a release unpacks with umask 077).
+  if (ISOLATE) {
+    for (const dir of [root, dataRoot, join(dataRoot, 'users')]) { try { mkdirSync(dir, { recursive: true }); chmodSync(dir, 0o711); } catch { /* best effort */ } }
+    const openRead = (path) => {
+      let st; try { st = lstatSync(path); } catch { return; }
+      if (st.isSymbolicLink()) return;
+      const mode = st.mode & 0o7777;
+      const want = st.isDirectory() ? (mode | 0o055) : (mode | 0o044);
+      if (want !== mode) { try { chmodSync(path, want); } catch { /* best effort */ } }
+      if (st.isDirectory()) for (const name of readdirSync(path)) openRead(join(path, name));
+    };
+    openRead(join(root, 'apps'));
+  }
+
+  function tenantUid(username) {
+    const file = join(dataRoot, 'users', username, '.uid');
+    try { const saved = Number(readFileSync(file, 'utf8')); if (saved > UID_BASE) return saved; } catch { /* first start */ }
+    let max = UID_BASE;
+    for (const name of readdirSync(join(dataRoot, 'users'))) {
+      try { max = Math.max(max, Number(readFileSync(join(dataRoot, 'users', name, '.uid'), 'utf8')) || 0); } catch { /* none */ }
+    }
+    const uid = max + 1;
+    mkdirSync(join(dataRoot, 'users', username), { recursive: true });
+    writeFileSync(file, `${uid}\n`, { mode: 0o600 });
+    return uid;
+  }
+
   function userDir(username, app) {
     if (!SAFE_NAME.test(username)) throw Object.assign(new Error('invalid_username'), { status: 400 });
     return join(dataRoot, 'users', username, app);
@@ -92,7 +142,20 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
       TERM: 'xterm-256color',
       NODE_ENV: baseEnv.NODE_ENV || 'production',
     };
-    const child = spawn(process.execPath, [join(root, template.entry)], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] });
+    let ids = {};
+    if (ISOLATE) {
+      for (const dir of [root, dataRoot, join(dataRoot, 'users')]) { try { chmodSync(dir, 0o711); } catch { /* best effort */ } }
+      const uid = tenantUid(username);
+      const home = join(dataRoot, 'users', username);
+      chownTree(join(home, app), uid);
+      try { lchownSync(home, uid, uid); chmodSync(home, 0o700); } catch { /* best effort */ }
+      ids = { uid, gid: uid };
+    }
+    // setpriv drops to the tenant uid with no-new-privs, so nothing the tenant
+    // runs can regain root (the core itself needs CAP_SETUID to do this).
+    const child = ids.uid && existsSync(SETPRIV)
+      ? spawn(SETPRIV, ['--no-new-privs', `--reuid=${ids.uid}`, `--regid=${ids.gid}`, '--clear-groups', '--', process.execPath, join(root, template.entry)], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] })
+      : spawn(process.execPath, [join(root, template.entry)], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'], ...ids });
     const tag = `[tenant ${username}/${app}:${port}]`;
     child.stdout.on('data', (c) => { for (const line of c.toString().trim().split('\n')) if (line) logger.log(`${tag} ${line}`); });
     child.stderr.on('data', (c) => { for (const line of c.toString().trim().split('\n')) if (line) logger.error(`${tag} ${line}`); });
@@ -106,6 +169,16 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
       if (instances.get(`${username}/${app}`) === instance) instances.delete(`${username}/${app}`);
     });
     return instance;
+  }
+
+  // Measured at most every 10 minutes per user so a request never waits on it.
+  const usage = new Map(); // username → { at, bytes }
+  function usageOf(username) {
+    const hit = usage.get(username);
+    if (hit && Date.now() - hit.at < 10 * 60_000) return hit.bytes;
+    const bytes = SAFE_NAME.test(username) ? treeBytes(join(dataRoot, 'users', username)) : 0;
+    usage.set(username, { at: Date.now(), bytes });
+    return bytes;
   }
 
   const reaper = setInterval(() => {
@@ -124,6 +197,8 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
     // Returns the loopback port of the user's running instance, starting it if needed.
     async acquire(username, app) {
       const key = `${username}/${app}`;
+      const usage = usageOf(username);
+      if (usage > QUOTA_BYTES) throw Object.assign(new Error(`storage_quota_exceeded (${Math.round(usage / 1048576)} MB of ${Math.round(QUOTA_BYTES / 1048576)} MB)`), { status: 507 });
       let instance = instances.get(key);
       if (!instance) { instance = await start(username, app); instances.set(key, instance); }
       try { await instance.ready; } catch (error) { instances.delete(key); throw error; }
@@ -137,6 +212,7 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
       for (const [key, instance] of instances) { instances.delete(key); try { instance.child.kill('SIGTERM'); } catch { /* gone */ } }
     },
     userDir,
+    usageOf,
     apps: Object.keys(APP_TEMPLATES),
     exists: (username, app) => existsSync(userDir(username, app)),
   });

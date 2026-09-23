@@ -1,6 +1,6 @@
 {
   "product": "SYC-AI",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "node_min": 20,
   "core": {
     "port": 8782,
