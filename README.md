@@ -10,6 +10,7 @@ Stop switching between Claude, Codex, Gemini, Cursor, Kimi and three ChatGPT
 logins. Sign in once, work with all of them side by side — and let your agents
 reach your phone, your servers and your channels.
 
+[![tests](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml/badge.svg)](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml)
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
 [![Get it](https://img.shields.io/badge/get%20it-Web%20%C2%B7%20Android%20%C2%B7%20Linux%20%C2%B7%20Desktop-informational.svg)](#get-started)
 [![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)

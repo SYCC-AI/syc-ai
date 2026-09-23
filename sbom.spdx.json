@@ -3,9 +3,9 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "SYC-AI local publication candidate",
-  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-cc8f385de3ec4efde244abb8ca95974804e6c5c77a8ff881c0fc8c77a9f13dea",
+  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-e0b3a7b13072cb3f7eea93e720bf618de139729add57daaef524a74c21183da9",
   "creationInfo": {
-    "created": "2026-09-23T18:20:50Z",
+    "created": "2026-09-23T19:25:30Z",
     "creators": [
       "Organization: SYC",
       "Tool: syc-ai-local-evidence/1"
@@ -25,8 +25,68 @@
   ],
   "files": [
     {
-      "fileName": "./.gitignore",
+      "fileName": "./.github/ISSUE_TEMPLATE/bug_report.yml",
       "SPDXID": "SPDXRef-File-1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7eea7a4aba4751e93b569076c1923eedfbbef18108566f8769d49213df7f1975"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./.github/ISSUE_TEMPLATE/config.yml",
+      "SPDXID": "SPDXRef-File-2",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6ac84fc70e973e35cbfeb2e20150c0428aa9f4faa1fdf22446ec23e0225128c2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./.github/ISSUE_TEMPLATE/feature_request.yml",
+      "SPDXID": "SPDXRef-File-3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "036c58b580445be7169ee555d70c9b515e5571375c17a3b1d547d20019295ba1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./.github/pull_request_template.md",
+      "SPDXID": "SPDXRef-File-4",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "46e5f3bfa95533e86c54111437103005848fb400e85d711fffe1c5e6edf95344"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./.github/workflows/test.yml",
+      "SPDXID": "SPDXRef-File-5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "90d26d78c3e4df6719636abf62f0ab053b7d0f2fb567ab971daf450f7927b00a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./.gitignore",
+      "SPDXID": "SPDXRef-File-6",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -37,8 +97,32 @@
       "copyrightText": "NOASSERTION"
     },
     {
+      "fileName": "./CHANGELOG.md",
+      "SPDXID": "SPDXRef-File-7",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6a3c54a32f0f1d71006de4b654b376ef82972f5100d32ac1b58d4b59fb915993"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./CODE_OF_CONDUCT.md",
+      "SPDXID": "SPDXRef-File-8",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "30af3288e782f98b26d683a92fc450d41ac5f2dc374c7a4d9b4e849573c2bad5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "copyrightText": "NOASSERTION"
+    },
+    {
       "fileName": "./CONTRIBUTING.md",
-      "SPDXID": "SPDXRef-File-2",
+      "SPDXID": "SPDXRef-File-9",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -50,7 +134,7 @@
     },
     {
       "fileName": "./LICENSE",
-      "SPDXID": "SPDXRef-File-3",
+      "SPDXID": "SPDXRef-File-10",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -62,7 +146,7 @@
     },
     {
       "fileName": "./LICENSES/OFL-1.1.txt",
-      "SPDXID": "SPDXRef-File-4",
+      "SPDXID": "SPDXRef-File-11",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -74,11 +158,11 @@
     },
     {
       "fileName": "./README.md",
-      "SPDXID": "SPDXRef-File-5",
+      "SPDXID": "SPDXRef-File-12",
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a09ed47e4ae38e988cede5d31de8e1cd3dba93358b99254b6a5a85a5a7b11627"
+          "checksumValue": "1bdcc9dd037dc0089b64541f77e2025ddd1575960bbf26406e03453a0e061e2c"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -86,11 +170,11 @@
     },
     {
       "fileName": "./SECURITY.md",
-      "SPDXID": "SPDXRef-File-6",
+      "SPDXID": "SPDXRef-File-13",
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2f5dd7b0c525938287a5b48fbe62e7eed9140bba5d52df6a81700c20b4543930"
+          "checksumValue": "8c836385c627035ad167b92edb67a2bf5f120aa495eb329cacf8cc5542193e6c"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -98,7 +182,7 @@
     },
     {
       "fileName": "./THIRD_PARTY_NOTICES.md",
-      "SPDXID": "SPDXRef-File-7",
+      "SPDXID": "SPDXRef-File-14",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -110,7 +194,7 @@
     },
     {
       "fileName": "./app/release.json",
-      "SPDXID": "SPDXRef-File-8",
+      "SPDXID": "SPDXRef-File-15",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -122,7 +206,7 @@
     },
     {
       "fileName": "./central-access-policy.mjs",
-      "SPDXID": "SPDXRef-File-9",
+      "SPDXID": "SPDXRef-File-16",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -134,7 +218,7 @@
     },
     {
       "fileName": "./control-plane-client.mjs",
-      "SPDXID": "SPDXRef-File-10",
+      "SPDXID": "SPDXRef-File-17",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -146,7 +230,7 @@
     },
     {
       "fileName": "./device-accounts.mjs",
-      "SPDXID": "SPDXRef-File-11",
+      "SPDXID": "SPDXRef-File-18",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -158,7 +242,7 @@
     },
     {
       "fileName": "./device-link.mjs",
-      "SPDXID": "SPDXRef-File-12",
+      "SPDXID": "SPDXRef-File-19",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -170,7 +254,7 @@
     },
     {
       "fileName": "./edge-client.mjs",
-      "SPDXID": "SPDXRef-File-13",
+      "SPDXID": "SPDXRef-File-20",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -182,7 +266,7 @@
     },
     {
       "fileName": "./entitlement.mjs",
-      "SPDXID": "SPDXRef-File-14",
+      "SPDXID": "SPDXRef-File-21",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -194,7 +278,7 @@
     },
     {
       "fileName": "./install.sh",
-      "SPDXID": "SPDXRef-File-15",
+      "SPDXID": "SPDXRef-File-22",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -206,7 +290,7 @@
     },
     {
       "fileName": "./installation-activation.mjs",
-      "SPDXID": "SPDXRef-File-16",
+      "SPDXID": "SPDXRef-File-23",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -218,7 +302,7 @@
     },
     {
       "fileName": "./installer-runtime.mjs",
-      "SPDXID": "SPDXRef-File-17",
+      "SPDXID": "SPDXRef-File-24",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -230,7 +314,7 @@
     },
     {
       "fileName": "./installer/build-packages.mjs",
-      "SPDXID": "SPDXRef-File-18",
+      "SPDXID": "SPDXRef-File-25",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -242,7 +326,7 @@
     },
     {
       "fileName": "./installer/build-plan.mjs",
-      "SPDXID": "SPDXRef-File-19",
+      "SPDXID": "SPDXRef-File-26",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -254,7 +338,7 @@
     },
     {
       "fileName": "./installer/manage-installation.sh",
-      "SPDXID": "SPDXRef-File-20",
+      "SPDXID": "SPDXRef-File-27",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -266,7 +350,7 @@
     },
     {
       "fileName": "./installer/package-inputs.mjs",
-      "SPDXID": "SPDXRef-File-21",
+      "SPDXID": "SPDXRef-File-28",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -278,7 +362,7 @@
     },
     {
       "fileName": "./installer/panel-install.sh",
-      "SPDXID": "SPDXRef-File-22",
+      "SPDXID": "SPDXRef-File-29",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -290,7 +374,7 @@
     },
     {
       "fileName": "./installer/panels.json",
-      "SPDXID": "SPDXRef-File-23",
+      "SPDXID": "SPDXRef-File-30",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -302,7 +386,7 @@
     },
     {
       "fileName": "./installer/release-builder.mjs",
-      "SPDXID": "SPDXRef-File-24",
+      "SPDXID": "SPDXRef-File-31",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -314,7 +398,7 @@
     },
     {
       "fileName": "./installer/render-service.mjs",
-      "SPDXID": "SPDXRef-File-25",
+      "SPDXID": "SPDXRef-File-32",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -326,7 +410,7 @@
     },
     {
       "fileName": "./onboarding-server.mjs",
-      "SPDXID": "SPDXRef-File-26",
+      "SPDXID": "SPDXRef-File-33",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -338,7 +422,7 @@
     },
     {
       "fileName": "./package.json",
-      "SPDXID": "SPDXRef-File-27",
+      "SPDXID": "SPDXRef-File-34",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -350,7 +434,7 @@
     },
     {
       "fileName": "./panel-release.mjs",
-      "SPDXID": "SPDXRef-File-28",
+      "SPDXID": "SPDXRef-File-35",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -362,7 +446,7 @@
     },
     {
       "fileName": "./public/account-center.mjs",
-      "SPDXID": "SPDXRef-File-29",
+      "SPDXID": "SPDXRef-File-36",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -374,7 +458,7 @@
     },
     {
       "fileName": "./public/assets/arefruqaa-bold.ttf",
-      "SPDXID": "SPDXRef-File-30",
+      "SPDXID": "SPDXRef-File-37",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -386,7 +470,7 @@
     },
     {
       "fileName": "./public/assets/arefruqaa-regular.ttf",
-      "SPDXID": "SPDXRef-File-31",
+      "SPDXID": "SPDXRef-File-38",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -398,7 +482,7 @@
     },
     {
       "fileName": "./public/assets/blakahollow-regular.ttf",
-      "SPDXID": "SPDXRef-File-32",
+      "SPDXID": "SPDXRef-File-39",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -410,7 +494,7 @@
     },
     {
       "fileName": "./public/assets/claude-color.svg",
-      "SPDXID": "SPDXRef-File-33",
+      "SPDXID": "SPDXRef-File-40",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -422,7 +506,7 @@
     },
     {
       "fileName": "./public/assets/claude.svg",
-      "SPDXID": "SPDXRef-File-34",
+      "SPDXID": "SPDXRef-File-41",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -434,7 +518,7 @@
     },
     {
       "fileName": "./public/assets/codex-color.svg",
-      "SPDXID": "SPDXRef-File-35",
+      "SPDXID": "SPDXRef-File-42",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -446,7 +530,7 @@
     },
     {
       "fileName": "./public/assets/codex.svg",
-      "SPDXID": "SPDXRef-File-36",
+      "SPDXID": "SPDXRef-File-43",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -458,7 +542,7 @@
     },
     {
       "fileName": "./public/assets/cursor-color.svg",
-      "SPDXID": "SPDXRef-File-37",
+      "SPDXID": "SPDXRef-File-44",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -470,7 +554,7 @@
     },
     {
       "fileName": "./public/assets/deepseek-color.svg",
-      "SPDXID": "SPDXRef-File-38",
+      "SPDXID": "SPDXRef-File-45",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -482,7 +566,7 @@
     },
     {
       "fileName": "./public/assets/gemini-color.svg",
-      "SPDXID": "SPDXRef-File-39",
+      "SPDXID": "SPDXRef-File-46",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -494,7 +578,7 @@
     },
     {
       "fileName": "./public/assets/googlegemini.svg",
-      "SPDXID": "SPDXRef-File-40",
+      "SPDXID": "SPDXRef-File-47",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -506,7 +590,7 @@
     },
     {
       "fileName": "./public/assets/kimi-color.svg",
-      "SPDXID": "SPDXRef-File-41",
+      "SPDXID": "SPDXRef-File-48",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -518,7 +602,7 @@
     },
     {
       "fileName": "./public/assets/kimi.svg",
-      "SPDXID": "SPDXRef-File-42",
+      "SPDXID": "SPDXRef-File-49",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -530,7 +614,7 @@
     },
     {
       "fileName": "./public/assets/lalezar-regular.ttf",
-      "SPDXID": "SPDXRef-File-43",
+      "SPDXID": "SPDXRef-File-50",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -542,7 +626,7 @@
     },
     {
       "fileName": "./public/assets/qwen-color.svg",
-      "SPDXID": "SPDXRef-File-44",
+      "SPDXID": "SPDXRef-File-51",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -554,7 +638,7 @@
     },
     {
       "fileName": "./public/assets/qwen.svg",
-      "SPDXID": "SPDXRef-File-45",
+      "SPDXID": "SPDXRef-File-52",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -566,7 +650,7 @@
     },
     {
       "fileName": "./public/assets/reemkufi-bold.ttf",
-      "SPDXID": "SPDXRef-File-46",
+      "SPDXID": "SPDXRef-File-53",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -578,7 +662,7 @@
     },
     {
       "fileName": "./public/assets/reemkufi-regular.ttf",
-      "SPDXID": "SPDXRef-File-47",
+      "SPDXID": "SPDXRef-File-54",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -590,7 +674,7 @@
     },
     {
       "fileName": "./public/assets/syc-logo.jpg",
-      "SPDXID": "SPDXRef-File-48",
+      "SPDXID": "SPDXRef-File-55",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -602,7 +686,7 @@
     },
     {
       "fileName": "./public/assets/syc-logo.svg",
-      "SPDXID": "SPDXRef-File-49",
+      "SPDXID": "SPDXRef-File-56",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -614,7 +698,7 @@
     },
     {
       "fileName": "./public/assets/vazirmatn-regular.ttf",
-      "SPDXID": "SPDXRef-File-50",
+      "SPDXID": "SPDXRef-File-57",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -626,7 +710,7 @@
     },
     {
       "fileName": "./public/assets/vazirmatn-semibold.ttf",
-      "SPDXID": "SPDXRef-File-51",
+      "SPDXID": "SPDXRef-File-58",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -638,7 +722,7 @@
     },
     {
       "fileName": "./public/communications.html",
-      "SPDXID": "SPDXRef-File-52",
+      "SPDXID": "SPDXRef-File-59",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -650,7 +734,7 @@
     },
     {
       "fileName": "./public/communications.js",
-      "SPDXID": "SPDXRef-File-53",
+      "SPDXID": "SPDXRef-File-60",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -662,7 +746,7 @@
     },
     {
       "fileName": "./public/connection-android.html",
-      "SPDXID": "SPDXRef-File-54",
+      "SPDXID": "SPDXRef-File-61",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -674,7 +758,7 @@
     },
     {
       "fileName": "./public/connection-android.js",
-      "SPDXID": "SPDXRef-File-55",
+      "SPDXID": "SPDXRef-File-62",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -686,7 +770,7 @@
     },
     {
       "fileName": "./public/connection.html",
-      "SPDXID": "SPDXRef-File-56",
+      "SPDXID": "SPDXRef-File-63",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -698,7 +782,7 @@
     },
     {
       "fileName": "./public/connection.js",
-      "SPDXID": "SPDXRef-File-57",
+      "SPDXID": "SPDXRef-File-64",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -710,7 +794,7 @@
     },
     {
       "fileName": "./public/i18n.js",
-      "SPDXID": "SPDXRef-File-58",
+      "SPDXID": "SPDXRef-File-65",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -722,7 +806,7 @@
     },
     {
       "fileName": "./public/login.html",
-      "SPDXID": "SPDXRef-File-59",
+      "SPDXID": "SPDXRef-File-66",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -734,7 +818,7 @@
     },
     {
       "fileName": "./public/login.js",
-      "SPDXID": "SPDXRef-File-60",
+      "SPDXID": "SPDXRef-File-67",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -746,7 +830,7 @@
     },
     {
       "fileName": "./public/main.css",
-      "SPDXID": "SPDXRef-File-61",
+      "SPDXID": "SPDXRef-File-68",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -758,7 +842,7 @@
     },
     {
       "fileName": "./public/main.html",
-      "SPDXID": "SPDXRef-File-62",
+      "SPDXID": "SPDXRef-File-69",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -770,7 +854,7 @@
     },
     {
       "fileName": "./public/main.js",
-      "SPDXID": "SPDXRef-File-63",
+      "SPDXID": "SPDXRef-File-70",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -782,7 +866,7 @@
     },
     {
       "fileName": "./public/onboarding-state.mjs",
-      "SPDXID": "SPDXRef-File-64",
+      "SPDXID": "SPDXRef-File-71",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -794,7 +878,7 @@
     },
     {
       "fileName": "./public/profage.html",
-      "SPDXID": "SPDXRef-File-65",
+      "SPDXID": "SPDXRef-File-72",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -806,7 +890,7 @@
     },
     {
       "fileName": "./public/profage.js",
-      "SPDXID": "SPDXRef-File-66",
+      "SPDXID": "SPDXRef-File-73",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -818,7 +902,7 @@
     },
     {
       "fileName": "./public/profile.js",
-      "SPDXID": "SPDXRef-File-67",
+      "SPDXID": "SPDXRef-File-74",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -830,7 +914,7 @@
     },
     {
       "fileName": "./public/syc-logo.jpg",
-      "SPDXID": "SPDXRef-File-68",
+      "SPDXID": "SPDXRef-File-75",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -842,7 +926,7 @@
     },
     {
       "fileName": "./public/theme.js",
-      "SPDXID": "SPDXRef-File-69",
+      "SPDXID": "SPDXRef-File-76",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -854,7 +938,7 @@
     },
     {
       "fileName": "./release-metadata.mjs",
-      "SPDXID": "SPDXRef-File-70",
+      "SPDXID": "SPDXRef-File-77",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -866,7 +950,7 @@
     },
     {
       "fileName": "./remote-runner.mjs",
-      "SPDXID": "SPDXRef-File-71",
+      "SPDXID": "SPDXRef-File-78",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -878,7 +962,7 @@
     },
     {
       "fileName": "./screenshots/account-center.png",
-      "SPDXID": "SPDXRef-File-72",
+      "SPDXID": "SPDXRef-File-79",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -890,7 +974,7 @@
     },
     {
       "fileName": "./screenshots/panels.png",
-      "SPDXID": "SPDXRef-File-73",
+      "SPDXID": "SPDXRef-File-80",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -902,7 +986,7 @@
     },
     {
       "fileName": "./screenshots/phone.png",
-      "SPDXID": "SPDXRef-File-74",
+      "SPDXID": "SPDXRef-File-81",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -914,7 +998,7 @@
     },
     {
       "fileName": "./scripts/set-admin-password.mjs",
-      "SPDXID": "SPDXRef-File-75",
+      "SPDXID": "SPDXRef-File-82",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -926,7 +1010,7 @@
     },
     {
       "fileName": "./server-startup.mjs",
-      "SPDXID": "SPDXRef-File-76",
+      "SPDXID": "SPDXRef-File-83",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -938,7 +1022,7 @@
     },
     {
       "fileName": "./server.mjs",
-      "SPDXID": "SPDXRef-File-77",
+      "SPDXID": "SPDXRef-File-84",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -950,7 +1034,7 @@
     },
     {
       "fileName": "./tenant-apps.mjs",
-      "SPDXID": "SPDXRef-File-78",
+      "SPDXID": "SPDXRef-File-85",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -962,7 +1046,7 @@
     },
     {
       "fileName": "./test/account-center.test.mjs",
-      "SPDXID": "SPDXRef-File-79",
+      "SPDXID": "SPDXRef-File-86",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -974,7 +1058,7 @@
     },
     {
       "fileName": "./test/build-plan.test.mjs",
-      "SPDXID": "SPDXRef-File-80",
+      "SPDXID": "SPDXRef-File-87",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -986,7 +1070,7 @@
     },
     {
       "fileName": "./test/central-access-policy.test.mjs",
-      "SPDXID": "SPDXRef-File-81",
+      "SPDXID": "SPDXRef-File-88",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -998,7 +1082,7 @@
     },
     {
       "fileName": "./test/control-plane-client.test.mjs",
-      "SPDXID": "SPDXRef-File-82",
+      "SPDXID": "SPDXRef-File-89",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1010,7 +1094,7 @@
     },
     {
       "fileName": "./test/core-package-closure.test.mjs",
-      "SPDXID": "SPDXRef-File-83",
+      "SPDXID": "SPDXRef-File-90",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1022,7 +1106,7 @@
     },
     {
       "fileName": "./test/entitlement-renewal.test.mjs",
-      "SPDXID": "SPDXRef-File-84",
+      "SPDXID": "SPDXRef-File-91",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1034,7 +1118,7 @@
     },
     {
       "fileName": "./test/entitlement.test.mjs",
-      "SPDXID": "SPDXRef-File-85",
+      "SPDXID": "SPDXRef-File-92",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1046,7 +1130,7 @@
     },
     {
       "fileName": "./test/install-lifecycle.test.mjs",
-      "SPDXID": "SPDXRef-File-86",
+      "SPDXID": "SPDXRef-File-93",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1058,7 +1142,7 @@
     },
     {
       "fileName": "./test/installation-activation.test.mjs",
-      "SPDXID": "SPDXRef-File-87",
+      "SPDXID": "SPDXRef-File-94",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1070,7 +1154,7 @@
     },
     {
       "fileName": "./test/installer-runtime.test.mjs",
-      "SPDXID": "SPDXRef-File-88",
+      "SPDXID": "SPDXRef-File-95",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1082,7 +1166,7 @@
     },
     {
       "fileName": "./test/installer.test.mjs",
-      "SPDXID": "SPDXRef-File-89",
+      "SPDXID": "SPDXRef-File-96",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1094,7 +1178,7 @@
     },
     {
       "fileName": "./test/onboarding-server.test.mjs",
-      "SPDXID": "SPDXRef-File-90",
+      "SPDXID": "SPDXRef-File-97",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1106,7 +1190,7 @@
     },
     {
       "fileName": "./test/onboarding-state.test.mjs",
-      "SPDXID": "SPDXRef-File-91",
+      "SPDXID": "SPDXRef-File-98",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1118,7 +1202,7 @@
     },
     {
       "fileName": "./test/panel-release.test.mjs",
-      "SPDXID": "SPDXRef-File-92",
+      "SPDXID": "SPDXRef-File-99",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1130,7 +1214,7 @@
     },
     {
       "fileName": "./test/private-package-inputs.test.mjs",
-      "SPDXID": "SPDXRef-File-93",
+      "SPDXID": "SPDXRef-File-100",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1142,7 +1226,7 @@
     },
     {
       "fileName": "./test/publication-evidence.test.mjs",
-      "SPDXID": "SPDXRef-File-94",
+      "SPDXID": "SPDXRef-File-101",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1154,7 +1238,7 @@
     },
     {
       "fileName": "./test/release-builder.test.mjs",
-      "SPDXID": "SPDXRef-File-95",
+      "SPDXID": "SPDXRef-File-102",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1166,7 +1250,7 @@
     },
     {
       "fileName": "./test/release-metadata.test.mjs",
-      "SPDXID": "SPDXRef-File-96",
+      "SPDXID": "SPDXRef-File-103",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1178,7 +1262,7 @@
     },
     {
       "fileName": "./test/render-service.test.mjs",
-      "SPDXID": "SPDXRef-File-97",
+      "SPDXID": "SPDXRef-File-104",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1190,7 +1274,7 @@
     },
     {
       "fileName": "./test/server-startup.test.mjs",
-      "SPDXID": "SPDXRef-File-98",
+      "SPDXID": "SPDXRef-File-105",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1202,7 +1286,7 @@
     },
     {
       "fileName": "./test/third-party-fonts.test.mjs",
-      "SPDXID": "SPDXRef-File-99",
+      "SPDXID": "SPDXRef-File-106",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1214,7 +1298,7 @@
     },
     {
       "fileName": "./test/update-manager.test.mjs",
-      "SPDXID": "SPDXRef-File-100",
+      "SPDXID": "SPDXRef-File-107",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1226,7 +1310,7 @@
     },
     {
       "fileName": "./test/update-service.test.mjs",
-      "SPDXID": "SPDXRef-File-101",
+      "SPDXID": "SPDXRef-File-108",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1238,7 +1322,7 @@
     },
     {
       "fileName": "./third-party-fonts.json",
-      "SPDXID": "SPDXRef-File-102",
+      "SPDXID": "SPDXRef-File-109",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1250,7 +1334,7 @@
     },
     {
       "fileName": "./update-manager.mjs",
-      "SPDXID": "SPDXRef-File-103",
+      "SPDXID": "SPDXRef-File-110",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1262,7 +1346,7 @@
     },
     {
       "fileName": "./update-runtime.mjs",
-      "SPDXID": "SPDXRef-File-104",
+      "SPDXID": "SPDXRef-File-111",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1274,7 +1358,7 @@
     },
     {
       "fileName": "./update-service.mjs",
-      "SPDXID": "SPDXRef-File-105",
+      "SPDXID": "SPDXRef-File-112",
       "checksums": [
         {
           "algorithm": "SHA256",
@@ -1815,6 +1899,41 @@
       "spdxElementId": "SPDXRef-Package-SYC-AI",
       "relationshipType": "CONTAINS",
       "relatedSpdxElement": "SPDXRef-File-105"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-106"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-107"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-108"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-109"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-110"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-111"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-SYC-AI",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-112"
     }
   ]
 }

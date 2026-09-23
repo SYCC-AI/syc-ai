@@ -2,12 +2,10 @@
 
 ## Reporting a vulnerability
 
-Please report security issues privately, not in public issues.
+Please report security issues privately, never in a public issue:
 
-The intended public contact is `syc@sycc.ir`, but it must not be advertised as
-operational until end-to-end SMTP and IMAP transport verification passes and the
-result is recorded. Until then, publication remains locked and no public
-security-reporting promise should be made.
+- GitHub: [open a private security advisory](https://github.com/SYCC-AI/syc-ai/security/advisories/new), or
+- email **syc@syc-ai.com**.
 
 A report should include the affected version, environment, reproduction steps
 and expected impact. Reporters should avoid public disclosure until a fix and

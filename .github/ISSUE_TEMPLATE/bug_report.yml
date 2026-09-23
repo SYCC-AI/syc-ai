@@ -1,0 +1,30 @@
+name: Bug report
+description: Something in SYC-AI does not work as it should.
+labels: [bug]
+body:
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did it happen?
+      options:
+        - Web (app.syc-ai.com)
+        - Android app (SYC-AI)
+        - Phone connector (SYC Claw)
+        - SYC Node on Linux
+        - SYC Node on Windows
+        - Desktop app
+        - Self-hosted panel
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Panel version (profile menu), app version, or `syc-node status`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: Steps to reproduce help a lot. Never paste passwords, tokens or codes.
+    validations:
+      required: true

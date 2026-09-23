@@ -1,0 +1,15 @@
+name: Feature request
+description: Suggest something that would make SYC-AI better for you.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What would you like to do?
+      description: Describe the job you want done, not only the button you imagine.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter to you?

@@ -4,7 +4,7 @@
     {
       "name": "syc-ai-publication-candidate",
       "digest": {
-        "sha256": "cc8f385de3ec4efde244abb8ca95974804e6c5c77a8ff881c0fc8c77a9f13dea"
+        "sha256": "e0b3a7b13072cb3f7eea93e720bf618de139729add57daaef524a74c21183da9"
       }
     }
   ],
@@ -14,7 +14,7 @@
       "buildType": "https://sycc.ir/build-types/allowlist-export/v1",
       "externalParameters": {
         "sourceCommit": "807e5af5b8fbea960dadb58678235b306ccd54dd",
-        "allowlistSha256": "856812602fe7b38ec676ad2a2608eb55b8aa401d30da2d4658c4592274589b39",
+        "allowlistSha256": "95f7e8851f7f33b3695ef51b601c3d440c2da8996bb89d19e08032e1d24c6d37",
         "networkUsed": false
       },
       "internalParameters": {},
@@ -32,9 +32,9 @@
         "id": "https://sycc.ir/builders/local-review/v1"
       },
       "metadata": {
-        "invocationId": "local-cc8f385de3ec4efd",
-        "startedOn": "2026-09-23T18:20:50Z",
-        "finishedOn": "2026-09-23T18:20:50Z"
+        "invocationId": "local-e0b3a7b13072cb3f",
+        "startedOn": "2026-09-23T19:25:30Z",
+        "finishedOn": "2026-09-23T19:25:30Z"
       }
     }
   }
