@@ -70,7 +70,11 @@ function render() {
   }
 }
 
-async function authenticated(user) { flow.dispatch('authenticated', { user, catalog }); render(); }
+async function authenticated(user) {
+  if (!user?.plan) user = (await api('/api/onboarding/session').catch(() => null))?.user || user;
+  if (user?.plan?.active) { const next = new URLSearchParams(location.search).get('next') || ''; location.href = /^\/(?!\/)/.test(next) ? next : '/main'; return; }
+  flow.dispatch('authenticated', { user, catalog }); render();
+}
 
 nav.addEventListener('click', (event) => {
   const mode = event.target.closest('button')?.dataset.mode;

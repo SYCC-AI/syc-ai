@@ -16,6 +16,7 @@ const OPERATIONS = Object.freeze({
   installationChallenge: ['POST', '/api/user/installations/challenge'],
   installationComplete: ['POST', '/api/user/installations/complete'],
   installationActivate: ['POST', '/api/user/installations/activate'],
+  planActivate: ['POST', '/api/user/plan/activate'],
   entitlementIssue: ['POST', '/api/user/entitlements/issue'],
   downloadGrant: ['POST', '/api/user/downloads/grant'],
   announcements: ['GET', '/api/user/announcements'],

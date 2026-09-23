@@ -10,6 +10,8 @@ import { existsSync, readFileSync, writeFileSync, renameSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createDeviceLink, CAPABILITIES } from './device-link.mjs';
+import { createTenantApps } from './tenant-apps.mjs';
+import * as deviceAccounts from './device-accounts.mjs';
 import { createInstallerRuntime } from './installer-runtime.mjs';
 import { createControlPlaneClient } from './control-plane-client.mjs';
 import { createInstallationActivation } from './installation-activation.mjs';
@@ -45,6 +47,7 @@ const onboarding = activation
       controlClient: createControlPlaneClient({ baseUrl: CONTROL_URL }),
       activation,
       productOrigin: PUBLIC_ORIGIN,
+      hosted: process.env.SYC_AI_HOSTED === '1',
     })
   : null;
 
@@ -134,10 +137,25 @@ function proxyToApp(port, label, req, res, user, targetPath) {
   req.pipe(upstream);
 }
 
-const proxyToCodex = (req, res, user, targetPath) => proxyToApp(CODEX_PORT, 'Codex Web', req, res, user, targetPath);
+// Hosted mode (syc-ai.com): every user gets their own instance of each
+// professional-account app, started on demand — see tenant-apps.mjs. The
+// classic self-host install keeps one shared instance per app on fixed ports.
+const HOSTED = process.env.SYC_AI_HOSTED === '1';
+const tenants = HOSTED ? createTenantApps({ root: ROOT, dataRoot: DATA_DIR }) : null;
+// Per-user app processes are children of this one: take them down with it,
+// or a restart leaves orphans holding their ports and the users' data files.
+if (tenants) for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => { tenants.stopAll(); setTimeout(() => process.exit(0), 300); });
+async function proxyToTenant(app, label, req, res, user, targetPath) {
+  let lease;
+  try { lease = await tenants.acquire(user.username, app); }
+  catch (error) { return json(res, error.status || 502, { error: `${label} could not start (${error.message}).` }); }
+  res.once('close', lease.release);
+  return proxyToApp(lease.port, label, req, res, user, targetPath);
+}
+const proxyToCodex = (req, res, user, targetPath) => (HOSTED ? proxyToTenant('codex', 'Codex Web', req, res, user, targetPath) : proxyToApp(CODEX_PORT, 'Codex Web', req, res, user, targetPath));
 // Claude Web asks for everything relative to its own prefix, so the whole
 // subtree forwards with the prefix stripped.
-const proxyToClaude = (req, res, user, targetPath) => proxyToApp(CLAUDE_PORT, 'Claude Web', req, res, user, targetPath);
+const proxyToClaude = (req, res, user, targetPath) => (HOSTED ? proxyToTenant('claude', 'Claude Web', req, res, user, targetPath) : proxyToApp(CLAUDE_PORT, 'Claude Web', req, res, user, targetPath));
 // Kimi's frontend rewrites its own paths under /profage/<name>/ before the
 // request leaves the browser, so the prefix is stripped again here — the panel
 // itself serves everything at the root, exactly as on the main panel.
@@ -285,6 +303,50 @@ function readBody(req, limit = 10_000) {
     req.on('end', () => { try { resolveBody(data ? JSON.parse(data) : {}); } catch (error) { reject(error); } });
     req.on('error', reject);
   });
+}
+
+async function hostedAccountsRoute(req, res, url, user) {
+  const path = url.pathname;
+  const fail = (error) => json(res, error.status || 502, { error: error.message || 'failed', ...(error.detail ? { detail: error.detail } : {}) });
+  try {
+    if (req.method === 'POST' && req.headers.origin !== new URL(PUBLIC_ORIGIN).origin) return json(res, 403, { error: 'origin_forbidden' });
+    if (path === '/api/hosted/accounts' && req.method === 'GET') {
+      const devices = await deviceAccounts.devicesFor(user.username);
+      const fresh = url.searchParams.get('fresh') === '1';
+      const list = await Promise.all(devices.map(async (d) => {
+        const accounts = {};
+        await Promise.all(Object.keys(deviceAccounts.DEVICE_ACCOUNTS).map(async (app) => {
+          accounts[app] = await deviceAccounts.accountStatus(user.username, d.deviceId, app, { fresh }).catch((e) => ({ app, error: e.message }));
+        }));
+        return { deviceId: d.deviceId, name: d.name, platform: d.platform, accounts };
+      }));
+      return json(res, 200, { devices: list, apps: Object.fromEntries(Object.entries(deviceAccounts.DEVICE_ACCOUNTS).map(([k, v]) => [k, { name: v.name }])) });
+    }
+    let m;
+    if ((m = /^\/api\/hosted\/accounts\/([a-z]+)\/install$/.exec(path)) && req.method === 'POST') {
+      const body = await readBody(req).catch(() => ({}));
+      res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no' });
+      const send = (event, data) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+      send('step', { text: 'Installing on your device…' });
+      try {
+        const status = await deviceAccounts.installAccount(user.username, String(body.deviceId || ''), m[1], (text) => send('log', { text }));
+        send('done', status);
+      } catch (error) { send('fail', { error: error.message, detail: error.detail || '' }); }
+      return res.end();
+    }
+    if ((m = /^\/api\/hosted\/accounts\/([a-z]+)\/login$/.exec(path)) && req.method === 'POST') {
+      const body = await readBody(req).catch(() => ({}));
+      return json(res, 200, await deviceAccounts.startLogin(user.username, String(body.deviceId || ''), m[1]));
+    }
+    if ((m = /^\/api\/hosted\/logins\/([0-9a-f-]{36})\/code$/.exec(path)) && req.method === 'POST') {
+      const body = await readBody(req).catch(() => ({}));
+      return json(res, 200, await deviceAccounts.finishLogin(user.username, m[1], String(body.code || '')));
+    }
+    if ((m = /^\/api\/hosted\/logins\/([0-9a-f-]{36})$/.exec(path)) && req.method === 'GET') {
+      return json(res, 200, await deviceAccounts.loginState(user.username, m[1]));
+    }
+    return json(res, 404, { error: 'not_found' });
+  } catch (error) { return res.headersSent ? res.end() : fail(error); }
 }
 
 const server = createServer(async (req, res) => {
@@ -549,7 +611,16 @@ const server = createServer(async (req, res) => {
     }
 
     // --- Professional accounts: install on demand ----------------------------
-    if (path === '/api/panels/status' && req.method === 'GET') return json(res, 200, await panelsStatus());
+    // Hosted panel: professional accounts are installed and signed in on the customer's own device.
+    if (HOSTED && path.startsWith('/api/hosted/')) return hostedAccountsRoute(req, res, url, user);
+    // Hosted panel: nothing is installed on our server and the phone link is single-tenant.
+    if (HOSTED && (path === '/api/panels/install' || path.startsWith('/api/connection/'))) {
+      return json(res, 409, { error: 'hosted_device_required' });
+    }
+    if (HOSTED && /^\/profage\/(qwen|gemini|cursor|kimi|syc-api)(\/|$)/.test(path)) {
+      return path.startsWith('/profage/') && !path.includes('/api/') ? send(res, 302, '', { Location: '/profage' }) : json(res, 409, { error: 'not_available_on_hosted_yet' });
+    }
+    if (path === '/api/panels/status' && req.method === 'GET') return json(res, 200, HOSTED ? { installable: false, panels: [] } : await panelsStatus());
     if (path === '/api/panels/install' && req.method === 'GET') {
       const id = url.searchParams.get('id') || '';
       return installPanelStream(id, res, { update: url.searchParams.get('update') === '1' });

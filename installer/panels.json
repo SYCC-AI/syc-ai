@@ -1,6 +1,6 @@
 {
   "product": "SYC-AI",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "node_min": 20,
   "core": {
     "port": 8782,
@@ -8,7 +8,7 @@
     "service": "syc-ai",
     "workdir": ".",
     "env": { "NODE_ENV": "production", "SYC_AI_PORT": "$PORT" },
-    "include": ["server.mjs", "server-startup.mjs", "device-link.mjs", "edge-client.mjs", "installer-runtime.mjs", "panel-release.mjs", "release-metadata.mjs", "control-plane-client.mjs", "installation-activation.mjs", "onboarding-server.mjs", "central-access-policy.mjs", "entitlement.mjs", "update-manager.mjs", "update-service.mjs", "update-runtime.mjs", "public", "scripts", "installer/panels.json", "installer/render-service.mjs", "installer/panel-install.sh", "installer/manage-installation.sh", "app"]
+    "include": ["server.mjs", "server-startup.mjs", "device-link.mjs", "edge-client.mjs", "installer-runtime.mjs", "panel-release.mjs", "release-metadata.mjs", "control-plane-client.mjs", "installation-activation.mjs", "onboarding-server.mjs", "central-access-policy.mjs", "tenant-apps.mjs", "device-accounts.mjs", "remote-runner.mjs", "entitlement.mjs", "update-manager.mjs", "update-service.mjs", "update-runtime.mjs", "public", "scripts", "installer/panels.json", "installer/render-service.mjs", "installer/panel-install.sh", "installer/manage-installation.sh", "app"]
   },
   "bundled": ["claude", "codex"],
   "panels": {

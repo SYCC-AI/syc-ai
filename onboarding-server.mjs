@@ -43,7 +43,7 @@ function securityContext(request) {
   };
 }
 
-export function createOnboardingServer({ controlClient, activation, productOrigin, now = Date.now } = {}) {
+export function createOnboardingServer({ controlClient, activation, productOrigin, hosted = false, now = Date.now } = {}) {
   if (!controlClient?.call || !activation?.activate || !activation?.access) {
     throw new TypeError('onboarding dependencies are required');
   }
@@ -74,6 +74,16 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
       return failure(403, 'origin_forbidden');
     }
     const context = securityContext(request);
+    if (activating && hosted) {
+      // Hosted panel: the plan belongs to the signed-in user, not to this server's installation.
+      const result = await controlClient.call('planActivate', { ...context, body: { planId: request.body?.planId } });
+      if (result.status !== 200) return result;
+      return {
+        status: 200,
+        body: { data: { installationId: 'hosted', planId: result.body.data.planId, status: 'active', endsAt: result.body.data.endsAt } },
+        setCookies: result.setCookies || [],
+      };
+    }
     if (activating) {
       try {
         const result = await activation.activate({ ...context, planId: request.body?.planId });
@@ -121,6 +131,19 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
     const response = await controlClient.call('session', { cookieHeader, clientAddress, userAgent });
     if (response.status !== 200 || !response.body?.data?.user) {
       return { authorized: false, reason: 'login_required' };
+    }
+    if (hosted) {
+      const plan = response.body.data.user.plan || {};
+      const access = plan.active
+        ? { mode: 'active', planId: plan.planId, endsAt: plan.endsAt }
+        : { mode: 'restricted', reason: 'plan_required' };
+      if (access.mode !== 'active' && !allowRestricted) return { authorized: false, reason: 'plan_required', access };
+      return {
+        authorized: true,
+        ...(access.mode === 'active' ? {} : { restricted: true }),
+        user: { ...response.body.data.user, accountMode: 'central' },
+        access,
+      };
     }
     const access = await renewed({ cookieHeader, clientAddress, userAgent }, await activation.access());
     if (access.mode !== 'active' && !allowRestricted) {
