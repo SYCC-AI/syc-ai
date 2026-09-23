@@ -11,7 +11,7 @@ logins. Sign in once, work with all of them side by side — and let your agents
 reach your phone, your servers and your channels.
 
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
-[![Devices](https://img.shields.io/badge/devices-Linux%20%C2%B7%20Windows-informational.svg)](#get-started)
+[![Get it](https://img.shields.io/badge/get%20it-Web%20%C2%B7%20Android%20%C2%B7%20Linux%20%C2%B7%20Desktop-informational.svg)](#get-started)
 [![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)
 [![Languages](https://img.shields.io/badge/UI-6%20languages-brightgreen.svg)](#languages)
 [![Edition](https://img.shields.io/badge/Main-free%20until%2014%20Oct%202026-ff6b00.svg)](#editions)
@@ -85,11 +85,18 @@ supposed to be.
 
 No server needed. Use the panel at **[syc-ai.com](https://syc-ai.com)** — your
 professional accounts run on your own computer, so your AI logins and files
-never leave it.
+never leave it. One account, four ways in:
+
+| | Where | How |
+|---|---|---|
+| 🌐 **Web** | any browser | open **[app.syc-ai.com](https://app.syc-ai.com/login)** |
+| 📱 **Android** | the SYC-AI app | **[Download SYC-AI for Android](https://syc-ai.com/download/syc-ai.apk)** (APK) |
+| 🐧 **Linux** | your computer or server | `curl -fsSL https://syc-ai.com/node/install.sh \| bash` |
+| 🖥️ **Desktop** | Windows / macOS | open app.syc-ai.com in Chrome or Edge → **Install SYC-AI**; on Windows also run `irm https://syc-ai.com/node/install.ps1 \| iex` |
 
 1. **Sign up** at [app.syc-ai.com](https://app.syc-ai.com/login) with your email,
    a username and a password, and activate **Main** (free until 14 Oct 2026).
-2. **Connect your device** with SYC Node:
+2. **Connect your computer** with SYC Node:
 
    ```bash
    # Linux / macOS (beta)
@@ -102,6 +109,11 @@ never leave it.
 3. **Install your accounts** — open *Professional accounts*, press **Install**
    on Claude or Codex, then **Sign in**. They install and sign in on your
    device; the panel drives them from syc-ai.com.
+4. **Link your phone (optional)** — install
+   **[SYC Claw](https://syc-ai.com/download/syc-claw.apk)**, a separate small
+   connector app, and sign in with the same account. In *Connection → Android*
+   you choose what your agents may send it (notifications, text, links); nothing
+   opens until you tap it.
 
 Claude and Codex run on your device today; the other accounts follow.
 

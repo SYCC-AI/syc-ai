@@ -3,9 +3,9 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "SYC-AI local publication candidate",
-  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-221c903d8ec7e6b1210a22dd6fe834583701e9257dff4abe690da9659c1666a9",
+  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-cc8f385de3ec4efde244abb8ca95974804e6c5c77a8ff881c0fc8c77a9f13dea",
   "creationInfo": {
-    "created": "2026-09-23T01:23:21Z",
+    "created": "2026-09-23T18:20:50Z",
     "creators": [
       "Organization: SYC",
       "Tool: syc-ai-local-evidence/1"
@@ -78,7 +78,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "4b5475bc5a33d2fc290fe990d7b5a2f9d0e8d12dc88ec9606b278df1d27555d4"
+          "checksumValue": "a09ed47e4ae38e988cede5d31de8e1cd3dba93358b99254b6a5a85a5a7b11627"
         }
       ],
       "licenseConcluded": "NOASSERTION",
