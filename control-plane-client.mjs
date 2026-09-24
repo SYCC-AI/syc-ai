@@ -23,6 +23,7 @@ const OPERATIONS = Object.freeze({
   phonePermissions: ['GET', '/api/user/phone/permissions'],
   phonePermissionsSet: ['POST', '/api/user/phone/permissions/update'],
   phoneLink: ['POST', '/api/user/phone/link'],
+  passwordChange: ['POST', '/api/user/password'],
   entitlementIssue: ['POST', '/api/user/entitlements/issue'],
   downloadGrant: ['POST', '/api/user/downloads/grant'],
   announcements: ['GET', '/api/user/announcements'],

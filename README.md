@@ -6,7 +6,7 @@
 
 ### All You Need With AI — In One.
 
-**Claude Code and Codex on your own computer — started, watched and approved from the web, your phone or your desktop.**
+**Every AI subscription you have — Claude, Codex and more — in one session, one project folder and one memory. On your own computer, steered from the web, your phone or your desktop.**
 
 **English** · [فارسی](README.fa.md) · [中文](README.zh-CN.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [Español](README.es.md)
 
@@ -20,13 +20,15 @@
 
 </div>
 
-<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI: sign in, your AI accounts, connect a device, phone alerts, the four ways in"></p>
+<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI: sign in, your AI accounts, SYC-AI All in One, connect a device, phone alerts"></p>
 
 ## Why SYC-AI
 
-AI coding agents are powerful, but they live in a terminal on one machine. You can't start a session from your phone, you don't know when one is waiting for your approval, and every tool has its own login and its own screen.
+You pay for Claude **and** ChatGPT, but each one lives in its own terminal, with its own memory, on one machine. When one hits its usage limit in the middle of a task, the work stops. You can't start a session from your phone, and you never know when an agent is waiting for your OK.
 
-**SYC-AI puts all of it in one place.** Connect your computer once. From then on you start and steer Claude Code and Codex from any browser, from the Android app or from your desktop. Your phone taps you when an agent needs your OK. Your provider logins and your files stay on your own computer.
+**SYC-AI puts all of it in one place.** Connect your computer once. Then open **SYC-AI — All in One**: one session where Claude plans, Codex builds and short questions go to a lighter model — all in the same project folder with the same memory. When one subscription reaches its limit, the next engine picks up the same message and carries on. Your provider logins and your files stay on your own computer.
+
+<p align="center"><img src="screenshots/all-in-one.png" width="860" alt="SYC-AI All in One: Claude plans, Codex builds, one session and one memory, the usage of both accounts on the side"></p>
 
 ## Features
 
@@ -34,20 +36,22 @@ Ranked by what people ask for most when they work with AI coding agents.
 
 | | Feature | What it means for you |
 |---|---|---|
-| 📱 | **Start and steer from your phone** | Open a new Claude Code or Codex session — not just watch one — from the web, the Android app or your desktop. |
+| ✨ | **SYC-AI — All in One** | One session for all your engines. Each message goes to the one that suits it — planning to Claude, building to Codex, short questions to a lighter model — or to the one you pick. One project folder and one shared memory (`AGENTS.md`), so nothing is lost when engines take turns. |
+| 🔁 | **Your work continues when a limit hits** | When one subscription reaches its usage limit, the same message continues with the next engine in *your* order, with a short handoff of what happened. (SYC-AI never jumps to a second account of the same provider to get around its limit.) |
+| 📊 | **All your usage in one place** | The 5-hour and weekly usage of every connected account, with reset times — read without sending anything to a model. |
+| 🪙 | **Token saver, on by default** | Short, exact answers and no wasted reading, with credited open-source skills. Their authors measured up to 65% fewer output tokens. |
+| 📱 | **Start and steer from your phone** | Open a new session — not just watch one — from the web, the Android app or your desktop. |
 | 🔔 | **Phone alerts when an agent needs you** | Your phone tells you when an agent waits for your OK, or when a long task is done. You switch it on; nothing opens by itself. |
-| 🧩 | **Every AI account in one place** | Claude and Codex work end to end today. Gemini, Cursor and Kimi install on your device today; signing in to them is next. |
+| 🧑‍🔧 | **Specialized sessions** | Website builder, bug fixer, code reviewer, research assistant, writer and translator, data analyst, beginner coach, game maker — start one in a click or download it as an `AGENTS.md` for any terminal agent. |
+| 👥 | **Two accounts per provider** | A personal and a work login of Claude or Codex on the same device; you choose which one each engine uses. |
 | 💻 | **Runs on your own computer** | The AI CLIs install and sign in on your device, under your own accounts. Your logins and your files stay there. |
-| ✅ | **You give the OK** | Commands and file changes wait for your approval. You decide how much an agent may do alone. |
+| ✅ | **You decide what agents may do** | Read only, work in the project, or full access — per session settings, in plain words. |
 | ⚡ | **No terminal needed** | One command connects a computer and installs Node.js for you. After that, everything is buttons. |
-| 🔀 | **Choose where it runs** | Each session runs on the device you pick — your laptop, your server or your Windows PC. |
-| 📊 | **Usage for every turn** | See what each answer used, so your quota is never a surprise. |
 | 🛡️ | **Open-source device agent** | [SYC Node](node-agent/) only runs the AI CLIs, only touches its own folder, logs every request and can be paused at any time. |
 | 🔏 | **Signed updates with rollback** | The panel and SYC Node install only releases signed by SYC, and put the previous version back if a check fails. |
 | 🌍 | **Six languages** | English, 中文, Español, العربية, Русский and فارسی — the panel, the installers and the agents' answers. |
-| 💬 | **Help where you work** | Tickets and announcements inside the panel, attached to your account. |
 
-**Coming next:** sign-in for Gemini, Cursor and Kimi · Communications (Telegram, WhatsApp, Instagram) connected to your agents · team workspaces · the professional editions.
+**Coming to SYC-AI:** Gemini, Cursor and Kimi inside All in One · connectors with official sign-in (GitHub, Google Drive, Gmail, Notion, Telegram, Figma) · personal image studio · short-video studio · one-click sites and shops · documents and translation · student research desk · game-making workshop · money and finance agents · smart Telegram bots (opt-in audiences only) · a team and company panel · a daily assistant on your phone.
 
 ## Get started
 
@@ -60,7 +64,7 @@ One account, four ways in. Sign up at **[app.syc-ai.com](https://app.syc-ai.com/
 | 🐧 | **Linux / macOS** | `curl -fsSL https://syc-ai.com/node/install.sh \| bash` |
 | 🪟 | **Windows** | `irm https://syc-ai.com/node/install.ps1 \| iex` — and in Chrome or Edge, *Install SYC-AI* makes the panel a desktop app. |
 
-Then open **Professional accounts**, press **Install** on Claude or Codex, and **Sign in** once in your own browser. That's it.
+Then open **Professional accounts**, press **Install** on Claude or Codex, and **Sign in** once in your own browser. Open **SYC-AI — All in One** and start working.
 
 > The installer adds Node.js if it is missing. Run as root on Linux, it creates a separate `syc-node` user. Remove everything any time with `syc-node uninstall`.
 
@@ -170,6 +174,11 @@ Your files stay on your computer. The conversation — your messages and the age
 Only start the AI CLIs, install exactly those CLIs with npm, and read or write inside `~/.syc-node`. Everything else is refused and logged. You can pause it or remove it at any time. [Read the code](node-agent/syc-node.mjs).
 </details>
 
+<details><summary><b>Does SYC-AI get around the usage limits of my subscriptions?</b></summary>
+
+No. Each engine runs under your own account and its own limits. When one subscription reaches its limit, SYC-AI can continue the same work with a *different* engine you also pay for (for example Codex after Claude). It never rotates between several accounts of the same provider to get around a limit.
+</details>
+
 <details><summary><b>Is SYC-AI affiliated with Anthropic, OpenAI or Google?</b></summary>
 
 No. SYC-AI is an independent product. You use your own accounts with each provider, under that provider's terms. Claude, Codex, Gemini, Cursor and Kimi are trademarks of their owners.
@@ -186,6 +195,13 @@ Releases and SYC Node updates are Ed25519-signed; the panel verifies size and SH
 - Email: syc@syc-ai.com
 
 If SYC-AI makes your work easier, a ⭐ helps other people find it.
+
+## Thanks
+
+SYC-AI's token saver is built on open-source work, credited inside the product wherever it is used:
+[Caveman](https://github.com/JuliusBrussee/caveman) by Julius Brussee (MIT) and the
+[Superpowers](https://github.com/obra/superpowers) skills by Jesse Vincent (MIT).
+Their licenses ship with the skills in [`skills/`](skills/).
 
 ## License
 

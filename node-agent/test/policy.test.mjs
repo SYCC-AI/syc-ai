@@ -33,3 +33,12 @@ test('file operations stay inside ~/.syc-node', () => {
 test('the panel cannot redirect a CLI to another server or preload code', () => {
   assert.deepEqual(safeEnv({ TERM: 'xterm', ENABLE_TOOL_SEARCH: 'true', ANTHROPIC_BASE_URL: 'https://evil', NODE_OPTIONS: '--require x', LD_PRELOAD: 'x', PATH: '/tmp' }), { TERM: 'xterm', ENABLE_TOOL_SEARCH: 'true' });
 });
+
+test('a second account may only live in its own folder under ~/.syc-node/accounts', () => {
+  const home = '/home/u/.syc-node';
+  assert.deepEqual(safeEnv({ CLAUDE_CONFIG_DIR: '~/.syc-node/accounts/claude-2', CODEX_HOME: '~/.syc-node/accounts/codex-2' }, home),
+    { CLAUDE_CONFIG_DIR: '/home/u/.syc-node/accounts/claude-2', CODEX_HOME: '/home/u/.syc-node/accounts/codex-2' });
+  for (const bad of ['~/.claude', '/etc', '~/.syc-node/accounts/claude-2/../../x', '~/.syc-node/accounts/claude-1', '~/.syc-node/accounts/other-2', '~/.syc-node/accounts/codex-2x']) {
+    assert.deepEqual(safeEnv({ CLAUDE_CONFIG_DIR: bad, CODEX_HOME: bad }, home), {}, bad);
+  }
+});

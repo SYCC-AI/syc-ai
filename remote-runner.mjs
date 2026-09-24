@@ -162,3 +162,14 @@ export function phoneAlert(title, body = '') {
   if (!username) return;
   hubJson('/internal/hub/alerts', { username, title: String(title).slice(0, 120), body: String(body).slice(0, 600) }).catch(() => {});
 }
+
+// Same, for code that serves many users (the panel itself): the user is named.
+export function phoneAlertFor(username, title, body = '') {
+  if (!username) return;
+  hubJson('/internal/hub/alerts', { username, title: String(title).slice(0, 120), body: String(body).slice(0, 600) }).catch(() => {});
+}
+
+// One open of a "coming to SYC-AI" box, counted by the control plane (a number per box).
+export function countIdea(id) {
+  return hubJson('/internal/hub/ideas', { id: String(id).slice(0, 40) }).then((r) => Boolean(r?.counted), () => false);
+}

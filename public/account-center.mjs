@@ -44,6 +44,7 @@ export function createAccountCenterClient({ fetchImpl = fetch } = {}) {
     },
     listTickets: () => request('/api/onboarding/tickets'),
     exportAccount: () => request('/api/onboarding/export'),
+    changePassword: (input) => request('/api/onboarding/password', input),
     createTicket: (input) => request('/api/onboarding/tickets', input),
     async thread(ticketId) { return request(ticketPath(ticketId)); },
     async reply(ticketId, body) { return request(ticketPath(ticketId, '/replies'), { body }); },

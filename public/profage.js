@@ -101,7 +101,7 @@
     if (!['claude', 'codex'].includes(card.dataset.brand)) card.querySelector('.card-gear')?.remove();
   });
   document.querySelectorAll('.professional-card[data-brand]').forEach((card) => {
-    if (HOSTED_APPS.includes(card.dataset.brand)) return;
+    if (HOSTED_APPS.includes(card.dataset.brand) || card.dataset.brand === 'syc') return;
     const link = card.querySelector('a.card');
     if (!link || link.classList.contains('disabled')) return;
     card.classList.add('is-pending'); link.classList.add('disabled'); link.setAttribute('aria-disabled', 'true'); link.removeAttribute('href');
@@ -155,6 +155,20 @@
       else { box.innerHTML = `<a class="professional-open-label open-link" href="/profage/${app}/">${esc(t('Open'))}</a>`; note(t('ready')); }
       box.querySelector('[data-do="install"]')?.addEventListener('click', () => install(app, flowBox(app)));
       box.querySelector('[data-do="login"]')?.addEventListener('click', () => login(app, flowBox(app)));
+      // A second account (personal and work, say): signed in on the same device,
+      // chosen per session in SYC-AI. Never switched to automatically.
+      card.querySelector('.second-account')?.remove();
+      const second = device?.accounts?.[`${app}-2`];
+      if (ready && second && ['claude', 'codex'].includes(app)) {
+        const row = document.createElement('div');
+        row.className = 'second-account';
+        if (second.needsNodeUpdate) row.innerHTML = `<span>${esc(t('Second account'))}</span><small>${esc(t('needs SYC Node 0.7.1 — run: syc-node update'))}</small>`;
+        else if (second.checking) row.innerHTML = `<span>${esc(t('Second account'))}</span><small>${esc(t('checking…'))}</small>`;
+        else if (second.loggedIn) row.innerHTML = `<span>${esc(t('Second account'))}</span><small class="ok">${esc(t('signed in · choose it in SYC-AI settings'))}</small>`;
+        else row.innerHTML = `<span>${esc(t('Second account'))}</span><button type="button" data-do="login2">${esc(t('Sign in a second account'))}</button>`;
+        row.querySelector('[data-do="login2"]')?.addEventListener('click', () => login(`${app}-2`, flowBox(app)));
+        card.append(row);
+      }
     }
   }
 
@@ -164,7 +178,7 @@
   bar.after(flow);
   function flowBox(app) {
     flow.classList.remove('hidden');
-    flow.innerHTML = `<h3>${esc(state.apps?.[app]?.name || app)}</h3><div class="hosted-actions"></div>`;
+    flow.innerHTML = `<h3>${esc(state.apps?.[app.replace(/-2$/, '')]?.name || app)}</h3><div class="hosted-actions"></div>`;
     flow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return flow.querySelector('.hosted-actions');
   }
@@ -211,7 +225,7 @@
     box.innerHTML = `<span class="hosted-state">${esc(t('Opening sign-in on your device…'))}</span>`;
     let started;
     try { started = await post(`/api/hosted/accounts/${app}/login`, { deviceId }); }
-    catch (e) { box.innerHTML = `<button type="button" data-do="login">${esc(t('Try again'))}</button><span class="hosted-state">${esc(e.message)}</span>`; box.querySelector('button').onclick = () => login(app, box); return; }
+    catch (e) { box.innerHTML = `<button type="button" data-do="login">${esc(t('Try again'))}</button><span class="hosted-state">${esc(e.message === 'update_syc_node' ? t('needs SYC Node 0.7.1 — run: syc-node update') : e.message)}</span>`; box.querySelector('button').onclick = () => login(app, box); return; }
     if (started.needsCode) {
       box.innerHTML = `<div class="hosted-login">1. <a href="${esc(started.url)}" target="_blank" rel="noopener">${esc(t('Open the sign-in page'))}</a><br>2. ${esc(t('Paste the code it shows you:'))}
         <input type="text" autocomplete="off" spellcheck="false"><button type="button">${esc(t('Finish sign-in'))}</button><span class="hosted-state"></span></div>`;
@@ -234,4 +248,25 @@
   renderBar(); renderCards(); scheduleRecheck();
   // A device that is being set up appears on its own.
   setInterval(() => { if (!(state.devices || []).length) refresh(false); }, 10_000);
+})();
+
+// "Coming to SYC-AI": each box says plainly that it is not open yet. Opening a
+// box is counted (per box, nothing about the person) so the most wanted one is
+// built first.
+(() => {
+  const t = (s) => (window.SYC?.t ? window.SYC.t(s) : s);
+  const toast = document.getElementById('ideaToast');
+  let timer = null;
+  document.querySelectorAll('.idea-box[data-idea]').forEach((box) => {
+    box.addEventListener('click', () => {
+      fetch(`/api/syc/ideas/${encodeURIComponent(box.dataset.idea)}`, { method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: '{}' }).catch(() => {});
+      const title = box.querySelector('b')?.textContent || '';
+      toast.innerHTML = `<b></b><span></span>`;
+      toast.querySelector('b').textContent = title;
+      toast.querySelector('span').textContent = t('Not available yet — we are building it. Thank you: your interest helps us decide what comes first.');
+      toast.classList.remove('hidden');
+      clearTimeout(timer);
+      timer = setTimeout(() => toast.classList.add('hidden'), 5000);
+    });
+  });
 })();

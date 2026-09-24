@@ -6,12 +6,15 @@
 import { createServer, request as httpRequest } from 'node:http';
 import { randomBytes, scryptSync, timingSafeEqual, createHmac, createCipheriv, createDecipheriv } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync, renameSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync, renameSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createDeviceLink, CAPABILITIES } from './device-link.mjs';
 import { createTenantApps } from './tenant-apps.mjs';
 import * as deviceAccounts from './device-accounts.mjs';
+import { countIdea, deviceFs, phoneAlertFor, spawnOnDevice } from './remote-runner.mjs';
+import { createAllInOne, suggestPriority } from './all-in-one.mjs';
+import { IDEAS } from './all-in-one-catalog.mjs';
 import { createInstallerRuntime } from './installer-runtime.mjs';
 import { createControlPlaneClient } from './control-plane-client.mjs';
 import { createInstallationActivation } from './installation-activation.mjs';
@@ -373,7 +376,7 @@ async function hostedAccountsRoute(req, res, url, user) {
       const fresh = url.searchParams.get('fresh') === '1';
       const list = await Promise.all(devices.map(async (d) => {
         const accounts = {};
-        await Promise.all(Object.keys(deviceAccounts.DEVICE_ACCOUNTS).map(async (app) => {
+        await Promise.all([...Object.keys(deviceAccounts.DEVICE_ACCOUNTS), ...Object.keys(deviceAccounts.SECOND_ACCOUNTS)].map(async (app) => {
           accounts[app] = await (fresh ? deviceAccounts.accountStatus(user.username, d.deviceId, app, { fresh }) : deviceAccounts.accountStatusQuick(user.username, d.deviceId, app)).catch((e) => ({ app, error: e.message }));
         }));
         return { deviceId: d.deviceId, name: d.name, platform: d.platform, accounts };
@@ -392,7 +395,7 @@ async function hostedAccountsRoute(req, res, url, user) {
       } catch (error) { send('fail', { error: error.message, detail: error.detail || '' }); }
       return res.end();
     }
-    if ((m = /^\/api\/hosted\/accounts\/([a-z]+)\/login$/.exec(path)) && req.method === 'POST') {
+    if ((m = /^\/api\/hosted\/accounts\/([a-z]+(?:-2)?)\/login$/.exec(path)) && req.method === 'POST') {
       const body = await readBody(req).catch(() => ({}));
       return json(res, 200, await deviceAccounts.startLogin(user.username, String(body.deviceId || ''), m[1]));
     }
@@ -405,6 +408,87 @@ async function hostedAccountsRoute(req, res, url, user) {
     }
     return json(res, 404, { error: 'not_found' });
   } catch (error) { return res.headersSent ? res.end() : fail(error); }
+}
+
+// SYC-AI (All in One): one session for every engine the user signed in on
+// their device — see all-in-one.mjs. Skills ship inside the release (skills/),
+// pinned and reviewed, so nothing is fetched from the internet at run time.
+const SKILLS_DIR = resolve(ROOT, 'skills');
+const allInOne = HOSTED ? createAllInOne({
+  dataDir: DATA_DIR,
+  devicesFor: deviceAccounts.devicesFor,
+  accountStatusQuick: deviceAccounts.accountStatusQuick,
+  spawn: spawnOnDevice,
+  deviceFs,
+  alert: phoneAlertFor,
+  fetchSkillFile: async (skill) => {
+    const dir = join(SKILLS_DIR, skill.id);
+    return readdirSync(dir).map((name) => ({ name, content: readFileSync(join(dir, name), 'utf8') }));
+  },
+}) : null;
+const IDEA_IDS = new Set(IDEAS.map((idea) => idea.id));
+const ideaClicksFile = join(DATA_DIR, 'syc-idea-clicks.json');
+
+async function allInOneRoute(req, res, url, user) {
+  const path = url.pathname;
+  if (req.method === 'POST') {
+    let sameOrigin = false;
+    try { sameOrigin = PUBLIC_ORIGIN ? req.headers.origin === new URL(PUBLIC_ORIGIN).origin : new URL(req.headers.origin).host === req.headers.host; } catch { /* no or bad Origin */ }
+    if (!sameOrigin) return json(res, 403, { error: 'origin_forbidden' });
+  }
+  // "What's coming" boxes: count opens per box (no personal data), in either mode.
+  let m;
+  if ((m = /^\/api\/syc\/ideas\/([a-z-]{2,40})$/.exec(path)) && req.method === 'POST') {
+    if (!IDEA_IDS.has(m[1])) return json(res, 404, { error: 'not_found' });
+    // Hosted: the control plane keeps the count so the console can show it.
+    if (HOSTED && await countIdea(m[1])) return json(res, 200, { ok: true });
+    let clicks = {};
+    try { clicks = JSON.parse(readFileSync(ideaClicksFile, 'utf8')); } catch { /* first click */ }
+    clicks[m[1]] = (clicks[m[1]] || 0) + 1;
+    try { writeFileSync(ideaClicksFile, JSON.stringify(clicks), { mode: 0o600 }); } catch { /* counting is best effort */ }
+    return json(res, 200, { ok: true });
+  }
+  if (!allInOne) return json(res, 409, { error: 'hosted_only' });
+  const username = user.username;
+  try {
+    if (path === '/api/syc/state' && req.method === 'GET') return json(res, 200, await allInOne.state(username, { deviceId: url.searchParams.get('device') || '' }));
+    if (path === '/api/syc/settings' && req.method === 'POST') return json(res, 200, { settings: allInOne.saveSettings(username, await readBody(req, 64 * 1024)) });
+    if (path === '/api/syc/suggest' && req.method === 'POST') return json(res, 200, suggestPriority((await readBody(req, 16 * 1024)).text));
+    if (path === '/api/syc/usage/refresh' && req.method === 'POST') return json(res, 200, { usage: await allInOne.refreshUsage(username, String((await readBody(req)).deviceId || '')) });
+    if (path === '/api/syc/sessions' && req.method === 'POST') {
+      const body = await readBody(req);
+      return json(res, 200, { session: allInOne.createSession(username, { title: body.title, templateId: body.template || null, deviceId: body.deviceId || null }) });
+    }
+    if ((m = /^\/api\/syc\/templates\/([a-z-]{2,40})\/download$/.exec(path)) && req.method === 'GET') {
+      return send(res, 200, allInOne.templateDownload(m[1]), { 'Content-Type': 'text/markdown; charset=utf-8', 'Content-Disposition': `attachment; filename="AGENTS-${m[1]}.md"` });
+    }
+    if ((m = /^\/api\/syc\/sessions\/([0-9a-f-]{36})(?:\/(send|stop|delete|rename|events))?$/.exec(path))) {
+      const [, id, action] = m;
+      if (!action && req.method === 'GET') return json(res, 200, { session: allInOne.loadSession(username, id), running: allInOne.isRunning(username, id) });
+      if (action === 'events' && req.method === 'GET') {
+        allInOne.loadSession(username, id);
+        res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no' });
+        const emit = (event, data) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+        emit('hello', { running: allInOne.isRunning(username, id) });
+        const off = allInOne.subscribe(username, id, emit);
+        const keepAlive = setInterval(() => res.write(': keep-alive\n\n'), 20_000);
+        res.once('close', () => { clearInterval(keepAlive); off(); });
+        return undefined;
+      }
+      if (req.method !== 'POST') return json(res, 405, { error: 'method_not_allowed' });
+      const body = await readBody(req, 256 * 1024);
+      if (action === 'send') {
+        const { turn } = await allInOne.sendMessage(username, id, { text: body.text, engine: body.engine, deviceId: body.deviceId });
+        return json(res, 202, { turn });
+      }
+      if (action === 'stop') return json(res, 200, { stopped: allInOne.stop(username, id) });
+      if (action === 'delete') { allInOne.deleteSession(username, id); return json(res, 200, { ok: true }); }
+      if (action === 'rename') return json(res, 200, { session: allInOne.renameSession(username, id, body.title) });
+    }
+    return json(res, 404, { error: 'not_found' });
+  } catch (error) {
+    return res.headersSent ? res.end() : json(res, error.status || 500, { error: error.message || 'failed' });
+  }
 }
 
 const server = createServer(async (req, res) => {
@@ -670,6 +754,12 @@ const server = createServer(async (req, res) => {
       const result = deviceLink.revoke();
       return json(res, result.status, result.error ? { error: result.error } : { ok: true });
     }
+
+    // --- SYC-AI (All in One) --------------------------------------------------
+    if (path === '/profage/syc') return send(res, 302, '', { Location: '/profage/syc/' });
+    if (path === '/profage/syc/') return serveFile(res, 'syc.html');
+    if (path === '/syc.js') return serveFile(res, 'syc.js');
+    if (path.startsWith('/api/syc/')) return allInOneRoute(req, res, url, user);
 
     // --- Professional accounts: install on demand ----------------------------
     // Hosted panel: professional accounts are installed and signed in on the customer's own device.

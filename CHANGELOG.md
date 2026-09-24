@@ -2,6 +2,22 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.7.2 — 2026-09-24
+- **SYC-AI — All in One**: a new professional account. One session, one project folder and one shared memory (AGENTS.md) for Claude and Codex on your device. Each message goes to the engine that suits it (planning → Claude, building → Codex, short questions → a lighter model), or the one you pick. When one subscription reaches its limit, the same message continues with the next engine in your order; an engine that joins or comes back gets a short handoff of what it missed.
+- Usage of every connected account in one place (5-hour window and week, with reset times), read without sending anything to a model.
+- Settings in five tabs: engines and order, answers, memory, permissions (read only / work in the project / full access), skills and tools.
+- Token saver on by default, with credited MIT skills: Caveman (Julius Brussee) and three Superpowers skills (Jesse Vincent), pinned and shipped with their licenses.
+- Specialized sessions behind the yellow **+**: website builder, bug fixer, code reviewer, research assistant, writer and translator, data analyst, beginner coach, game maker — each downloadable as an AGENTS.md.
+- A second Claude or Codex account per device (personal and work), chosen by you per engine; SYC-AI never switches accounts on its own. Needs SYC Node 0.7.1 (devices update themselves).
+- Professional accounts: new order, the SYC-AI card, and twelve "coming to SYC-AI" boxes.
+- Change your password from inside the panel.
+
+## 0.7.1 — 2026-09-24 (optional)
+- Sign-in page: one-click language row.
+- Communications page in the new look (Telegram, WhatsApp, Instagram, TikTok and YouTube marked *Coming soon*).
+- Claude on the hosted panel: the *Runs on* label shows your device (never "This server"); the empty screen points at *Runs on*.
+- Codex: when Codex is not installed on the chosen device yet, the panel tries once a minute instead of restarting over and over.
+
 ## 0.7.0 — 2026-09-24
 - **All You Need With AI — In One.** A new look for every page: the sign-in page, the home page with a "get going" checklist, and the professional accounts page with twelve feature boxes around the accounts. Calm by design: no blinking, no counters.
 - **Phone alerts:** your phone tells you when an agent is waiting for your OK or when a long task has finished (*Connection → Android → Agent alerts*; off until you switch it on).

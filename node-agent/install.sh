@@ -16,6 +16,8 @@ set -euo pipefail
 # it: with `curl … | bash`, a child that reads stdin would otherwise eat the rest.
 {
 SERVER="${SYC_SERVER:-https://syc-ai.com}"
+# Where the user opens the panel after connecting (the hosted panel).
+PANEL="${SYC_PANEL:-https://app.syc-ai.com}"
 DL="${SYC_DOWNLOAD:-$SERVER}"   # where the files come from (tests point this at a staging copy)
 NODE_MIRRORS="${SYC_NODE_MIRROR:-https://nodejs.org/dist https://npmmirror.com/mirrors/node}"
 LANG_DEFAULT="${SYC_LANG:-__SYC_LANG__}"
@@ -57,12 +59,12 @@ m() {
     zh:service) echo "SYC Node 已在后台运行，重启后仍会保持连接。";;
     es:service) echo "SYC Node se ejecuta en segundo plano y sigue conectado tras reiniciar.";;
     *:service) echo "SYC Node is running in the background and stays connected after a reboot.";;
-    fa:done) echo "تمام شد. در پنل باز کنید: $SERVER/app/ ← دستگاه‌های من. برای حذف: syc-node uninstall";;
-    ar:done) echo "تم. افتح $SERVER/app/ ← أجهزتي. للإزالة: syc-node uninstall";;
-    ru:done) echo "Готово. Откройте $SERVER/app/ → Мои устройства. Удалить: syc-node uninstall";;
-    zh:done) echo "完成。打开 $SERVER/app/ → 我的设备。卸载：syc-node uninstall";;
-    es:done) echo "Listo. Abre $SERVER/app/ → Mis dispositivos. Para quitarlo: syc-node uninstall";;
-    *:done) echo "Done. Open $SERVER/app/ → My devices. To remove it later: syc-node uninstall";;
+    fa:done) echo "تمام شد. باز کنید: $PANEL/profage ← همین دستگاه را انتخاب کنید و Claude یا Codex را نصب کنید. برای حذف: syc-node uninstall";;
+    ar:done) echo "تم. افتح $PANEL/profage ← اختر هذا الجهاز وثبّت Claude أو Codex. للإزالة: syc-node uninstall";;
+    ru:done) echo "Готово. Откройте $PANEL/profage → выберите это устройство и установите Claude или Codex. Удалить: syc-node uninstall";;
+    zh:done) echo "完成。打开 $PANEL/profage → 选择此设备并安装 Claude 或 Codex。卸载：syc-node uninstall";;
+    es:done) echo "Listo. Abre $PANEL/profage → elige este dispositivo e instala Claude o Codex. Para quitarlo: syc-node uninstall";;
+    *:done) echo "Done. Open $PANEL/profage → choose this device and install Claude or Codex. To remove it later: syc-node uninstall";;
     fa:root) echo "با root اجرا شده. SYC Node زیر یک کاربر جدا به نام syc-node اجرا شود (پیشنهادی) یا با root؟ [۱=کاربر جدا، ۲=root] ";;
     *:root) echo "Running as root. Run SYC Node as a separate user 'syc-node' (recommended) or as root? [1=separate user, 2=root] ";;
     fa:rootuser) echo "کاربر syc-node ساخته شد؛ SYC Node با همین کاربر اجرا می‌شود.";;

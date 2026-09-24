@@ -121,3 +121,19 @@ test('restricted entitlement keeps the authenticated account available only when
     access: { mode: 'restricted', reason: 'entitlement_expired', capabilities: { support: 'enabled' } },
   });
 });
+
+test('password change is relayed through one exact same-origin route', async () => {
+  const { router, calls } = fixture();
+  const response = await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/password',
+    headers: { origin: 'https://panel.example', cookie: 'syc_session=session-1; syc_csrf=csrf-1' },
+    body: { currentPassword: 'old one', newPassword: 'A new passphrase 99!' }, clientAddress: '198.51.100.10',
+  });
+  assert.notEqual(response, null);
+  assert.deepEqual(calls.map(({ operation }) => operation), ['passwordChange']);
+  const foreign = await router.dispatch({
+    method: 'POST', pathname: '/api/onboarding/password',
+    headers: { origin: 'https://evil.example', cookie: 'syc_session=session-1; syc_csrf=csrf-1' }, body: {},
+  });
+  assert.equal(foreign.status, 403);
+});

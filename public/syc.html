@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050914">
+  <title>SYC-AI · All in One</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=17"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
+  <link rel="stylesheet" href="/v2.css?v=4">
+</head>
+<body class="v2 aio-page">
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/profage" aria-label="Back" data-i18n-attr="aria-label">
+        <svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg>
+      </a>
+      <span class="aio-mark" aria-hidden="true"><img src="/assets/syc-logo.svg" alt=""></span>
+      <div>
+        <strong>SYC-AI <span class="aio-tag">All in One</span></strong>
+        <span data-i18n>Every engine you have, one session, one memory</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button type="button" class="aio-icon-btn" id="openUsage" aria-label="Accounts and usage" data-i18n-attr="aria-label,title" title="Accounts and usage">
+        <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+      </button>
+      <button type="button" class="aio-icon-btn" id="openSettings" aria-label="Settings" data-i18n-attr="aria-label,title" title="Settings">
+        <svg viewBox="0 0 24 24"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+      </button>
+      <div class="avatar-menu" id="avatarMenu"></div>
+    </div>
+  </header>
+
+  <div class="aio-shell">
+    <aside class="aio-side" id="aioSide">
+      <div class="aio-new">
+        <button type="button" class="aio-plus" id="newSession" title="New session" data-i18n-attr="title"><span aria-hidden="true">+</span> <span data-i18n>New session</span></button>
+        <button type="button" class="aio-plus gold" id="newSpecial" title="Specialized sessions" data-i18n-attr="title"><span aria-hidden="true">+</span> <span data-i18n>Specialized</span></button>
+      </div>
+      <nav class="aio-sessions" id="sessionList" aria-label="Sessions" data-i18n-attr="aria-label"></nav>
+    </aside>
+
+    <main class="aio-main">
+      <div class="aio-head">
+        <button type="button" class="aio-icon-btn aio-side-toggle" id="toggleSide" aria-label="Sessions" data-i18n-attr="aria-label">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <input id="sessionTitle" class="aio-title" maxlength="80" aria-label="Session name" data-i18n-attr="aria-label" disabled>
+        <label class="aio-device" title="Runs on" data-i18n-attr="title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+          <select id="deviceSelect" aria-label="Runs on" data-i18n-attr="aria-label"></select>
+        </label>
+      </div>
+
+      <section class="aio-empty" id="emptyState">
+        <img src="/assets/syc-logo.svg" alt="" width="64" height="64">
+        <h1 data-i18n>All you need with AI, in one</h1>
+        <p data-i18n>Claude plans, Codex builds, short questions go to a lighter model — in one project folder with one shared memory. When one subscription reaches its limit, the next engine continues the same work.</p>
+        <div class="aio-engines" id="engineChips"></div>
+        <div class="aio-suggest">
+          <label for="suggestText" data-i18n>Tell SYC-AI what you usually do, and get the best engine order for it</label>
+          <div class="aio-suggest-row">
+            <input id="suggestText" placeholder="For example: I build websites and write their texts" data-i18n-attr="placeholder">
+            <button type="button" id="suggestBtn" data-i18n>Suggest</button>
+          </div>
+          <div class="aio-suggest-out hidden" id="suggestOut"></div>
+        </div>
+      </section>
+
+      <section class="aio-thread hidden" id="thread" aria-live="polite"></section>
+
+      <form class="aio-composer" id="composer">
+        <div class="aio-engine-pick" role="radiogroup" aria-label="Engine" data-i18n-attr="aria-label">
+          <button type="button" data-engine="auto" class="on" role="radio" aria-checked="true" data-i18n>Auto</button>
+          <button type="button" data-engine="claude" role="radio" aria-checked="false">Claude</button>
+          <button type="button" data-engine="codex" role="radio" aria-checked="false">Codex</button>
+        </div>
+        <textarea id="messageInput" rows="2" placeholder="Write your message…" data-i18n-attr="placeholder"></textarea>
+        <div class="aio-compose-row">
+          <span class="aio-hint" id="routeHint"></span>
+          <button type="submit" class="aio-send" id="sendBtn"><span data-i18n>Send</span></button>
+          <button type="button" class="aio-stop hidden" id="stopBtn" data-i18n>Stop</button>
+        </div>
+      </form>
+    </main>
+
+    <aside class="aio-usage" id="usagePanel">
+      <h2 data-i18n>Your accounts</h2>
+      <div id="usageCards"></div>
+      <button type="button" class="aio-ghost" id="refreshUsage" data-i18n>Refresh Codex usage</button>
+      <p class="aio-note" data-i18n>Claude usage updates after each Claude answer. Nothing is sent to a model to read it.</p>
+    </aside>
+  </div>
+
+  <!-- Specialized sessions (the yellow +) -->
+  <div class="aio-layer hidden" id="specialLayer">
+    <div class="aio-dialog" role="dialog" aria-modal="true" aria-labelledby="specialTitle">
+      <header><strong id="specialTitle" data-i18n>Specialized sessions</strong><button type="button" class="aio-close" data-close data-i18n>Close</button></header>
+      <p class="aio-note" data-i18n>Sessions trained for one job, with the right way of working built in. Start one here, or download it to use in any terminal agent. New ones are added regularly.</p>
+      <div class="aio-template-grid" id="templateGrid"></div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="aio-layer hidden" id="settingsLayer">
+    <div class="aio-dialog wide" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <header><strong id="settingsTitle" data-i18n>SYC-AI settings</strong><button type="button" class="aio-close" data-close data-i18n>Close</button></header>
+      <nav class="aio-tabs" role="tablist">
+        <button type="button" data-tab="engines" class="on" data-i18n>Engines</button>
+        <button type="button" data-tab="answers" data-i18n>Answers</button>
+        <button type="button" data-tab="memory" data-i18n>Memory</button>
+        <button type="button" data-tab="access" data-i18n>Permissions</button>
+        <button type="button" data-tab="skills" data-i18n>Skills and tools</button>
+      </nav>
+      <div class="aio-tab" data-pane="engines">
+        <section class="aio-box">
+          <h3 data-i18n>Engine order</h3>
+          <p data-i18n>The first engine answers when routing is off, and the next ones take over when one reaches its limit.</p>
+          <ol class="aio-order" id="orderList"></ol>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Choose the engine for each message</h3>
+          <label class="aio-switch"><input type="checkbox" id="routingAuto"><span data-i18n>Automatic: pick by the kind of message</span></label>
+          <div class="aio-routes" id="routeRows"></div>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>When a subscription reaches its limit</h3>
+          <label class="aio-switch"><input type="checkbox" id="fallback"><span data-i18n>Continue the same message with the next engine</span></label>
+          <p class="aio-note" data-i18n>Only a different engine continues (for example Codex after Claude). SYC-AI never moves you to a second account of the same provider to get around its limit.</p>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Accounts</h3>
+          <p data-i18n>If you signed in a second account on this device (Professional accounts → Second account), choose which one each engine uses. SYC-AI never switches accounts on its own.</p>
+          <div class="aio-route"><span>Claude</span><div class="aio-seg" id="accClaude"><button type="button" data-value="1" data-i18n>1st account</button><button type="button" data-value="2" data-i18n>2nd account</button></div></div>
+          <div class="aio-route"><span>Codex</span><div class="aio-seg" id="accCodex"><button type="button" data-value="1" data-i18n>1st account</button><button type="button" data-value="2" data-i18n>2nd account</button></div></div>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Codex thinking effort</h3>
+          <div class="aio-seg" id="codexEffort">
+            <button type="button" data-value="low" data-i18n>Low</button><button type="button" data-value="medium" data-i18n>Medium</button><button type="button" data-value="high" data-i18n>High</button>
+          </div>
+        </section>
+      </div>
+      <div class="aio-tab hidden" data-pane="answers">
+        <section class="aio-box">
+          <h3 data-i18n>Reply language</h3>
+          <select id="language">
+            <option value="auto" data-i18n>Same as my message</option><option value="en">English</option><option value="zh">中文</option><option value="es">Español</option><option value="ar">العربية</option><option value="ru">Русский</option><option value="fa">فارسی</option>
+          </select>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Answer length</h3>
+          <div class="aio-seg" id="style">
+            <button type="button" data-value="short" data-i18n>Short</button><button type="button" data-value="balanced" data-i18n>Balanced</button><button type="button" data-value="detailed" data-i18n>Detailed</button>
+          </div>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Way of working</h3>
+          <label class="aio-switch"><input type="checkbox" id="planFirst"><span data-i18n>Show a short plan before large or risky changes</span></label>
+          <label class="aio-switch"><input type="checkbox" id="beginner"><span data-i18n>I am new to this: explain in plain words</span></label>
+        </section>
+      </div>
+      <div class="aio-tab hidden" data-pane="memory">
+        <section class="aio-box">
+          <h3 data-i18n>Project folder</h3>
+          <p><span data-i18n>Every engine works in the same folder on your device:</span> <code dir="ltr">~/.syc-node/workspace/syc-ai/<b id="projectEcho">main</b></code></p>
+          <input id="project" maxlength="40" pattern="[a-z0-9][a-z0-9-]*">
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Shared memory</h3>
+          <p data-i18n>What every engine should always know: who you are, your project, your rules. It is saved as AGENTS.md in the project folder.</p>
+          <textarea id="memory" rows="8" maxlength="20000" placeholder="For example: My shop sells handmade tea. The site is in Persian and English. Never delete customer data." data-i18n-attr="placeholder"></textarea>
+          <label class="aio-switch"><input type="checkbox" id="rememberDecisions"><span data-i18n>Let engines write important decisions into the memory</span></label>
+        </section>
+      </div>
+      <div class="aio-tab hidden" data-pane="access">
+        <section class="aio-box">
+          <h3 data-i18n>What engines may do on your device</h3>
+          <div class="aio-perms" id="permissions">
+            <label><input type="radio" name="perm" value="read"><span><b data-i18n>Read only</b><small data-i18n>Looks and answers. Changes nothing.</small></span></label>
+            <label><input type="radio" name="perm" value="edit"><span><b data-i18n>Work in the project</b><small data-i18n>Edits files in the project folder and runs common project commands (npm, node, python, git).</small></span></label>
+            <label class="danger"><input type="radio" name="perm" value="full"><span><b data-i18n>Full access</b><small data-i18n>Anything the engine decides, anywhere on this device. Only for a device you can reset.</small></span></label>
+          </div>
+        </section>
+      </div>
+      <div class="aio-tab hidden" data-pane="skills">
+        <section class="aio-box">
+          <h3 data-i18n>Token saver</h3>
+          <label class="aio-switch"><input type="checkbox" id="tokenSaver"><span data-i18n>Use fewer tokens: short, exact answers and no wasted reading</span></label>
+          <p class="aio-credit" id="tokenCredit"></p>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Skills</h3>
+          <p data-i18n>Skills are put into your project folder the next time you send a message. Every skill names its author.</p>
+          <div class="aio-skill-grid" id="skillGrid"></div>
+        </section>
+        <section class="aio-box">
+          <h3 data-i18n>Connectors</h3>
+          <p data-i18n>Each connector will use the provider's own official sign-in, like in Claude and ChatGPT.</p>
+          <div class="aio-skill-grid" id="connectorGrid"></div>
+        </section>
+      </div>
+      <footer class="aio-dialog-foot"><span id="settingsStatus" class="aio-note"></span><button type="button" class="aio-send" id="saveSettings" data-i18n>Save</button></footer>
+    </div>
+  </div>
+
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=6"></script>
+  <script type="module" src="/syc.js?v=2"></script>
+</body>
+</html>

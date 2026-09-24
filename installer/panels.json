@@ -1,6 +1,6 @@
 {
   "product": "SYC-AI",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "node_min": 20,
   "core": {
     "port": 8782,
@@ -26,6 +26,9 @@
       "tenant-apps.mjs",
       "device-accounts.mjs",
       "remote-runner.mjs",
+      "skills",
+      "all-in-one-catalog.mjs",
+      "all-in-one.mjs",
       "entitlement.mjs",
       "update-manager.mjs",
       "update-service.mjs",

@@ -66,9 +66,14 @@
               <div class="profile-account-card" id="profileEmailCard" hidden><span class="profile-account-icon">✉</span><div><small>Email</small><strong id="profileEmail"></strong><p>Your verified central account address.</p></div></div>
               <div class="profile-account-card"><span class="profile-account-icon">◇</span><div><small data-i18n>Access level</small><strong id="profileRole"></strong><p data-i18n>Section access is controlled by role.</p></div></div>
               <div class="profile-account-card"><span class="profile-account-icon">★</span><div><small data-i18n>Edition</small><strong>SYC-AI (Main)</strong><p data-i18n>See the Upgrade section for other editions.</p></div></div>
-              <div class="profile-account-card"><span class="profile-account-icon">⌁</span><div><small data-i18n>Password last changed</small><strong id="profilePasswordChanged">—</strong><p data-i18n>Change it from the Security section.</p></div></div>
+              <div class="profile-account-card" id="profileLocalPasswordCard"><span class="profile-account-icon">⌁</span><div><small data-i18n>Password last changed</small><strong id="profilePasswordChanged">—</strong><p data-i18n>Change it from the Security section.</p></div></div>
+              <form class="profile-account-card" id="profileCentralPassword" hidden autocomplete="on"><span class="profile-account-icon">⚿</span><div><small data-i18n>Password</small><strong data-i18n>Change your password</strong>
+                <input type="password" id="cpCurrent" autocomplete="current-password" placeholder="Current password" data-i18n-attr="placeholder" required>
+                <input type="password" id="cpNew" autocomplete="new-password" placeholder="New password (12 characters or more)" data-i18n-attr="placeholder" minlength="12" required>
+                <button class="primary" type="submit" data-i18n>Change password</button>
+                <p class="form-status" id="cpStatus" aria-live="polite"></p></div></form>
               <div class="profile-account-card" id="profileExportCard" hidden><span class="profile-account-icon">⇩</span><div><small>Your data</small><strong>Account export</strong><p>Download your central account, installations, entitlements and support conversations.</p><button class="ghost" id="profileExport" type="button">Download JSON</button><p class="form-status" id="profileExportStatus" aria-live="polite"></p></div></div>
-              <div class="profile-note" data-i18n>This profile is stored only on this panel.</div>
+              <div class="profile-note" id="profileLocalNote" data-i18n>This profile is stored only on this panel.</div>
             </section>
 
             <section class="profile-pane" data-profile-pane="security">
@@ -145,6 +150,7 @@
     document.getElementById('profilePassword').onsubmit = changePassword;
     document.getElementById('profileRevokeSessions').onclick = revokeSessions;
     document.getElementById('profileExport').onclick = exportAccount;
+    document.getElementById('profileCentralPassword').onsubmit = changeCentralPassword;
     document.getElementById('ticketCreateForm').onsubmit = createTicket;
     document.getElementById('ticketList').onclick = (event) => {
       const ticketId = event.target.closest('[data-ticket-id]')?.dataset.ticketId;
@@ -272,6 +278,23 @@
     } catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
   }
 
+  async function changeCentralPassword(event) {
+    event.preventDefault();
+    const tr = (x) => (window.SYC?.t ? window.SYC.t(x) : x);
+    const status = document.getElementById('cpStatus');
+    const button = event.target.querySelector('button[type="submit"]');
+    button.disabled = true; status.textContent = tr('Changing…'); status.className = 'form-status';
+    try {
+      const service = await center();
+      await service.client.changePassword({ currentPassword: document.getElementById('cpCurrent').value, newPassword: document.getElementById('cpNew').value });
+      event.target.reset();
+      status.textContent = tr('Password changed. Your other sessions were signed out.'); status.className = 'form-status success';
+    } catch (error) {
+      const messages = { current_password_wrong: 'The current password is not right.', weak_password: 'Use at least 12 characters, and not your username.', rate_limited: 'Too many tries. Wait a few minutes.' };
+      status.textContent = tr(messages[error.message] || error.message); status.className = 'form-status error';
+    } finally { button.disabled = false; }
+  }
+
   async function exportAccount() {
     const button = document.getElementById('profileExport');
     const status = document.getElementById('profileExportStatus');
@@ -297,6 +320,11 @@
     document.querySelectorAll('[data-profile-tab="support"], [data-open-tab="support"]').forEach((node) => { node.hidden = !central; });
     const emailCard = document.getElementById('profileEmailCard'); if (emailCard) emailCard.hidden = !central;
     const exportCard = document.getElementById('profileExportCard'); if (exportCard) exportCard.hidden = !central;
+    // A central (syc-ai.com) account changes its password right here; the
+    // local-panel password card and note do not apply to it.
+    const centralPassword = document.getElementById('profileCentralPassword'); if (centralPassword) centralPassword.hidden = !central;
+    const localPassword = document.getElementById('profileLocalPasswordCard'); if (localPassword) localPassword.hidden = central;
+    const localNote = document.getElementById('profileLocalNote'); if (localNote) localNote.hidden = central;
     const email = document.getElementById('profileEmail'); if (email) email.textContent = currentUser.email || '—';
   }
 

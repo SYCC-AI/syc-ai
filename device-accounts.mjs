@@ -33,9 +33,9 @@ export const DEVICE_ACCOUNTS = Object.freeze({
 const strip = (text) => String(text).replace(/\u001b\[[0-9;?]*[A-Za-z]/g, '');
 
 // Run to completion; resolves {code, out, missing}. `missing` = the binary is not on the device.
-export function runOnDevice(deviceId, bin, args, { timeoutMs = 60_000, onOutput } = {}) {
+export function runOnDevice(deviceId, bin, args, { timeoutMs = 60_000, onOutput, env } = {}) {
   return new Promise((resolve) => {
-    const child = spawnOnDevice(deviceId, { bin, args, timeoutMs });
+    const child = spawnOnDevice(deviceId, { bin, args, timeoutMs, env });
     let out = ''; let failed = '';
     const take = (chunk) => { const text = strip(chunk.toString('utf8')); out += text; onOutput?.(text); };
     child.stdout.on('data', take); child.stderr.on('data', take);
@@ -57,8 +57,28 @@ async function ownedDevice(username, deviceId) {
   return device;
 }
 
+// A second account of Claude or Codex (personal and work, say): the same
+// program, its sign-in kept in its own folder under ~/.syc-node/accounts/
+// (SYC Node 0.7.1+). The user picks which one a session uses; nothing here
+// ever moves a session from one account to the other on its own.
+export const SECOND_ACCOUNTS = Object.freeze({ 'claude-2': 'claude', 'codex-2': 'codex' });
+export function accountEnv(app) {
+  if (app === 'claude-2') return { CLAUDE_CONFIG_DIR: '~/.syc-node/accounts/claude-2' };
+  if (app === 'codex-2') return { CODEX_HOME: '~/.syc-node/accounts/codex-2' };
+  return undefined;
+}
+
+// An older SYC Node ignores the account folder and would sign the FIRST
+// account in again — so a second account needs 0.7.1 or newer.
+const versionAtLeast = (have, want) => {
+  const a = String(have || '0').split('.').map(Number); const b = want.split('.').map(Number);
+  for (let i = 0; i < 3; i += 1) { if ((a[i] || 0) !== b[i]) return (a[i] || 0) > b[i]; }
+  return true;
+};
+export const secondAccountReady = (device) => versionAtLeast(device?.agentVersion, '0.7.1');
+
 function account(app) {
-  const spec = DEVICE_ACCOUNTS[app];
+  const spec = DEVICE_ACCOUNTS[SECOND_ACCOUNTS[app] || app];
   if (!spec) throw Object.assign(new Error('unknown_account'), { status: 404 });
   return spec;
 }
@@ -80,8 +100,9 @@ export async function accountStatusQuick(username, deviceId, app) {
 }
 
 export async function accountStatus(username, deviceId, app, { fresh = false } = {}) {
-  await ownedDevice(username, deviceId);
+  const device = await ownedDevice(username, deviceId);
   const spec = account(app);
+  if (SECOND_ACCOUNTS[app] && !secondAccountReady(device)) return { app, installed: null, loggedIn: false, needsNodeUpdate: true };
   const key = `${deviceId}/${app}`;
   const hit = statusCache.get(key);
   if (!fresh && hit && Date.now() - hit.at < 5 * 60_000) return hit.value;
@@ -92,7 +113,7 @@ export async function accountStatus(username, deviceId, app, { fresh = false } =
   else if (spec.installOnly) {
     value = { app, installed: true, version: version.out.trim().split('\n')[0].slice(0, 60), loggedIn: null, installOnly: true };
   } else {
-    const status = await runOnDevice(deviceId, spec.bin, spec.status, { timeoutMs: 30_000 });
+    const status = await runOnDevice(deviceId, spec.bin, spec.status, { timeoutMs: 30_000, env: accountEnv(app) });
     value = { app, installed: true, version: version.out.trim().split('\n')[0].slice(0, 60), loggedIn: spec.loggedIn(status.out, status.code) };
   }
   statusCache.set(key, { at: Date.now(), value });
@@ -121,11 +142,12 @@ export async function installAccount(username, deviceId, app, onOutput) {
 const logins = new Map(); // loginId → { username, deviceId, app, child, out, done, startedAt }
 
 export async function startLogin(username, deviceId, app) {
-  await ownedDevice(username, deviceId);
+  const device = await ownedDevice(username, deviceId);
   const spec = account(app);
+  if (SECOND_ACCOUNTS[app] && !secondAccountReady(device)) throw Object.assign(new Error('update_syc_node'), { status: 409 });
   if (spec.installOnly) throw Object.assign(new Error('sign_in_not_available_yet'), { status: 409 });
   statusCache.delete(`${deviceId}/${app}`);
-  const child = spawnOnDevice(deviceId, { bin: spec.bin, args: spec.login, timeoutMs: 15 * 60_000 });
+  const child = spawnOnDevice(deviceId, { bin: spec.bin, args: spec.login, timeoutMs: 15 * 60_000, env: accountEnv(app) });
   const loginId = crypto.randomUUID();
   const entry = { username, deviceId, app, child, out: '', done: false, code: null, startedAt: Date.now() };
   logins.set(loginId, entry);

@@ -6,7 +6,7 @@
 
 ### All You Need With AI — In One.
 
-**Todo lo que necesitas de la IA, en un solo lugar. Claude Code y Codex en tu propio ordenador: iniciados, seguidos y aprobados desde la web, el móvil o el escritorio.**
+**Todo lo que necesitas de la IA, en un solo lugar. Todas tus suscripciones de IA — Claude, Codex y más — en una sesión, una carpeta de proyecto y una memoria. En tu propio ordenador, manejado desde la web, el móvil o el escritorio.**
 
 [English](README.md) · [فارسی](README.fa.md) · [中文](README.zh-CN.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · **Español**
 
@@ -22,30 +22,34 @@
 
 ## Por qué SYC-AI
 
-Los agentes de programación con IA son potentes, pero viven en la terminal de un solo ordenador: no puedes iniciar una sesión desde el móvil, no sabes cuándo esperan tu aprobación y cada herramienta tiene su propio acceso y su propia pantalla.
+Pagas por Claude **y** ChatGPT, pero cada uno vive en su propia terminal, con su propia memoria, en una sola máquina. Cuando uno llega a su límite a mitad de una tarea, el trabajo se detiene. No puedes empezar una sesión desde el móvil y nunca sabes cuándo un agente espera tu aprobación.
 
-**SYC-AI lo reúne todo en un solo lugar.** Conecta tu ordenador una vez; a partir de ahí inicias y diriges Claude Code y Codex desde cualquier navegador, desde la app de Android o desde el escritorio. Tu móvil te avisa cuando un agente necesita tu visto bueno. Tus accesos y tus archivos se quedan en tu propio ordenador.
+**SYC-AI lo reúne todo en un solo lugar.** Conecta tu ordenador una vez y abre **SYC-AI — All in One**: una sesión donde Claude planifica, Codex construye y las preguntas cortas van a un modelo más ligero, en la misma carpeta de proyecto y con la misma memoria. Cuando una suscripción llega a su límite, el siguiente motor continúa el mismo mensaje. Tus accesos y tus archivos se quedan en tu ordenador.
+
+<p align="center"><img src="screenshots/all-in-one.png" width="860" alt="SYC-AI All in One"></p>
 
 ## Funciones
 
-Ordenadas por lo que más piden quienes trabajan con agentes de IA.
+Ordenadas según lo que más pide la gente que trabaja con agentes de IA.
 
 | | Función | Qué significa para ti |
 |---|---|---|
-| 📱 | **Inicia y dirige desde el móvil** | Abre una sesión nueva de Claude Code o Codex —no solo mirarla— desde la web, la app de Android o el escritorio. |
-| 🔔 | **Avisos en el móvil** | Tu móvil te avisa cuando un agente espera tu visto bueno o cuando termina una tarea larga. Lo activas tú; nada se abre solo. |
-| 🧩 | **Todas las cuentas en un solo lugar** | Claude y Codex funcionan de principio a fin hoy. Gemini, Cursor y Kimi se instalan hoy en tu dispositivo; iniciar sesión en ellos es lo siguiente. |
-| 💻 | **Funciona en tu propio ordenador** | Las CLI de IA se instalan e inician sesión con tus cuentas en tu dispositivo. Tus accesos y archivos se quedan allí. |
-| ✅ | **Tú das el visto bueno** | Los comandos y los cambios de archivos esperan tu aprobación. Tú decides cuánto puede hacer un agente por su cuenta. |
-| ⚡ | **Sin terminal** | Un solo comando conecta el ordenador e instala Node.js si falta. Después, todo son botones. |
-| 🔀 | **Elige dónde se ejecuta** | Cada sesión se ejecuta en el dispositivo que elijas: portátil, servidor o PC con Windows. |
-| 📊 | **Consumo en cada turno** | Mira lo que consumió cada respuesta para que tu cuota nunca te sorprenda. |
-| 🛡️ | **Agente de dispositivo abierto** | [SYC Node](node-agent/) solo ejecuta las CLI de IA, solo toca su propia carpeta, registra cada petición y se puede pausar en cualquier momento. |
+| ✨ | **SYC-AI — All in One** | Una sesión para todos tus motores. Cada mensaje va al que mejor encaja — la planificación a Claude, la construcción a Codex, las preguntas cortas a un modelo más ligero — o al que elijas. Una carpeta de proyecto y una memoria compartida (`AGENTS.md`), para que nada se pierda cuando los motores se turnan. |
+| 🔁 | **Tu trabajo sigue cuando llega un límite** | Cuando una suscripción llega a su límite de uso, el mismo mensaje continúa con el siguiente motor en *tu* orden, con un breve resumen de lo ocurrido. (SYC-AI nunca salta a una segunda cuenta del mismo proveedor para saltarse su límite.) |
+| 📊 | **Todo tu uso en un solo lugar** | El uso de 5 horas y semanal de cada cuenta conectada, con la hora de reinicio, sin enviar nada a ningún modelo. |
+| 🪙 | **Ahorro de tokens, activado por defecto** | Respuestas cortas y exactas y sin lecturas inútiles, con habilidades de código abierto y sus autores citados. Sus autores midieron hasta un 65% menos de tokens de salida. |
+| 📱 | **Empieza y dirige desde el móvil** | Abre una sesión nueva — no solo mírala — desde la web, la app de Android o el escritorio. |
+| 🔔 | **Avisos en el móvil cuando un agente te necesita** | Tu móvil te avisa cuando un agente espera tu aprobación o termina una tarea larga. Lo activas tú; nada se abre solo. |
+| 🧑‍🔧 | **Sesiones especializadas** | Creador de webs, reparador de errores, revisor de código, asistente de investigación, redactor y traductor, analista de datos, entrenador para principiantes, creador de juegos: empieza con un clic o descárgalas como `AGENTS.md` para cualquier agente de terminal. |
+| 👥 | **Dos cuentas por proveedor** | Una cuenta personal y otra de trabajo de Claude o Codex en el mismo dispositivo; tú eliges cuál usa cada motor. |
+| 💻 | **Funciona en tu ordenador** | Las CLI de IA se instalan e inician sesión en tu dispositivo con tus cuentas. Accesos y archivos se quedan allí. |
+| ✅ | **Tú decides qué pueden hacer los agentes** | Solo lectura, trabajar en el proyecto o acceso total, con palabras claras. |
+| ⚡ | **Sin terminal** | Un comando conecta el ordenador e instala Node.js si falta. Después, todo son botones. |
+| 🛡️ | **Agente de dispositivo de código abierto** | [SYC Node](node-agent/) solo ejecuta las CLI de IA, solo toca su propia carpeta, registra cada petición y se puede pausar en cualquier momento. |
 | 🔏 | **Actualizaciones firmadas con reversión** | El panel y SYC Node solo instalan versiones firmadas por SYC y vuelven a la anterior si falla una comprobación. |
 | 🌍 | **Seis idiomas** | English, 中文, Español, العربية, Русский y فارسی: el panel, los instaladores y las respuestas de los agentes. |
-| 💬 | **Ayuda donde trabajas** | Tickets y avisos dentro del panel, vinculados a tu cuenta. |
 
-**Próximamente:** inicio de sesión en Gemini, Cursor y Kimi · Comunicaciones (Telegram, WhatsApp, Instagram) conectadas a tus agentes · espacios de equipo · las ediciones profesionales.
+**Próximamente en SYC-AI:** Gemini, Cursor y Kimi dentro de All in One · conectores con inicio de sesión oficial (GitHub, Google Drive, Gmail, Notion, Telegram, Figma) · estudio de imágenes personal · estudio de vídeos cortos · webs y tiendas en un clic · documentos y traducción · escritorio de investigación para estudiantes · taller para crear juegos · agentes de finanzas · bots inteligentes de Telegram (solo audiencias que aceptan) · panel para equipos y empresas · asistente diario en tu móvil.
 
 ## Empezar
 
@@ -108,6 +112,10 @@ La edición autoalojada instala el panel completo en tu propio servidor Linux: c
 Preguntas e ideas en [Discussions](https://github.com/SYCC-AI/syc-ai/discussions), errores en [Issues](https://github.com/SYCC-AI/syc-ai/issues), correo syc@syc-ai.com.
 
 Si SYC-AI te facilita el trabajo, una ⭐ ayuda a que otros lo encuentren.
+
+## Agradecimientos
+
+El ahorro de tokens de SYC-AI se apoya en trabajo de código abierto, citado dentro del producto allí donde se usa: [Caveman](https://github.com/JuliusBrussee/caveman) de Julius Brussee (MIT) y las habilidades de [Superpowers](https://github.com/obra/superpowers) de Jesse Vincent (MIT). Sus licencias acompañan a las habilidades en [`skills/`](skills/).
 
 ## Licencia
 

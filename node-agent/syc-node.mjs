@@ -30,7 +30,7 @@ import { createHash, createPublicKey, verify as verifySignature } from 'node:cry
 import { fileURLToPath } from 'node:url';
 import { promises as fsp } from 'node:fs';
 
-export const VERSION = '0.7.0';
+export const VERSION = '0.7.1';
 const DEFAULT_SERVER = 'https://syc-ai.com';
 const HOME = join(process.env.SYC_NODE_HOME || homedir(), '.syc-node');
 const CONFIG = join(HOME, 'config.json');
@@ -81,9 +81,18 @@ export function commandAllowed(bin, args = []) {
   return Array.isArray(extra) && extra.includes(name);
 }
 
-export function safeEnv(env) {
+// A second account of the same AI (a personal and a work login, say) keeps its
+// sign-in in its own folder under ~/.syc-node/accounts/. These two variables
+// only ever point there; any other value is dropped.
+const ACCOUNT_ENV = new Set(['CLAUDE_CONFIG_DIR', 'CODEX_HOME']);
+const ACCOUNT_DIR = /^~\/\.syc-node\/accounts\/(?:claude|codex)-[2-9]$/;
+
+export function safeEnv(env, home = HOME) {
   const out = {};
-  for (const [key, value] of Object.entries(env || {})) if (ENV_ALLOWED.has(key)) out[key] = String(value);
+  for (const [key, value] of Object.entries(env || {})) {
+    if (ENV_ALLOWED.has(key)) out[key] = String(value);
+    else if (ACCOUNT_ENV.has(key) && ACCOUNT_DIR.test(String(value))) out[key] = join(home, String(value).slice('~/.syc-node/'.length));
+  }
   return out;
 }
 
@@ -228,6 +237,7 @@ function handleSpawn(config, command) {
   let child;
   try {
     mkdirSync(cwd, { recursive: true });
+    for (const key of ACCOUNT_ENV) if (env[key]) mkdirSync(env[key], { recursive: true, mode: 0o700 });
     const expanded = args.map(expand);
     const direct = windowsTarget(bin, expanded);
     child = direct

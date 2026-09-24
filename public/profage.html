@@ -7,9 +7,9 @@
   <title>SYC</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
   <link rel="manifest" href="/assets/app.webmanifest">
-  <script src="/i18n.js?v=15"></script>
+  <script src="/i18n.js?v=17"></script>
   <link rel="stylesheet" href="/main.css?v=22">
-  <link rel="stylesheet" href="/v2.css?v=1">
+  <link rel="stylesheet" href="/v2.css?v=4">
 </head>
 <body class="v2 profage-section">
   <div class="watermark" aria-hidden="true"></div>
@@ -36,31 +36,32 @@
       <p class="lede" data-i18n>Pick a device, install an account and sign in once. Then open it from here, from your phone or from your desktop.</p>
     </section>
     <div class="accounts-layout">
-      <aside class="feature-column" aria-label="What you can do">
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
-        <div><b data-i18n>Runs on your own computer</b><small data-i18n>Claude and Codex install and sign in on your device. Your logins and your files stay there.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
-        <div><b data-i18n>Start from your phone</b><small data-i18n>Open a new session or continue one from the web, the Android app or your desktop.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
-        <div><b data-i18n>Alerts on your phone</b><small data-i18n>Your phone tells you when an agent waits for your OK, or when a long task is done.</small></div>
-      </article>
-      <article class="feature-box">
+      <aside class="feature-column" aria-label="Coming to SYC-AI" data-i18n-attr="aria-label">
+      <p class="idea-head" data-i18n>Coming to SYC-AI</p>
+      <button type="button" class="feature-box idea-box" data-idea="image-studio">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 9"/></svg></span>
+        <span class="idea-text"><b data-i18n>Personal image studio</b><small data-i18n>Create and edit images with every model you have, in one place.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="game-config">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v4M5 13h4M16 12h.01M18 14h.01"/></svg></span>
+        <span class="idea-text"><b data-i18n>Game-making workshop</b><small data-i18n>A ready setup of tools, skills and templates for building your own games.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="student-research">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg></span>
+        <span class="idea-text"><b data-i18n>Student research desk</b><small data-i18n>Sources, notes, summaries and citations for your papers and projects.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="finance-agents">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M9 15v2c0 1.7 2.7 3 6 3s6-1.3 6-3v-5c0-1.7-2.7-3-6-3"/></svg></span>
+        <span class="idea-text"><b data-i18n>Money and finance agents</b><small data-i18n>Budgets, invoices and reports, prepared by agents you approve.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="telegram-bots">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m22 2-9 20-4-9-7-4 20-7Z"/><path d="M22 2 9 13"/></svg></span>
+        <span class="idea-text"><b data-i18n>Smart Telegram bots</b><small data-i18n>Bots that answer customers and sell for you — with opt-in audiences only, never spam.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="network-tools">
         <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <div><b data-i18n>You give the OK</b><small data-i18n>Commands and file changes wait for your approval. You decide how much an agent may do alone.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-        <div><b data-i18n>Every account in one place</b><small data-i18n>One sign-in for Claude and Codex today; Gemini, Cursor and Kimi are on the way.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h11M4 17h11"/><path d="m15 4 3 3-3 3M15 14l3 3-3 3"/></svg></span>
-        <div><b data-i18n>Choose where it runs</b><small data-i18n>Each session runs on the device you pick — your laptop, your server, your Windows PC.</small></div>
-      </article>
+        <span class="idea-text"><b data-i18n>Secure connection tools</b><small data-i18n>Private, fast network setups designed and checked with AI.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
       </aside>
       <section class="accounts-center">
     <div class="grid accounts-grid" id="items">
@@ -88,14 +89,22 @@
           </button>
         </div>
       </article>
-      <article class="card-wrap professional-card" data-brand="qwen">
-        <a class="card" href="/profage/qwen/">
-          <span class="card-icon card-logo brand-qwen"><img src="/assets/qwen-color.svg" alt="" loading="lazy"></span>
-          <b>Qwen</b>
-          <small dir="auto">Qwen Code</small>
+      <article class="card-wrap professional-card aio-card" data-brand="syc">
+        <a class="card" href="/profage/syc/">
+          <span class="card-icon card-logo brand-syc"><img src="/assets/syc-logo.svg" alt="" loading="lazy"></span>
+          <b>SYC-AI <span class="aio-tag">All in One</span></b>
+          <small dir="auto" data-i18n>Every model you have, connected in one session</small>
+        </a>
+        <div class="professional-card-footer"><a class="professional-open-label open-link aio-open" href="/profage/syc/" data-i18n>Open</a></div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="cursor">
+        <a class="card" href="/profage/cursor/">
+          <span class="card-icon card-logo brand-cursor"><img src="/assets/cursor-color.svg" alt="" loading="lazy"></span>
+          <b>Cursor</b>
+          <small dir="auto">Cursor Agent</small>
         </a>
         <div class="professional-card-footer">
-          <button class="card-gear" type="button" data-settings="/profage/qwen/?view=settings" data-label="Qwen" title="Qwen settings" aria-label="Qwen settings">
+          <button class="card-gear" type="button" data-settings="/profage/cursor/?view=settings" data-label="Cursor" title="Cursor settings" aria-label="Cursor settings">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
           </button>
         </div>
@@ -112,18 +121,6 @@
           </button>
         </div>
       </article>
-      <article class="card-wrap professional-card" data-brand="cursor">
-        <a class="card" href="/profage/cursor/">
-          <span class="card-icon card-logo brand-cursor"><img src="/assets/cursor-color.svg" alt="" loading="lazy"></span>
-          <b>Cursor</b>
-          <small dir="auto">Cursor Agent</small>
-        </a>
-        <div class="professional-card-footer">
-          <button class="card-gear" type="button" data-settings="/profage/cursor/?view=settings" data-label="Cursor" title="Cursor settings" aria-label="Cursor settings">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
-          </button>
-        </div>
-      </article>
       <article class="card-wrap professional-card" data-brand="kimi">
         <a class="card" href="/profage/kimi/">
           <span class="card-icon card-logo brand-kimi"><img src="/assets/kimi-color.svg" alt="" loading="lazy"></span>
@@ -132,6 +129,18 @@
         </a>
         <div class="professional-card-footer">
           <button class="card-gear" type="button" data-settings="/profage/kimi/?view=settings" data-label="Kimi" title="Kimi settings" aria-label="Kimi settings">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </article>
+      <article class="card-wrap professional-card" data-brand="qwen">
+        <a class="card" href="/profage/qwen/">
+          <span class="card-icon card-logo brand-qwen"><img src="/assets/qwen-color.svg" alt="" loading="lazy"></span>
+          <b>Qwen</b>
+          <small dir="auto">Qwen Code</small>
+        </a>
+        <div class="professional-card-footer">
+          <button class="card-gear" type="button" data-settings="/profage/qwen/?view=settings" data-label="Qwen" title="Qwen settings" aria-label="Qwen settings">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.4L4 11v2l-1.6 1.6 2 3.4 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.4L18 13v-2l1.6-1.6-2-3.4-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></svg>
           </button>
         </div>
@@ -158,34 +167,37 @@
       </article>
     </div>
       </section>
-      <aside class="feature-column" aria-label="What you can do">
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></span>
-        <div><b data-i18n>Usage for every turn</b><small data-i18n>See what each answer used, so nothing about your quota is a surprise.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></span>
-        <div><b data-i18n>Pause any time</b><small data-i18n>One command on your device — syc-node pause — and the panel cannot use it until you resume.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4"/></svg></span>
-        <div><b data-i18n>Open device agent</b><small data-i18n>SYC Node is open source: read exactly what it may run on your device and what it refuses.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="M9 11h6v5H9z"/><path d="M10 11V9a2 2 0 0 1 4 0v2"/></svg></span>
-        <div><b data-i18n>Signed updates</b><small data-i18n>The panel and SYC Node only install releases signed by SYC, and roll back if a check fails.</small></div>
-      </article>
-      <article class="feature-box">
+      <aside class="feature-column" aria-label="Coming to SYC-AI" data-i18n-attr="aria-label">
+      <p class="idea-head" data-i18n>Also on the way</p>
+      <button type="button" class="feature-box idea-box" data-idea="org-panel">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10 21v-3h4v3"/></svg></span>
+        <span class="idea-text"><b data-i18n>Team and company panel</b><small data-i18n>Manage your team’s AI use, and add smart alerts to your own workplace cameras — with consent.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="free-finder">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18M12 8v13M12 8S10 3 7.5 4 9 8 12 8Zm0 0s2-5 4.5-4S15 8 12 8Z"/></svg></span>
+        <span class="idea-text"><b data-i18n>Free-deal finder</b><small data-i18n>Every day, the free credits, trials and legal discount codes that matter to you.</small><span class="idea-tag" data-i18n>Needs Plus</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="site-builder">
         <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
-        <div><b data-i18n>Six languages</b><small data-i18n>English, 中文, Español, العربية, Русский and فارسی — and answers come back in your language.</small></div>
-      </article>
-      <article class="feature-box">
-        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-12.9 6.3L3 20l1.7-4.6A8 8 0 1 1 21 12Z"/><path d="M9 10h6M9 14h4"/></svg></span>
-        <div><b data-i18n>Help where you work</b><small data-i18n>Tickets and announcements live inside the panel, attached to your account.</small></div>
-      </article>
+        <span class="idea-text"><b data-i18n>One-click sites and shops</b><small data-i18n>From an idea to a live website or store, published for you.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="video-studio">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg></span>
+        <span class="idea-text"><b data-i18n>Short-video studio</b><small data-i18n>Script, voice, subtitles and export for Reels, TikTok and Shorts.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="docs-assistant">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></span>
+        <span class="idea-text"><b data-i18n>Documents and translation</b><small data-i18n>Contracts, CVs, PDFs and summaries, in six languages.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
+      <button type="button" class="feature-box idea-box" data-idea="daily-assistant">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
+        <span class="idea-text"><b data-i18n>Daily assistant on your phone</b><small data-i18n>Morning brief, reminders and scheduled tasks, on the phone you already linked.</small><span class="idea-tag" data-i18n>Coming soon</span></span>
+      </button>
       </aside>
     </div>
   </main>
+
+  <div class="idea-toast hidden" id="ideaToast" role="status"></div>
 
   <div id="engineSettingsLayer" class="engine-settings-layer hidden">
     <div class="engine-settings-box" role="dialog" aria-modal="true">
@@ -199,6 +211,6 @@
 
   <script src="/theme.js?v=1"></script>
   <script src="/profile.js?v=3"></script>
-  <script src="/profage.js?v=11"></script>
+  <script src="/profage.js?v=13"></script>
 </body>
 </html>

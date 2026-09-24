@@ -10,6 +10,7 @@ const ROUTES = new Map([
   ['GET /api/onboarding/announcements', 'announcements'],
   ['GET /api/onboarding/tickets', 'ticketList'],
   ['POST /api/onboarding/tickets', 'ticketCreate'],
+  ['POST /api/onboarding/password', 'passwordChange'],
 ]);
 const TICKET_ID = '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
 const TICKET_THREAD = new RegExp(`^/api/onboarding/tickets/(${TICKET_ID})$`);
