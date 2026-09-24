@@ -4,17 +4,17 @@
     {
       "name": "syc-ai-publication-candidate",
       "digest": {
-        "sha256": "ca6e8f5bdb8808c96817e1727b34f06b820681d1210ab980450bd168d88ec882"
+        "sha256": "d5eac2f418b879ba30cf3021d19f259b3f62e672564dd064a7b67a78dfc1c830"
       }
     }
   ],
   "predicateType": "https://slsa.dev/provenance/v1",
   "predicate": {
     "buildDefinition": {
-      "buildType": "https://sycc.ir/build-types/allowlist-export/v1",
+      "buildType": "https://syc-ai.com/build-types/allowlist-export/v1",
       "externalParameters": {
-        "sourceCommit": "22297b249dd572f60378faa219d02992407deeb9",
-        "allowlistSha256": "41da650016e77579cef51c20820cdd40ae4062ba50fe1473b77ba47bc9abbd6a",
+        "sourceCommit": "bb986b2ac4694fa37b21c8b5e4b4cb1a201fd3a1",
+        "allowlistSha256": "44036110487df0853ed0320779b0d81f9466febbf673437473f21e0e79936849",
         "networkUsed": false
       },
       "internalParameters": {},
@@ -22,19 +22,19 @@
         {
           "uri": "git+local:syc-ai-engineering",
           "digest": {
-            "gitCommit": "22297b249dd572f60378faa219d02992407deeb9"
+            "gitCommit": "bb986b2ac4694fa37b21c8b5e4b4cb1a201fd3a1"
           }
         }
       ]
     },
     "runDetails": {
       "builder": {
-        "id": "https://sycc.ir/builders/local-review/v1"
+        "id": "https://syc-ai.com/builders/local-review/v1"
       },
       "metadata": {
-        "invocationId": "local-ca6e8f5bdb8808c9",
-        "startedOn": "2026-09-23T20:39:30Z",
-        "finishedOn": "2026-09-23T20:39:30Z"
+        "invocationId": "local-d5eac2f418b879ba",
+        "startedOn": "2026-09-24T02:39:40Z",
+        "finishedOn": "2026-09-24T02:39:40Z"
       }
     }
   }

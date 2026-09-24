@@ -2,6 +2,17 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.7.0 — 2026-09-24
+- **All You Need With AI — In One.** A new look for every page: the sign-in page, the home page with a "get going" checklist, and the professional accounts page with twelve feature boxes around the accounts. Calm by design: no blinking, no counters.
+- **Phone alerts:** your phone tells you when an agent is waiting for your OK or when a long task has finished (*Connection → Android → Agent alerts*; off until you switch it on).
+- **SYC Node 0.7.0** (the agent on your computer): runs only the AI CLIs and their npm installs, reads and writes only inside `~/.syc-node`, drops environment variables that could redirect a CLI, logs every request (`syc-node log`), and adds `pause`, `resume` and `uninstall`. The installer now adds Node.js when it is missing, speaks six languages, and runs as a separate `syc-node` user when started as root.
+- **Busy days:** the panel keeps a ceiling on running workspaces; the longest-idle one makes room, and when every slot is busy a newcomer sees a friendly "try again in a minute" page instead of an error.
+- **Shared addresses:** sign-up codes and sign-ups are limited per person, with a larger allowance per address, so people behind the same VPN or office network no longer block each other.
+- **Language links:** `app.syc-ai.com/login?lang=fa` (and zh, es, ar, ru) opens the panel in that language; a first visit offers "English or your language".
+- **Upgrade page:** every edition with its status; paid editions show a disabled upgrade button and the payment methods that open with them (USDT, card, PayPal).
+- A thank-you to our first 1,000 members, with an optional GitHub star link.
+- Security: a suspended account's devices are refused, and a password reset disconnects every device.
+
 ## 0.6.1 — 2026-09-23
 - **One Android app:** SYC-AI for Android is the panel on your phone and also links the phone to your account (*Connection → Android → Connect this phone*) — no second app, no second password, no Accessibility permission.
 - **Agents can hand your phone a notification, a link or a piece of text.** Each kind is off until you switch it on; links are marked as risky; nothing opens until you tap it; the server refuses anything that is off.

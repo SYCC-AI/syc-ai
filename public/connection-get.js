@@ -10,6 +10,16 @@ function say(text) {
   toastTimer = setTimeout(() => toast.classList.add('hidden'), 2400);
 }
 
+// The installers speak the panel's language: /node/<lang>/… asks "English or <language>?".
+{
+  const lang = window.SYC?.i18n?.lang || 'en';
+  if (lang !== 'en') {
+    document.querySelectorAll('.get-command code').forEach((code) => {
+      code.textContent = code.textContent.replace('https://syc-ai.com/node/install', `https://syc-ai.com/node/${lang}/install`);
+    });
+  }
+}
+
 document.querySelectorAll('[data-copy]').forEach((button) => {
   button.addEventListener('click', async () => {
     const text = button.parentElement.querySelector('code').textContent;

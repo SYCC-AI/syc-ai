@@ -56,15 +56,22 @@ export function renderPlanCards(plans = [], currentPlanId = '') {
     const current = plan.id === currentPlanId;
     const original = Number(plan.originalPriceMinor || 0);
     const effective = Number(plan.effectivePriceMinor || 0);
-    const cost = original > effective
-      ? `<s>${price(original, plan.currency)}</s> ${effective === 0 ? 'Free now' : price(effective, plan.currency)}`
-      : price(effective, plan.currency) || 'Coming soon';
+    // An edition that is not open yet shows no price: it is announced when it opens.
+    const cost = !plan.available && !current
+      ? 'Price announced at launch'
+      : original > effective
+        ? `<s>${price(original, plan.currency)}</s> ${effective === 0 ? 'Free now' : price(effective, plan.currency)}`
+        : price(effective, plan.currency) || 'Coming soon';
     const until = plan.offerEndsAt && Date.parse(plan.offerEndsAt)
       ? ` · free until ${new Date(plan.offerEndsAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}`
       : '';
+    // Payments are not open yet: a paid edition shows what it will cost and a
+    // disabled button, so nobody mistakes "coming" for "broken".
+    const upgrade = current ? '' : '<button type="button" disabled aria-disabled="true">Upgrade · opens soon</button>';
     return `<article class="upgrade-card${current ? ' current' : ''}">
-      <b>${escapeHtml(plan.displayName)}</b><small>${cost}${effective === 0 && original > effective ? until : ''}</small>
+      <b>${escapeHtml(plan.displayName)}</b><small class="plan-price">${cost}${effective === 0 && original > effective ? until : ''}</small>
       <em>${current ? 'Active' : plan.available ? escapeHtml(plan.offerLabel || 'Available') : 'Coming soon'}</em>
+      ${upgrade}
     </article>`;
   }).join('');
 }

@@ -67,3 +67,12 @@ test('account center escapes ticket summaries and messages', () => {
   assert.match(list, /&lt;img onerror=alert\(1\)&gt;/);
   assert.match(thread, /&lt;b&gt;unsafe&lt;\/b&gt;/);
 });
+
+test('paid editions show a clear, disabled upgrade button until payments open', () => {
+  const html = renderPlanCards([
+    { id: 'main', displayName: 'SYC-AI (Main)', currency: 'USDT', originalPriceMinor: 175, effectivePriceMinor: 0, available: true, offerLabel: 'Launch offer' },
+    { id: 'plus', displayName: 'SYC-AI Plus', currency: 'USDT', originalPriceMinor: 1999, effectivePriceMinor: 1999, available: false },
+  ], 'main');
+  assert.match(html, /<button type="button" disabled[^>]*>Upgrade · opens soon<\/button>/);
+  assert.equal((html.match(/<button type="button" disabled/g) || []).length, 1, 'the current edition has no upgrade button');
+});

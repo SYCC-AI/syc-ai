@@ -99,6 +99,12 @@
                 <article class="upgrade-card"><b>Pro</b><small>Coming soon</small><em>Unavailable</em></article>
                 <article class="upgrade-card"><b>Immortal Edition</b><small>Coming soon</small><em>Unavailable</em></article>
               </div>
+              <div class="upgrade-intro"><p class="profile-kicker" data-i18n>Payment</p><h3 data-i18n>How you will pay</h3><p data-i18n>Payments open together with the paid editions. Main stays free until then.</p></div>
+              <div class="pay-methods" aria-label="Payment methods">
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">₮</span><div><b>USDT (TRC20)</b><small data-i18n>Opens with paid editions</small></div></div>
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">💳</span><div><b data-i18n>Card (Visa / Mastercard)</b><small data-i18n>Opens with paid editions</small></div></div>
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">P</span><div><b>PayPal</b><small data-i18n>Opens with paid editions</small></div></div>
+              </div>
             </section>
 
             <section class="profile-pane" data-profile-pane="support">

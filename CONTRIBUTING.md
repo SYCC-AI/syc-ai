@@ -14,8 +14,10 @@ welcome to open issues for bugs and suggestions.
 ## Pull requests
 
 - Keep changes focused and described.
-- By submitting a contribution you agree it may be distributed under the project's
-  license.
+- Sign off every commit (`git commit -s`, the [Developer Certificate of Origin](https://developercertificate.org/)).
+  By signing off you confirm you may contribute the change and you agree it may be
+  distributed under the project's license, including the Change License named in
+  [LICENSE](LICENSE).
 - Do not include secrets, credentials, real server addresses, or third-party
   binaries in a contribution.
 

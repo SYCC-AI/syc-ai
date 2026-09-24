@@ -152,3 +152,13 @@ export function spawnOnDevice(deviceId, { bin, args = [], cwd, env, prepare = []
   queueMicrotask(() => { child._start({ bin, args, cwd, env, prepare, timeoutMs }); });
   return child;
 }
+
+// Tell the signed-in user's phone that a session needs them — an approval to
+// give, a long task that finished. Only when the user switched "Agent alerts"
+// on (Connection → Android); the control plane enforces that and de-duplicates.
+// Best effort: never throws and never delays the session.
+export function phoneAlert(title, body = '') {
+  const username = process.env.SYC_TENANT_USER;
+  if (!username) return;
+  hubJson('/internal/hub/alerts', { username, title: String(title).slice(0, 120), body: String(body).slice(0, 600) }).catch(() => {});
+}

@@ -148,7 +148,18 @@ if (tenants) for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () =
 async function proxyToTenant(app, label, req, res, user, targetPath) {
   let lease;
   try { lease = await tenants.acquire(user.username, app); }
-  catch (error) { return json(res, error.status || 502, { error: `${label} could not start (${error.message}).` }); }
+  catch (error) {
+    if (error.status === 503) {
+      // Every workspace on this server is busy: say so plainly, never a stack trace.
+      res.setHeader('Retry-After', String(error.retryAfter || 60));
+      if (String(req.headers.accept || '').includes('text/html')) {
+        res.writeHead(503, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+        return res.end(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SYC-AI is busy</title><link rel="stylesheet" href="/v2.css"></head><body class="busy-page"><main class="busy-card"><img src="/assets/syc-logo.svg" alt="" width="64" height="64"><h1>Many people are starting SYC-AI right now</h1><p>Your workspace is safe. Please try again in a minute.</p><p><a class="button" href="">Try again</a> <a class="button ghost" href="/main">Back to the panel</a></p></main></body></html>`);
+      }
+      return json(res, 503, { error: 'capacity_full', message: 'Many people are starting SYC-AI right now. Your workspace is safe; please try again in a minute.', retryAfter: error.retryAfter || 60 });
+    }
+    return json(res, error.status || 502, { error: `${label} could not start (${error.message}).` });
+  }
   res.once('close', lease.release);
   return proxyToApp(lease.port, label, req, res, user, targetPath);
 }
@@ -615,7 +626,7 @@ const server = createServer(async (req, res) => {
     if (path.startsWith('/auth/')) return json(res, 404, { error: 'not_found' });
 
     if (path === '/login') return onboarding ? serveFile(res, 'login.html') : (cookieUser(req) ? send(res, 302, '', { Location: '/' }) : serveFile(res, 'login.html'));
-    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
+    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/v2.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
 
     // Everything else requires a session.
     let user = cookieUser(req);

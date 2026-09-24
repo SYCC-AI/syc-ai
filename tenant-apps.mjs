@@ -11,7 +11,12 @@ import { createServer } from 'node:net';
 import { chmodSync, existsSync, lchownSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const IDLE_MS = 30 * 60 * 1000;
+const IDLE_MS = Number(process.env.SYC_TENANT_IDLE_MIN || 15) * 60 * 1000;
+// Hard ceiling on app processes on this box (each user can have two: Claude
+// and Codex). At the ceiling the longest-idle instance is stopped to make room;
+// if every instance is mid-request the newcomer is told to retry shortly.
+// Sized from the unit's MemoryMax: ~70 MB idle, a few hundred MB while busy.
+function maxInstances() { return Math.max(1, Number(process.env.SYC_TENANT_MAX || 120)); }
 // Each user's app processes run under their own numeric uid (no passwd entry
 // needed), so one customer's process cannot read another customer's files or
 // the panel's secrets. Only when the panel itself runs as root.
@@ -181,6 +186,21 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
     return bytes;
   }
 
+  // Stop the instance that has been idle the longest; refuse when none is idle.
+  function makeRoom() {
+    let victim = null;
+    for (const [key, instance] of instances) {
+      if (instance.inflight > 0) continue;
+      if (!victim || instance.lastUsed < victim[1].lastUsed) victim = [key, instance];
+    }
+    if (!victim) {
+      throw Object.assign(new Error('capacity_full: every workspace on this server is busy right now; please try again in a minute'), { status: 503, retryAfter: 60 });
+    }
+    logger.log(`[tenant ${victim[0]}] stopped to make room (${instances.size} running, ceiling ${maxInstances()})`);
+    instances.delete(victim[0]);
+    try { victim[1].child.kill('SIGTERM'); } catch { /* gone */ }
+  }
+
   const reaper = setInterval(() => {
     const now = Date.now();
     for (const [key, instance] of instances) {
@@ -200,7 +220,11 @@ export function createTenantApps({ root, dataRoot, baseEnv = process.env, logger
       const usage = usageOf(username);
       if (usage > QUOTA_BYTES) throw Object.assign(new Error(`storage_quota_exceeded (${Math.round(usage / 1048576)} MB of ${Math.round(QUOTA_BYTES / 1048576)} MB)`), { status: 507 });
       let instance = instances.get(key);
-      if (!instance) { instance = await start(username, app); instances.set(key, instance); }
+      if (!instance) {
+        if (instances.size >= maxInstances()) makeRoom();
+        instance = await start(username, app);
+        instances.set(key, instance);
+      }
       try { await instance.ready; } catch (error) { instances.delete(key); throw error; }
       instance.lastUsed = Date.now();
       instance.inflight += 1;

@@ -55,6 +55,7 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ 
 // What the user lets agents hand to the phone. All off until switched on; the
 // risky one is red.
 const HOSTED_CAPABILITIES = [
+  ['alerts', 'Agent alerts', 'Your phone tells you when an agent is waiting for your OK, or when a long task has finished.', 'safe'],
   ['notify', 'Show notifications', 'Agents can put a message on the phone.', 'safe'],
   ['text', 'Send text to copy or share', 'Agents can hand you a piece of text; you copy or share it.', 'normal'],
   ['link', 'Send links to open', 'Links can lead to any website. Allow this only if you trust what your agents do.', 'danger'],

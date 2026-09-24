@@ -92,7 +92,7 @@
   const HOSTED_APPS = Object.keys(state.apps || {});
   const bar = document.createElement('section');
   bar.className = 'device-bar';
-  document.querySelector('main.dash').prepend(bar);
+  (document.querySelector('.accounts-center') || document.querySelector('main.dash')).prepend(bar);
   let deviceId = (() => { try { return localStorage.getItem('syc.device') || ''; } catch { return ''; } })();
 
   // Accounts that do not run on devices yet stay visible but closed.
@@ -112,10 +112,14 @@
   function renderBar() {
     const devices = state.devices || [];
     if (!devices.length) {
+      // The installer speaks the panel's language (English stays at /node/).
+      const lang = window.SYC?.i18n?.lang || 'en';
+      const base = `https://syc-ai.com/node/${lang === 'en' ? '' : `${lang}/`}`;
       bar.innerHTML = `<h3>${esc(t('Connect your device first'))}</h3>
         <div>${esc(t('Your professional accounts run on your own computer or server. Install SYC Node there and sign in with this SYC-AI account:'))}</div>
-        <div>Linux / macOS:</div><code>curl -fsSL https://syc-ai.com/node/install.sh | bash</code>
-        <div>Windows (PowerShell):</div><code>irm https://syc-ai.com/node/install.ps1 | iex</code>
+        <div>Linux / macOS:</div><code>curl -fsSL ${base}install.sh | bash</code>
+        <div>Windows (PowerShell):</div><code>irm ${base}install.ps1 | iex</code>
+        <div class="hosted-state">${esc(t('Node.js is installed for you if it is missing. Remove it any time with: syc-node uninstall'))}</div>
         <div class="hosted-state">${esc(t('Waiting for your device…'))}</div>`;
       return;
     }
@@ -148,7 +152,7 @@
       if (!st.installed) { box.innerHTML = `<button type="button" class="professional-open-label install-btn" data-do="install">${esc(t('Install'))}</button>`; note(t('not installed')); }
       else if (st.installOnly) { box.innerHTML = ''; note(t('installed · sign-in coming soon')); }
       else if (!st.loggedIn) { box.innerHTML = `<button type="button" class="professional-open-label install-btn" data-do="login">${esc(t('Sign in'))}</button>`; note(t('installed, not signed in')); }
-      else { box.innerHTML = `<a class="professional-open-label" href="/profage/${app}/">${esc(t('Open'))}</a>`; note(t('ready')); }
+      else { box.innerHTML = `<a class="professional-open-label open-link" href="/profage/${app}/">${esc(t('Open'))}</a>`; note(t('ready')); }
       box.querySelector('[data-do="install"]')?.addEventListener('click', () => install(app, flowBox(app)));
       box.querySelector('[data-do="login"]')?.addEventListener('click', () => login(app, flowBox(app)));
     }
@@ -194,7 +198,7 @@
       }
       if (failed) throw Object.assign(new Error(failed.error), failed);
     } catch (e) {
-      const msg = e.message === 'npm_missing' ? t('Node.js/npm is missing on this device. Install Node.js 20+ from nodejs.org and try again.') : e.message === 'not_available_on_this_platform' ? t('Not available for this device yet (Linux and macOS only).') : `${t('Install failed')}: ${e.message}`;
+      const msg = e.message === 'npm_missing' ? t('Node.js/npm is missing on this device. Run the SYC Node installer again — it installs Node.js for you.') : e.message === 'not_available_on_this_platform' ? t('Not available for this device yet (Linux and macOS only).') : `${t('Install failed')}: ${e.message}`;
       box.innerHTML = `<button type="button" data-do="install">${esc(t('Try again'))}</button><span class="hosted-state">${esc(msg)}</span><div class="hosted-log">${esc(e.detail || '')}</div>`;
       box.querySelector('[data-do="install"]').onclick = () => install(app, box);
       return;

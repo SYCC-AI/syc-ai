@@ -13,13 +13,15 @@ coordinated disclosure timeline are available.
 
 ## Scope
 
-- The self-hosted panel and its central account integration.
-- Release installation, verification, repair, update and uninstall paths.
-- Central authentication, entitlements, support and release administration.
-- Encrypted database backup and restore.
+- The hosted panel at syc-ai.com / app.syc-ai.com and its account, session, plan and support flows.
+- SYC Node (`node-agent/`): the agent on customer devices — its command and file policy, token handling, self-update and installers.
+- The SYC-AI Android app (phone link, alerts, update check).
+- The self-hosted panel: release installation, verification, repair, update and uninstall paths.
+- Release and update signing (panel releases, SYC Node updates).
 
-Android, Windows and iPhone clients and bundled provider runtimes are not in the
-verified scope of this release candidate.
+Provider CLIs (Claude Code, Codex, Gemini CLI, Cursor, Kimi) are third-party software and out of scope; report issues in them to their vendors.
+
+We aim to acknowledge a report within 72 hours and to agree a disclosure timeline with you.
 
 ## Security expectations
 

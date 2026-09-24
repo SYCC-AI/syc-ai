@@ -1,124 +1,138 @@
 <div align="center">
 
-<img src="public/assets/syc-logo.svg" width="96" alt="SYC-AI">
+<img src="public/assets/syc-logo.svg" width="104" alt="SYC-AI">
 
 # SYC-AI
 
-**Every AI account you own. One panel. Your own device.**
+### All You Need With AI — In One.
 
-Stop switching between Claude, Codex, Gemini, Cursor, Kimi and three ChatGPT
-logins. Sign in once, work with all of them side by side — and let your agents
-reach your phone, your servers and your channels.
+**Claude Code and Codex on your own computer — started, watched and approved from the web, your phone or your desktop.**
+
+**English** · [فارسی](README.fa.md) · [中文](README.zh-CN.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · [Español](README.es.md)
 
 [![tests](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml/badge.svg)](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml)
-[![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
-[![Get it](https://img.shields.io/badge/get%20it-Web%20%C2%B7%20Android%20%C2%B7%20Linux%20%C2%B7%20Desktop-informational.svg)](#get-started)
-[![Releases](https://img.shields.io/badge/releases-signed%20%26%20verified-success.svg)](#security)
-[![Languages](https://img.shields.io/badge/UI-6%20languages-brightgreen.svg)](#languages)
-[![Edition](https://img.shields.io/badge/Main-free%20until%2014%20Oct%202026-ff6b00.svg)](#editions)
+[![release](https://img.shields.io/github/v/release/SYCC-AI/syc-ai?label=release&color=4f8cff)](https://github.com/SYCC-AI/syc-ai/releases/latest)
+[![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-8b7bff.svg)](LICENSE)
+[![Main is free during launch](https://img.shields.io/badge/Main-free%20during%20launch-34d399.svg)](#editions)
+[![6 languages](https://img.shields.io/badge/UI-6%20languages-4f8cff.svg)](#six-languages)
 
-[Get started](#get-started) · [Self-host](#install) · [What you get](#what-you-get-today) · [Editions](#editions) · [Security](#security) · [Support](#support)
+[**Start free →**](https://app.syc-ai.com/login) &nbsp;·&nbsp; [Get it](#get-started) &nbsp;·&nbsp; [Features](#features) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [FAQ](#faq)
 
 </div>
 
-<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI in 15 seconds: sign in, the main panel, professional accounts, connection, the four ways in, and the phone connector"></p>
+<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI: sign in, your AI accounts, connect a device, phone alerts, the four ways in"></p>
 
----
+## Why SYC-AI
 
-## Tired of switching?
+AI coding agents are powerful, but they live in a terminal on one machine. You can't start a session from your phone, you don't know when one is waiting for your approval, and every tool has its own login and its own screen.
 
-Codex for one job. Claude for the next. Gemini for a third, Cursor for the rest
-— and a handful of ChatGPT accounts you keep logging in and out of because each
-one hits its limit at a different hour.
+**SYC-AI puts all of it in one place.** Connect your computer once. From then on you start and steer Claude Code and Codex from any browser, from the Android app or from your desktop. Your phone taps you when an agent needs your OK. Your provider logins and your files stay on your own computer.
 
-**SYC-AI is the answer to that.** Install it once on your own server, sign in to
-your accounts once, and run every account, every model and every agent from a
-single panel that is yours.
+## Features
 
-And that is only the beginning.
+Ranked by what people ask for most when they work with AI coding agents.
 
-## What you get today
+| | Feature | What it means for you |
+|---|---|---|
+| 📱 | **Start and steer from your phone** | Open a new Claude Code or Codex session — not just watch one — from the web, the Android app or your desktop. |
+| 🔔 | **Phone alerts when an agent needs you** | Your phone tells you when an agent waits for your OK, or when a long task is done. You switch it on; nothing opens by itself. |
+| 🧩 | **Every AI account in one place** | Claude and Codex work end to end today. Gemini, Cursor and Kimi install on your device today; signing in to them is next. |
+| 💻 | **Runs on your own computer** | The AI CLIs install and sign in on your device, under your own accounts. Your logins and your files stay there. |
+| ✅ | **You give the OK** | Commands and file changes wait for your approval. You decide how much an agent may do alone. |
+| ⚡ | **No terminal needed** | One command connects a computer and installs Node.js for you. After that, everything is buttons. |
+| 🔀 | **Choose where it runs** | Each session runs on the device you pick — your laptop, your server or your Windows PC. |
+| 📊 | **Usage for every turn** | See what each answer used, so your quota is never a surprise. |
+| 🛡️ | **Open-source device agent** | [SYC Node](node-agent/) only runs the AI CLIs, only touches its own folder, logs every request and can be paused at any time. |
+| 🔏 | **Signed updates with rollback** | The panel and SYC Node install only releases signed by SYC, and put the previous version back if a check fails. |
+| 🌍 | **Six languages** | English, 中文, Español, العربية, Русский and فارسی — the panel, the installers and the agents' answers. |
+| 💬 | **Help where you work** | Tickets and announcements inside the panel, attached to your account. |
 
-**SYC-AI (Main)** — free for everyone until **14 October 2026**.
-
-- **Every account in one place.** Claude, Codex, Gemini, Qwen, Cursor, Kimi and
-  API-key providers, each in its own panel, all behind one sign-in.
-- **Your agents in your pocket.** Pair your Android phone with the **SYC Claw**
-  app in minutes. The panel hands you the app; you sign in on the phone; your
-  agents can act on it — with permissions *you* switch on, one by one.
-- **Your server, your data.** Self-hosted. Nothing leaves your machine except
-  your own requests to your own providers.
-- **Updates you can trust.** Every release is signed. The panel verifies hash
-  and size before it writes a byte, applies the update transactionally,
-  health-checks itself and rolls back on failure. Your data survives either way.
-- **A real account, not a local password.** Central sign-up, username and
-  password recovery, signed entitlements — and no second factor forced on you.
-  Extra security lives in settings, never at the door.
-- **Support inside the panel.** Tickets and announcements where you work.
-- **Six interface languages.** English, 中文, Español, العربية, Русский, فارسی.
-
-<p align="center">
-<img src="screenshots/panels.png" width="420" alt="The main panel: professional accounts, connection, communications">&nbsp;
-<img src="screenshots/phone.png" width="420" alt="Connect your Android phone with SYC Claw">
-</p>
-
-## And that is only the beginning
-
-Main is the front door. Behind it, SYC-AI already does this — the professional
-editions bring it to you:
-
-- **Every server, one mesh.** Link all your servers and let your agents work
-  across them as one.
-- **Your channels, your agents.** Connect the social platforms and services you
-  already use to the agents on your accounts.
-- **Agents that spend less.** Token saving built into the agent itself —
-  nothing extra to install.
-- **Agents that think your way.** Personal configuration for how each agent
-  reasons, sees and answers.
-- **Agent Surgery.** For professionals who need to see exactly what an agent is
-  doing — and change it.
-
-You are a professional; the next editions are built for you. Until then, Main
-is free. Install it and find out how much easier your monthly accounts were
-supposed to be.
+**Coming next:** sign-in for Gemini, Cursor and Kimi · Communications (Telegram, WhatsApp, Instagram) connected to your agents · team workspaces · the professional editions.
 
 ## Get started
 
-No server needed. Use the panel at **[syc-ai.com](https://syc-ai.com)** — your
-professional accounts run on your own computer, so your AI logins and files
-never leave it. One account, four ways in:
+One account, four ways in. Sign up at **[app.syc-ai.com](https://app.syc-ai.com/login)** with a Gmail address, a username and a password.
 
 | | Where | How |
 |---|---|---|
-| 🌐 **Web** | any browser | open **[app.syc-ai.com](https://app.syc-ai.com/login)** |
-| 📱 **Android** | the SYC-AI app — the panel, and your phone's link to your agents | **[Download SYC-AI for Android](https://syc-ai.com/download/syc-ai.apk)** (APK) |
-| 🐧 **Linux** | your computer or server | `curl -fsSL https://syc-ai.com/node/install.sh \| bash` |
-| 🖥️ **Desktop** | Windows / macOS | open app.syc-ai.com in Chrome or Edge → **Install SYC-AI**; on Windows also run `irm https://syc-ai.com/node/install.ps1 \| iex` |
+| 🌐 | **Web** | Open **[app.syc-ai.com](https://app.syc-ai.com/login)** in any browser. |
+| 📱 | **Android** | **[Download the SYC-AI app](https://syc-ai.com/download/syc-ai.apk)** (APK). It is the panel on your phone and the link for phone alerts. |
+| 🐧 | **Linux / macOS** | `curl -fsSL https://syc-ai.com/node/install.sh \| bash` |
+| 🪟 | **Windows** | `irm https://syc-ai.com/node/install.ps1 \| iex` — and in Chrome or Edge, *Install SYC-AI* makes the panel a desktop app. |
 
-1. **Sign up** at [app.syc-ai.com](https://app.syc-ai.com/login) with your email,
-   a username and a password, and activate **Main** (free until 14 Oct 2026).
-2. **Connect your computer** with SYC Node:
+Then open **Professional accounts**, press **Install** on Claude or Codex, and **Sign in** once in your own browser. That's it.
 
-   ```bash
-   # Linux / macOS (beta)
-   curl -fsSL https://syc-ai.com/node/install.sh | bash
-   ```
-   ```powershell
-   # Windows (PowerShell)
-   irm https://syc-ai.com/node/install.ps1 | iex
-   ```
-3. **Install your accounts** — open *Professional accounts*, press **Install**
-   on Claude or Codex, then **Sign in**. They install and sign in on your
-   device; the panel drives them from syc-ai.com.
-4. **Connect your phone (optional)** — in the SYC-AI Android app open
-   *Connection → Android* and tap **Connect this phone**. You choose what your
-   agents may send it (notifications, text, links); nothing opens until you tap it.
+> The installer adds Node.js if it is missing. Run as root on Linux, it creates a separate `syc-node` user. Remove everything any time with `syc-node uninstall`.
 
-Claude and Codex run on your device today; the other accounts follow.
+## How it works
 
-## Install
+```mermaid
+flowchart LR
+  subgraph you["Anywhere"]
+    W["Browser"]:::c
+    A["Android app"]:::c
+    D["Desktop app"]:::c
+  end
+  subgraph cloud["syc-ai.com"]
+    P["SYC-AI panel<br/>sessions · alerts · plans"]:::s
+  end
+  subgraph pc["Your computer"]
+    N["SYC Node<br/>(open source)"]:::n
+    C["Claude Code / Codex<br/>your own logins"]:::n
+  end
+  W & A & D --> P
+  P <-- "encrypted link<br/>(outbound from your computer)" --> N
+  N --> C
+  C --> AI["Anthropic · OpenAI<br/>(your accounts)"]
+  P -. "alert: needs your OK" .-> A
+  classDef c fill:#10203f,stroke:#4f8cff,color:#eaf0ff
+  classDef s fill:#1a1840,stroke:#8b7bff,color:#eaf0ff
+  classDef n fill:#0f2a24,stroke:#34d399,color:#eaf0ff
+```
 
-Prefer to host the whole panel yourself? One command on a fresh Linux server:
+- Your computer connects **out** to syc-ai.com. No port is opened on your machine and no server is needed.
+- The panel tells SYC Node to start the AI CLI you installed. The CLI talks to Anthropic or OpenAI directly, with your own account.
+- Your messages and the agents' replies pass through the panel and are kept in your session history, so you can continue on another device.
+
+## Where your data lives
+
+| Stays on your computer | Kept on syc-ai.com | Your controls |
+|---|---|---|
+| Your Claude and OpenAI logins (the CLIs keep them) | Your SYC-AI account (email, username, password hash) | `syc-node pause` — the panel can't use the device until you resume |
+| Your files and projects | Your session history, so you can continue anywhere | `syc-node log` — every request the panel made to your device |
+| The commands the agents run | Device names, alerts, support tickets | `syc-node uninstall` · download your data from your profile |
+
+Full details: [privacy notice](https://syc-ai.com/privacy) · [terms](https://syc-ai.com/terms).
+
+## SYC Node — the agent on your device
+
+SYC Node is a single, dependency-free file ([`node-agent/syc-node.mjs`](node-agent/syc-node.mjs)). It:
+
+- **runs only** the AI CLIs (`claude`, `codex`, `gemini`, `cursor-agent`, `kimi`, `qwen`), npm installs of exactly those packages into `~/.syc-node/npm`, and the official Cursor installer; **it refuses any other program**;
+- **reads and writes only inside `~/.syc-node`**; paths outside it are refused;
+- **drops any environment variable** that could redirect a CLI to another server or preload code;
+- **logs every request** in `~/.syc-node/activity.log` (`syc-node log`);
+- **updates itself only** with builds signed by the SYC release key.
+
+```text
+syc-node login | run | status | pause | resume | log | update | uninstall
+syc-node phone notify|link|text <value>     # what agents use to reach your phone (you choose which kinds)
+```
+
+## Six languages
+
+The panel, the installers and the agents' answers speak **English, 中文, Español, العربية, Русский and فارسی**. The README links in your language point to installers that ask *"English or your language?"* when they start.
+
+## Editions
+
+| Edition | Status |
+|---|---|
+| **SYC-AI (Main)** | Available now — **free during the launch** |
+| Plus · Pro · Immortal Edition | Coming. The price is shown before you choose anything; payments are not open yet. |
+
+## Self-host
+
+Prefer to run the whole panel on your own Linux server? The self-hosted edition installs with one command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \
@@ -132,76 +146,47 @@ curl -fsSL https://raw.githubusercontent.com/SYCC-AI/syc-ai/main/install.sh | \
   bash
 ```
 
-Then open your origin, create your account and pick **Main**. Add
-`SYC_FLAVOR=full` to ship Claude and Codex in the same download, and
-`SYC_YES=1` to skip the prompts on an unattended server.
+Needs Linux with systemd, Node.js 20+, `zstd`, `curl`, `tar`, root access and an HTTPS reverse proxy. The installer is fail-closed: without the signed manifest and both public keys it stops before touching your server. Upgrades keep your data; a failed update puts the previous version back. `sudo /opt/syc-ai/manage-installation.sh repair|uninstall` repairs or removes it (user data is never silently erased).
 
-The installer is deliberately fail-closed: it needs the signed release manifest,
-the release and entitlement public keys and an HTTPS control URL, or it stops
-before touching your server. Upgrades keep your data; a failed activation puts
-the previous installation back.
+## FAQ
 
-### Requirements
+<details><summary><b>Is it free?</b></summary>
 
-- Linux with `systemd`
-- Node.js 20 or newer
-- `zstd`, `curl` and `tar`
-- root access for service installation
-- an HTTPS reverse proxy (nginx, Caddy) in front of the panel
+SYC-AI (Main) is free during the launch. Paid editions come later; their price is shown before you choose, and payments are not open yet.
+</details>
 
-## Editions
+<details><summary><b>Do I need a server?</b></summary>
 
-| Edition | Status | Price |
-|---|---|---|
-| **SYC-AI (Main)** | available now | ~~1.75 USDT~~ **free until 14 October 2026** |
-| Plus | next | — |
-| Pro | next | — |
-| Immortal Edition | next | — |
+No. Your own laptop or PC is enough. A server works too, if you want your agents to run there.
+</details>
 
-The launch offer runs for 22 days from release day (22 September → 14 October
-2026). After that, Main is 1.75 USDT — the panel shows the exact end date on
-its plan page.
+<details><summary><b>Is my code sent to you?</b></summary>
 
-Professional accounts are delivered only against a short-lived, single-use
-grant bound to your installation — never from a public download.
+Your files stay on your computer. The conversation — your messages and the agents' replies, which can quote parts of files — passes through syc-ai.com and is kept in your session history.
+</details>
+
+<details><summary><b>What can SYC Node do on my computer?</b></summary>
+
+Only start the AI CLIs, install exactly those CLIs with npm, and read or write inside `~/.syc-node`. Everything else is refused and logged. You can pause it or remove it at any time. [Read the code](node-agent/syc-node.mjs).
+</details>
+
+<details><summary><b>Is SYC-AI affiliated with Anthropic, OpenAI or Google?</b></summary>
+
+No. SYC-AI is an independent product. You use your own accounts with each provider, under that provider's terms. Claude, Codex, Gemini, Cursor and Kimi are trademarks of their owners.
+</details>
 
 ## Security
 
-- Release and entitlement documents are verified before use; the release key
-  never leaves SYC.
-- Central sessions use secure cookies, CSRF protection, step-up checks and
-  role-based authorization.
-- Runtime secrets live outside the release archives, owner-readable only.
-- Backups are authenticated and encrypted; restores validate before activation.
-- A release the panel cannot apply leaves it in **restricted mode**: account and
-  support stay reachable, nothing is silently out of date, nothing is deleted.
-- The phone app connects by signing in to *your* panel; every capability starts
-  off and is switched on by you.
+Releases and SYC Node updates are Ed25519-signed; the panel verifies size and SHA-256 before it writes a byte, applies updates transactionally and rolls back on failure. Sessions use secure cookies and CSRF protection; passwords are hashed with scrypt; device tokens are stored only as hashes. Report a vulnerability privately: [SECURITY.md](SECURITY.md).
 
-Private reporting: see [SECURITY.md](SECURITY.md).
+## Community
 
-## Operations
+- Questions and ideas: [Discussions](https://github.com/SYCC-AI/syc-ai/discussions)
+- Bugs: [Issues](https://github.com/SYCC-AI/syc-ai/issues)
+- Email: syc@syc-ai.com
 
-```bash
-sudo /opt/syc-ai/manage-installation.sh repair
-sudo /opt/syc-ai/manage-installation.sh uninstall
-```
-
-Uninstall is recoverable: the installation is moved to a timestamped backup and
-only its own service units are removed. User data is never silently erased.
-Migration from the earlier `syc-free` service is handled by the installer.
-
-## Languages
-
-English (default), 中文, Español, العربية, Русский and فارسی. Other
-languages for this page are on the way.
-
-## Support
-
-Open an issue on [github.com/SYCC-AI/syc-ai](https://github.com/SYCC-AI/syc-ai/issues). Inside the panel, use **Support** to open a
-ticket that reaches the operators directly.
+If SYC-AI makes your work easier, a ⭐ helps other people find it.
 
 ## License
 
-Source-available under the Business Source License 1.1 — see [LICENSE](LICENSE)
-for the use grant and change date. `SYC` and `SYC-AI` are trademarks of SYC.
+Source-available under the [Business Source License 1.1](LICENSE). `SYC` and `SYC-AI` are trademarks of SYC. SYC-AI is not affiliated with Anthropic, OpenAI, Google, Cursor or Moonshot AI.

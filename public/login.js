@@ -55,7 +55,7 @@ const input = (id, label, type = 'text', autocomplete = '', icon = 'user', place
   <input id="${id}" name="${id}" type="${type}" autocomplete="${autocomplete}" placeholder="${t(placeholder)}" required>
   ${type === 'password' ? `<button class="login-password-toggle" type="button" aria-label="${t('Show password')}" aria-pressed="false">${EYE}</button>` : ''}</span></label>`;
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-// Titles show the brand in blue, like sycc.ir.
+// Titles show the brand name in the accent blue.
 const setTitle = (text) => { title.innerHTML = escapeHtml(t(text)).replace('SYC-AI', '<b>SYC-AI</b>'); };
 
 function render() {
@@ -65,7 +65,7 @@ function render() {
   const current = { signin: 'signin', signup_request: 'signup', signup_verify: 'signup', recovery_request: state.purpose === 'reset_password' ? 'password' : 'username', recovery_verify: state.purpose === 'reset_password' ? 'password' : 'username' }[state.step];
   nav.querySelectorAll('[data-mode]').forEach((button) => { button.hidden = button.dataset.mode === current; });
   if (state.step === 'signin') {
-    setTitle('Welcome to SYC-AI'); subtitle.textContent = t('Sign in to your command center');
+    setTitle('Welcome to SYC-AI'); subtitle.textContent = t('All you need with AI, in one place');
     fields.innerHTML = input('username', 'Username', 'text', 'username', 'user', 'Enter your username') + input('password', 'Password', 'password', 'current-password', 'lock', 'Enter your password');
     form.dataset.action = 'login'; document.getElementById('submitLabel').textContent = t('Sign in');
   } else if (state.step === 'signup_request') {

@@ -7,11 +7,11 @@
   <title>SYC</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
   <link rel="manifest" href="/assets/app.webmanifest">
-  <script src="/i18n.js?v=14"></script>
+  <script src="/i18n.js?v=15"></script>
   <link rel="stylesheet" href="/main.css?v=22">
+  <link rel="stylesheet" href="/v2.css?v=1">
 </head>
-<body class="profage-section">
-  <div class="ambient"></div>
+<body class="v2 profage-section">
   <div class="watermark" aria-hidden="true"></div>
 
   <header class="topbar">
@@ -21,7 +21,7 @@
       </a>
       <div>
         <strong id="sectionTitle" data-i18n>Professional accounts</strong>
-        <span id="sectionBlurb" data-i18n>Your private workspace</span>
+        <span id="sectionBlurb" data-i18n>Your AI accounts, on your own device</span>
       </div>
     </div>
     <div class="topbar-right">
@@ -30,7 +30,40 @@
   </header>
 
   <main class="dash">
-    <div class="grid" id="items">
+    <section class="page-hero">
+      <p class="eyebrow" data-i18n>Professional accounts</p>
+      <h1 data-i18n>All your AI accounts, on your own device</h1>
+      <p class="lede" data-i18n>Pick a device, install an account and sign in once. Then open it from here, from your phone or from your desktop.</p>
+    </section>
+    <div class="accounts-layout">
+      <aside class="feature-column" aria-label="What you can do">
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+        <div><b data-i18n>Runs on your own computer</b><small data-i18n>Claude and Codex install and sign in on your device. Your logins and your files stay there.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+        <div><b data-i18n>Start from your phone</b><small data-i18n>Open a new session or continue one from the web, the Android app or your desktop.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
+        <div><b data-i18n>Alerts on your phone</b><small data-i18n>Your phone tells you when an agent waits for your OK, or when a long task is done.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <div><b data-i18n>You give the OK</b><small data-i18n>Commands and file changes wait for your approval. You decide how much an agent may do alone.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+        <div><b data-i18n>Every account in one place</b><small data-i18n>One sign-in for Claude and Codex today; Gemini, Cursor and Kimi are on the way.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h11M4 17h11"/><path d="m15 4 3 3-3 3M15 14l3 3-3 3"/></svg></span>
+        <div><b data-i18n>Choose where it runs</b><small data-i18n>Each session runs on the device you pick — your laptop, your server, your Windows PC.</small></div>
+      </article>
+      </aside>
+      <section class="accounts-center">
+    <div class="grid accounts-grid" id="items">
       <article class="card-wrap professional-card" data-brand="claude">
         <a class="card" href="/profage/claude/">
           <span class="card-icon card-logo brand-claude"><img src="/assets/claude-color.svg" alt="" loading="lazy"></span>
@@ -124,6 +157,34 @@
         </div>
       </article>
     </div>
+      </section>
+      <aside class="feature-column" aria-label="What you can do">
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></span>
+        <div><b data-i18n>Usage for every turn</b><small data-i18n>See what each answer used, so nothing about your quota is a surprise.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></span>
+        <div><b data-i18n>Pause any time</b><small data-i18n>One command on your device — syc-node pause — and the panel cannot use it until you resume.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4"/></svg></span>
+        <div><b data-i18n>Open device agent</b><small data-i18n>SYC Node is open source: read exactly what it may run on your device and what it refuses.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="M9 11h6v5H9z"/><path d="M10 11V9a2 2 0 0 1 4 0v2"/></svg></span>
+        <div><b data-i18n>Signed updates</b><small data-i18n>The panel and SYC Node only install releases signed by SYC, and roll back if a check fails.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+        <div><b data-i18n>Six languages</b><small data-i18n>English, 中文, Español, العربية, Русский and فارسی — and answers come back in your language.</small></div>
+      </article>
+      <article class="feature-box">
+        <span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-12.9 6.3L3 20l1.7-4.6A8 8 0 1 1 21 12Z"/><path d="M9 10h6M9 14h4"/></svg></span>
+        <div><b data-i18n>Help where you work</b><small data-i18n>Tickets and announcements live inside the panel, attached to your account.</small></div>
+      </article>
+      </aside>
+    </div>
   </main>
 
   <div id="engineSettingsLayer" class="engine-settings-layer hidden">
@@ -138,6 +199,6 @@
 
   <script src="/theme.js?v=1"></script>
   <script src="/profile.js?v=3"></script>
-  <script src="/profage.js?v=10"></script>
+  <script src="/profage.js?v=11"></script>
 </body>
 </html>
