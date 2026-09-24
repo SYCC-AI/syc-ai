@@ -55,6 +55,7 @@ test('account center renders server plan names and prices without obsolete editi
   assert.match(html, /<s>1\.75 USDT<\/s>/);
   assert.match(html, /Immortal Edition/);
   assert.doesNotMatch(html, /Super Pro/);
+  assert.doesNotMatch(html, />Starter</, 'the internal starter edition is not shown');
 });
 
 test('account center escapes ticket summaries and messages', () => {
@@ -75,4 +76,5 @@ test('paid editions show a clear, disabled upgrade button until payments open', 
   ], 'main');
   assert.match(html, /<button type="button" disabled[^>]*>Upgrade · opens soon<\/button>/);
   assert.equal((html.match(/<button type="button" disabled/g) || []).length, 1, 'the current edition has no upgrade button');
+  assert.match(html, /19\.99 USDT \/ month/, 'a paid edition that is not open yet still shows its monthly price');
 });

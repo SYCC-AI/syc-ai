@@ -41,7 +41,7 @@
             <button data-profile-tab="account" type="button" data-i18n>Account details</button>
             <button data-profile-tab="security" type="button" data-i18n>Security</button>
             <button data-profile-tab="upgrade" type="button" data-i18n>Upgrade</button>
-            <button data-profile-tab="support" type="button">Support</button>
+            <button data-profile-tab="support" type="button" data-i18n>Support</button>
           </nav>
 
           <div class="profile-content">
@@ -63,16 +63,21 @@
 
             <section class="profile-pane" data-profile-pane="account">
               <div class="profile-account-card"><span class="profile-account-icon">@</span><div><small data-i18n>Username</small><strong id="profileUsername"></strong><p data-i18n>The sign-in name is set by the panel administrator.</p></div></div>
-              <div class="profile-account-card" id="profileEmailCard" hidden><span class="profile-account-icon">✉</span><div><small>Email</small><strong id="profileEmail"></strong><p>Your verified central account address.</p></div></div>
+              <div class="profile-account-card" id="profileEmailCard" hidden><span class="profile-account-icon">✉</span><div><small data-i18n>Email</small><strong id="profileEmail"></strong><p data-i18n>Your verified central account address.</p></div></div>
               <div class="profile-account-card"><span class="profile-account-icon">◇</span><div><small data-i18n>Access level</small><strong id="profileRole"></strong><p data-i18n>Section access is controlled by role.</p></div></div>
-              <div class="profile-account-card"><span class="profile-account-icon">★</span><div><small data-i18n>Edition</small><strong>SYC-AI (Main)</strong><p data-i18n>See the Upgrade section for other editions.</p></div></div>
+              <div class="profile-account-card"><span class="profile-account-icon">★</span><div><small data-i18n>Edition</small><strong>SYC-AI (Main)</strong><p id="profilePlanTime" class="plan-time"></p><p data-i18n>See the Upgrade section for other editions.</p></div></div>
               <div class="profile-account-card" id="profileLocalPasswordCard"><span class="profile-account-icon">⌁</span><div><small data-i18n>Password last changed</small><strong id="profilePasswordChanged">—</strong><p data-i18n>Change it from the Security section.</p></div></div>
               <form class="profile-account-card" id="profileCentralPassword" hidden autocomplete="on"><span class="profile-account-icon">⚿</span><div><small data-i18n>Password</small><strong data-i18n>Change your password</strong>
                 <input type="password" id="cpCurrent" autocomplete="current-password" placeholder="Current password" data-i18n-attr="placeholder" required>
                 <input type="password" id="cpNew" autocomplete="new-password" placeholder="New password (12 characters or more)" data-i18n-attr="placeholder" minlength="12" required>
                 <button class="primary" type="submit" data-i18n>Change password</button>
                 <p class="form-status" id="cpStatus" aria-live="polite"></p></div></form>
-              <div class="profile-account-card" id="profileExportCard" hidden><span class="profile-account-icon">⇩</span><div><small>Your data</small><strong>Account export</strong><p>Download your central account, installations, entitlements and support conversations.</p><button class="ghost" id="profileExport" type="button">Download JSON</button><p class="form-status" id="profileExportStatus" aria-live="polite"></p></div></div>
+              <div class="profile-account-card" id="profileExportCard" hidden><span class="profile-account-icon">⇩</span><div><small data-i18n>Your data</small><strong data-i18n>Account export</strong><p data-i18n>Download your central account, installations, entitlements and support conversations.</p><button class="ghost" id="profileExport" type="button" data-i18n>Download JSON</button><p class="form-status" id="profileExportStatus" aria-live="polite"></p></div></div>
+              <div class="profile-account-card" id="profilePrivacyCard" hidden><span class="profile-account-icon">⛨</span><div><small data-i18n>Privacy</small><strong data-i18n>Your account and your data</strong>
+                <p data-i18n>Your AI logins and files stay on your own computer. We keep your SYC-AI account, your session history and your support tickets.</p>
+                <p><a href="https://syc-ai.com/privacy" target="_blank" rel="noopener" data-i18n>Read the privacy notice</a></p>
+                <button class="ghost danger-ghost" id="profileDeleteRequest" type="button" data-i18n>Ask to delete my account</button>
+                <p class="form-status" id="profileDeleteStatus" aria-live="polite"></p></div></div>
               <div class="profile-note" id="profileLocalNote" data-i18n>This profile is stored only on this panel.</div>
             </section>
 
@@ -98,30 +103,33 @@
             <section class="profile-pane" data-profile-pane="upgrade">
               <div class="upgrade-intro"><p class="profile-kicker" data-i18n>Plans</p><h3 data-i18n>Upgrade your panel</h3><p data-i18n>You are using SYC-AI (Main).</p></div>
               <div class="upgrade-grid" id="accountPlanGrid">
-                <article class="upgrade-card"><b>Starter</b><small>Coming soon</small><em>Unavailable</em></article>
                 <article class="upgrade-card current"><b>SYC-AI (Main)</b><small>Your current edition</small><em>Active</em></article>
-                <article class="upgrade-card"><b>Plus</b><small>Coming soon</small><em>Unavailable</em></article>
-                <article class="upgrade-card"><b>Pro</b><small>Coming soon</small><em>Unavailable</em></article>
-                <article class="upgrade-card"><b>Immortal Edition</b><small>Coming soon</small><em>Unavailable</em></article>
+                <article class="upgrade-card"><b>SYC-AI Plus</b><small>4 USDT / month</small><em>Coming soon</em></article>
+                <article class="upgrade-card"><b>SYC-AI Pro</b><small>15 USDT / month</small><em>Coming soon</em></article>
+                <article class="upgrade-card"><b>SYC-AI Immortal Edition</b><small>90 USDT / month</small><em>Coming soon</em></article>
               </div>
+              <div class="upgrade-intro"><p class="profile-kicker" data-i18n>Balance</p><h3 data-i18n>Your balance</h3><p data-i18n>Top up once and pay for any edition from your balance. Top-ups open together with the paid editions.</p></div>
+              <div class="balance-card" aria-disabled="true"><div><small data-i18n>Available</small><strong>0.00 USD</strong></div><button type="button" disabled aria-disabled="true" data-i18n>Top up · opens soon</button></div>
               <div class="upgrade-intro"><p class="profile-kicker" data-i18n>Payment</p><h3 data-i18n>How you will pay</h3><p data-i18n>Payments open together with the paid editions. Main stays free until then.</p></div>
-              <div class="pay-methods" aria-label="Payment methods">
-                <div class="pay-method" aria-disabled="true"><span class="pm-icon">₮</span><div><b>USDT (TRC20)</b><small data-i18n>Opens with paid editions</small></div></div>
-                <div class="pay-method" aria-disabled="true"><span class="pm-icon">💳</span><div><b data-i18n>Card (Visa / Mastercard)</b><small data-i18n>Opens with paid editions</small></div></div>
-                <div class="pay-method" aria-disabled="true"><span class="pm-icon">P</span><div><b>PayPal</b><small data-i18n>Opens with paid editions</small></div></div>
+              <div class="pay-methods" id="payMethods" aria-label="Payment methods">
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">₮</span><div><b>USDT</b><small>TRC20 · ERC20 · BEP20 · Polygon · TON</small></div></div>
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">₿</span><div><b data-i18n>Other cryptocurrencies</b><small>BTC · ETH · BNB · SOL · XRP · USDC · TRX · TON · DOGE · LTC</small></div></div>
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">P</span><div><b>PayPal</b><small data-i18n>A payment link for each order</small></div></div>
+                <div class="pay-method" aria-disabled="true"><span class="pm-icon">💳</span><div><b data-i18n>Card (Visa / Mastercard)</b><small data-i18n>Through PayPal</small></div></div>
               </div>
+              <p class="profile-note" data-i18n>Every method opens together with the paid editions.</p>
             </section>
 
             <section class="profile-pane" data-profile-pane="support">
-              <div class="upgrade-intro"><p class="profile-kicker">Support</p><h3>Tickets</h3><p>Technical and financial requests stay attached to your SYC-AI account.</p></div>
+              <div class="upgrade-intro"><p class="profile-kicker" data-i18n>Support</p><h3 data-i18n>Tickets</h3><p data-i18n>Technical and financial questions, suggestions and criticism — every ticket stays attached to your SYC-AI account and we answer here.</p></div>
               <form class="security-card" id="ticketCreateForm">
-                <label>Subject<input id="ticketSubject" maxlength="120" minlength="5" required></label>
+                <label><span data-i18n>Subject</span><input id="ticketSubject" maxlength="120" minlength="5" required></label>
                 <div class="profile-form-grid">
-                  <label>Category<select id="ticketCategory"><option value="technical">Technical</option><option value="financial">Financial</option></select></label>
-                  <label>Severity<select id="ticketSeverity"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></label>
+                  <label><span data-i18n>Topic</span><select id="ticketCategory"><option value="technical" data-i18n>Technical</option><option value="financial" data-i18n>Financial</option><option value="suggestion" data-i18n>Suggestions and criticism</option></select></label>
+                  <label><span data-i18n>Urgency</span><select id="ticketSeverity"><option value="low" data-i18n>Low</option><option value="medium" data-i18n>Medium</option><option value="high" data-i18n>High</option></select></label>
                 </div>
-                <label>Message<textarea id="ticketBody" maxlength="5000" required></textarea></label>
-                <button class="primary" type="submit">Create ticket</button><p class="form-status" id="ticketCreateStatus" aria-live="polite"></p>
+                <label><span data-i18n>Message</span><textarea id="ticketBody" maxlength="5000" required></textarea></label>
+                <button class="primary" type="submit" data-i18n>Create ticket</button><p class="form-status" id="ticketCreateStatus" aria-live="polite"></p>
               </form>
               <div class="ticket-list" id="ticketList"></div>
               <div id="ticketThread" hidden></div>
@@ -150,6 +158,7 @@
     document.getElementById('profilePassword').onsubmit = changePassword;
     document.getElementById('profileRevokeSessions').onclick = revokeSessions;
     document.getElementById('profileExport').onclick = exportAccount;
+    document.getElementById('profileDeleteRequest').onclick = requestDeletion;
     document.getElementById('profileCentralPassword').onsubmit = changeCentralPassword;
     document.getElementById('ticketCreateForm').onsubmit = createTicket;
     document.getElementById('ticketList').onclick = (event) => {
@@ -214,6 +223,8 @@
       const bootstrap = await service.client.bootstrap();
       accountCatalog = bootstrap.catalog;
       document.getElementById('accountPlanGrid').innerHTML = service.module.renderPlanCards(accountCatalog.plans, 'main');
+      const methods = service.module.renderPaymentMethods?.(accountCatalog.payments || {}, (x) => (window.SYC?.t ? window.SYC.t(x) : x));
+      if (methods) document.getElementById('payMethods').innerHTML = methods;
       const tickets = await service.client.listTickets();
       document.getElementById('ticketList').innerHTML = service.module.renderTicketList(tickets);
     } catch (error) {
@@ -295,6 +306,21 @@
     } finally { button.disabled = false; }
   }
 
+  // Deleting an account is done by a person, so nothing is lost by accident:
+  // the button files a support ticket that the SYC-AI team handles.
+  async function requestDeletion() {
+    const tr = (x) => (window.SYC?.t ? window.SYC.t(x) : x);
+    const status = document.getElementById('profileDeleteStatus');
+    if (!confirm(tr('Ask the SYC-AI team to delete your account and its data? You will get an answer in Support.'))) return;
+    const button = document.getElementById('profileDeleteRequest'); button.disabled = true;
+    try {
+      const service = await center();
+      await service.client.createTicket({ subject: 'Please delete my account', category: 'technical', severity: 'medium',
+        body: 'I ask the SYC-AI team to delete my account and its data. (Sent from Profile → Account details → Privacy.)' });
+      status.textContent = tr('Request sent. You will find the answer in Support.'); status.className = 'form-status success';
+    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+  }
+
   async function exportAccount() {
     const button = document.getElementById('profileExport');
     const status = document.getElementById('profileExportStatus');
@@ -320,6 +346,19 @@
     document.querySelectorAll('[data-profile-tab="support"], [data-open-tab="support"]').forEach((node) => { node.hidden = !central; });
     const emailCard = document.getElementById('profileEmailCard'); if (emailCard) emailCard.hidden = !central;
     const exportCard = document.getElementById('profileExportCard'); if (exportCard) exportCard.hidden = !central;
+    const privacyCard = document.getElementById('profilePrivacyCard'); if (privacyCard) privacyCard.hidden = !central;
+    // How long the edition runs: its end date and the days left.
+    const planTime = document.getElementById('profilePlanTime');
+    const endsAt = Date.parse(currentUser.plan?.endsAt || '');
+    if (planTime) {
+      const tr = (x, vars) => (window.SYC?.t ? window.SYC.t(x, vars) : x);
+      if (Number.isFinite(endsAt)) {
+        const days = Math.max(0, Math.ceil((endsAt - Date.now()) / 86_400_000));
+        const until = new Date(endsAt).toLocaleDateString(window.SYC?.i18n?.lang || undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+        planTime.textContent = tr('Active until {date} · {days} days left', { date: until, days: String(days) });
+        planTime.classList.toggle('soon', days <= 7);
+      } else planTime.textContent = '';
+    }
     // A central (syc-ai.com) account changes its password right here; the
     // local-panel password card and note do not apply to it.
     const centralPassword = document.getElementById('profileCentralPassword'); if (centralPassword) centralPassword.hidden = !central;
@@ -406,7 +445,8 @@
         <button type="button" role="menuitem" data-open-tab="account" data-i18n>Account details</button>
         <button type="button" role="menuitem" data-open-tab="security" data-i18n>Security</button>
         <button type="button" role="menuitem" data-open-tab="upgrade" data-i18n>Upgrade</button>
-        <button type="button" role="menuitem" data-open-tab="support">Support</button>
+        <button type="button" role="menuitem" data-open-tab="support" data-i18n>Support</button>
+        <a role="menuitem" class="avatar-menu-link" href="/help" data-i18n>Guide</a>
         <hr>
         <div class="avatar-language" role="group" aria-label="Language">
           <small data-i18n>Language</small>

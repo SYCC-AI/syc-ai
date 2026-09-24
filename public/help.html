@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050914">
+  <title>SYC-AI guide</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="/assets/app.webmanifest">
+  <script src="/i18n.js?v=18"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
+  <link rel="stylesheet" href="/v2.css?v=5">
+</head>
+<body class="v2 help-page">
+  <div class="watermark" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/main" aria-label="Back" data-i18n-attr="aria-label"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></a>
+      <div><strong data-i18n>Guide</strong><span data-i18n>The basics of SYC-AI in three minutes</span></div>
+    </div>
+    <div class="topbar-right"><div class="avatar-menu" id="avatarMenu"></div></div>
+  </header>
+
+  <main class="dash help-layout">
+    <nav class="help-toc" aria-label="Contents" data-i18n-attr="aria-label">
+      <a href="#start" data-i18n>Start in three steps</a>
+      <a href="#accounts" data-i18n>Professional accounts</a>
+      <a href="#switching" data-i18n>Automatic switching</a>
+      <a href="#skills" data-i18n>Skills and plugins</a>
+      <a href="#special" data-i18n>Specialized sessions</a>
+      <a href="#phone" data-i18n>Your phone</a>
+      <a href="#faq" data-i18n>Questions</a>
+    </nav>
+
+    <div class="help-body">
+      <section class="page-hero">
+        <p class="eyebrow" data-i18n>Guide</p>
+        <h1 data-i18n>Welcome to SYC-AI</h1>
+        <p class="lede" data-i18n>SYC-AI runs your own AI subscriptions — Claude, Codex and more — on your own computer, and lets you use them from the web, your phone or your desktop. This page shows everything you need, step by step.</p>
+      </section>
+
+      <section class="help-section" id="start">
+        <h2 data-i18n>Start in three steps</h2>
+        <ol class="help-steps">
+          <li>
+            <div><b data-i18n>1 · Connect your computer</b>
+              <p data-i18n>Open “Professional monthly accounts”. Copy the one-line command for Linux / macOS or for Windows and run it on your computer, then sign in with your SYC-AI username and password. Node.js is installed for you if it is missing.</p></div>
+            <img src="/assets/help/connect.jpg" alt="The one-line install commands" loading="lazy" data-i18n-attr="alt">
+          </li>
+          <li>
+            <div><b data-i18n>2 · Install and sign in Claude or Codex</b>
+              <p data-i18n>On the Claude or Codex card press “Install”, then “Sign in”. The sign-in page of Anthropic or OpenAI opens in your browser. Your login stays on your computer; SYC-AI never sees your password.</p></div>
+            <img src="/assets/help/accounts.jpg" alt="Claude and Codex cards with Install and Open" loading="lazy" data-i18n-attr="alt">
+          </li>
+          <li>
+            <div><b data-i18n>3 · Open SYC-AI — All in One</b>
+              <p data-i18n>Write what you need. SYC-AI sends each message to the engine that suits it, in one project folder with one shared memory, and shows who answered under every answer.</p></div>
+            <img src="/assets/help/all-in-one.jpg" alt="SYC-AI All in One conversation" loading="lazy" data-i18n-attr="alt">
+          </li>
+        </ol>
+      </section>
+
+      <section class="help-section" id="accounts">
+        <h2 data-i18n>Professional accounts</h2>
+        <p data-i18n>These are your own monthly subscriptions — for example Claude Pro or Max for Claude, and ChatGPT Plus or Pro for Codex. SYC-AI does not sell them; it connects the ones you already have.</p>
+        <ul class="help-list">
+          <li data-i18n>Add an account: on its card press “Install”, then “Sign in”.</li>
+          <li data-i18n>A second account (for example personal and work): once the first one is signed in, the card shows “Second account” — sign it in there.</li>
+          <li data-i18n>Choose which account each engine uses in SYC-AI → Settings → Engines → Accounts. SYC-AI never switches accounts on its own.</li>
+          <li data-i18n>Gemini, Cursor and Kimi already install on your computer; signing in to them is on the way.</li>
+        </ul>
+      </section>
+
+      <section class="help-section" id="switching">
+        <h2 data-i18n>Automatic switching in SYC-AI All in One</h2>
+        <div class="help-media">
+          <div>
+            <p data-i18n>Planning and writing go to Claude, building and fixing go to Codex, and short questions go to a lighter model. You can also pick the engine yourself for any message.</p>
+            <p data-i18n>When one subscription reaches its usage limit, the same message continues with the next engine in your order, with a short summary of what happened, so your work does not stop. The usage of every account, with its reset time, is on the right side of the page.</p>
+            <p data-i18n>Change the order, the models and the rules in Settings → Engines.</p>
+          </div>
+          <img src="/assets/help/settings.jpg" alt="SYC-AI settings: engine order and routing" loading="lazy" data-i18n-attr="alt">
+        </div>
+      </section>
+
+      <section class="help-section" id="skills">
+        <h2 data-i18n>Skills and plugins</h2>
+        <div class="help-media">
+          <div>
+            <p data-i18n>A skill teaches the agent a way of working — for example “write the test first” or “answer short and exact”. Skills make answers better and use fewer tokens.</p>
+            <ul class="help-list">
+              <li data-i18n>Add one: SYC-AI → Settings → Skills and tools → Add. It is put into your project folder with your next message.</li>
+              <li data-i18n>The token saver is on from the start. Every skill shows its author and licence.</li>
+              <li data-i18n>Plugins (connectors) such as GitHub, Google Drive, Gmail and Notion will use each provider’s own official sign-in; they are on the way.</li>
+            </ul>
+          </div>
+          <img src="/assets/help/skills.jpg" alt="Skills and tools, with their authors" loading="lazy" data-i18n-attr="alt">
+        </div>
+      </section>
+
+      <section class="help-section" id="special">
+        <h2 data-i18n>Specialized sessions</h2>
+        <div class="help-media">
+          <div>
+            <p data-i18n>The yellow “+” opens sessions trained for one job: website builder, bug fixer, code reviewer, research assistant, writer and translator, data analyst, beginner coach and game maker. Start one with a click, or download it to use in any terminal agent.</p>
+          </div>
+          <img src="/assets/help/specialized.jpg" alt="Specialized sessions" loading="lazy" data-i18n-attr="alt">
+        </div>
+      </section>
+
+      <section class="help-section" id="phone">
+        <h2 data-i18n>Your phone</h2>
+        <div class="help-media">
+          <div>
+            <p data-i18n>Open “Connect your phone”, install the SYC-AI app, sign in on the phone and tap “Connect this phone”. Then turn on “Agent alerts”: your phone tells you when an agent waits for your OK or finishes a long task. Nothing opens by itself.</p>
+          </div>
+          <img src="/assets/help/phone.jpg" alt="Connect your phone" loading="lazy" data-i18n-attr="alt">
+        </div>
+      </section>
+
+      <section class="help-section" id="faq">
+        <h2 data-i18n>Questions</h2>
+        <details><summary data-i18n>Is it free?</summary><p data-i18n>SYC-AI (Main) is free until 31 December 2026. Plus, Pro and Immortal Edition open later; their price is shown before you choose anything.</p></details>
+        <details><summary data-i18n>Where do my files and logins stay?</summary><p data-i18n>On your own computer. Only the conversation passes through SYC-AI, so you can continue it on another device.</p></details>
+        <details><summary data-i18n>Does SYC-AI get around the limits of my subscriptions?</summary><p data-i18n>No. Each engine runs under your own account and its own limits. When one reaches its limit, SYC-AI can continue with a different engine you also have.</p></details>
+        <details><summary data-i18n>What may the agents do on my computer?</summary><p data-i18n>You choose in Settings → Permissions: read only, work in the project, or full access. SYC Node runs only the AI programs and works inside its own folder.</p></details>
+        <details><summary data-i18n>How do I install a plugin or a skill?</summary><p data-i18n>Skills: SYC-AI → Settings → Skills and tools → Add. Plugins with official sign-in are on the way and will appear in the same place.</p></details>
+        <details><summary data-i18n>How do I pause or remove it?</summary><p data-i18n>On your computer run “syc-node pause” to stop the panel from using it, “syc-node resume” to allow it again, or “syc-node uninstall” to remove everything.</p></details>
+        <details><summary data-i18n>How do I get help?</summary><p data-i18n>Open your profile → Support → New ticket, and choose technical, financial, or suggestions and criticism. You can also write to syc@syc-ai.com.</p></details>
+      </section>
+
+      <section class="help-star">
+        <span class="help-star-hand" aria-hidden="true">🙏</span>
+        <div>
+          <h2 data-i18n>One small favour</h2>
+          <p data-i18n>We worked very hard on SYC-AI and give it to you for free. We are just starting out — if you like it, please give us a star on GitHub. It helps other people find us. Thank you, and have a wonderful day.</p>
+          <a class="thanks-star" href="https://github.com/SYCC-AI/syc-ai" target="_blank" rel="noopener">★ <span data-i18n>Star SYC-AI on GitHub</span></a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=6"></script>
+  <script src="/help.js?v=1"></script>
+</body>
+</html>

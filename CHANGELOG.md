@@ -2,6 +2,16 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.7.3 — 2026-09-24
+- **Token doctor** (Claude Web → Usage reports → Token doctor): cache hits this week, long conversations whose cache has expired, the fixed part of every question, compression line, sign-in and stopped answers — plain advice in six languages, computed without asking a model.
+- **Cold-conversation warning** in Claude Web and Codex Web: returning to a long conversation after an hour or more offers a new conversation, since the next message would re-read the whole memory at full price. The choice stays yours.
+- **Installers**: after sign-in, the Linux/macOS and Windows one-line installers offer to install Claude Code and Codex too (`SYC_NODE_CLIS=yes|no` for unattended installs).
+- **Home page**: five cards — Professional monthly accounts, Connect your phone, Communications, Connect to Windows and Linux, Simulators — a first-visit guide, and a visual **Guide** page with real screenshots and answers to common questions.
+- **Profile**: time left on your plan, privacy and account deletion request, payment methods, tickets in three topics (technical, financial, suggestions).
+- **Protection of SYC-AI's own files on your device**: agents refuse to read or change SYC Node's panel, accounts and configuration, in every permission mode, and such attempts are reported.
+- Editions show their monthly price; announcements and payment methods come in your language.
+- Fixes: Codex Web opened unstyled in Persian and Arabic; composer placeholders were not translated; clearer English throughout Claude Web.
+
 ## 0.7.2 — 2026-09-24
 - **SYC-AI — All in One**: a new professional account. One session, one project folder and one shared memory (AGENTS.md) for Claude and Codex on your device. Each message goes to the engine that suits it (planning → Claude, building → Codex, short questions → a lighter model), or the one you pick. When one subscription reaches its limit, the same message continues with the next engine in your order; an engine that joins or comes back gets a short handoff of what it missed.
 - Usage of every connected account in one place (5-hour window and week, with reset times), read without sending anything to a model.

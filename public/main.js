@@ -28,32 +28,34 @@
       const box = document.createElement('section');
       box.className = 'access-notice announcement';
       box.setAttribute('role', 'status');
-      box.innerHTML = `<strong>${esc(a.title)}</strong><span>${esc(a.body)}</span><button type="button" class="announce-close" aria-label="Close">×</button>`;
+      // The operator may write the announcement in several languages; each person sees theirs.
+      const localized = a.translations?.[window.SYC?.i18n?.lang] || a;
+      box.innerHTML = `<strong>${esc(localized.title)}</strong><span>${esc(localized.body)}</span><button type="button" class="announce-close" aria-label="Close">×</button>`;
       box.querySelector('button').onclick = () => { box.remove(); try { localStorage.setItem('syc.announce.seen', JSON.stringify([...seen, a.id])); } catch {} };
       document.querySelector('.dash')?.prepend(box);
     }
   } catch { /* no announcements */ }
-  // The first 1,000 members get a thank-you once, with a friendly (optional)
-  // GitHub star link. Nothing depends on it; it can be closed for good.
+  // First visit: a friendly pointer to the visual guide (the thank-you and the
+  // GitHub star request live at the bottom of that guide). Shown once.
   try {
     const t = (x) => (window.SYC?.t ? window.SYC.t(x) : x);
-    const key = 'syc.thanks.v1';
-    if (me.user?.earlyMember && !localStorage.getItem(key)) {
+    const key = 'syc.guide.v1';
+    if (!localStorage.getItem(key)) {
       const box = document.createElement('section');
-      box.className = 'thanks-card';
+      box.className = 'thanks-card guide-card';
       box.setAttribute('role', 'note');
       box.innerHTML = `<span class="thanks-hand" aria-hidden="true">👋</span>
         <div class="thanks-body">
-          <strong>${t('Thank you for being one of our first 1,000 members')}</strong>
-          <p>${t('We have opened valuable features to you for free. SYC-AI is at the start of its road — if you like it, a star on GitHub helps other people find it. We are not asking for stars; only if you really like it. Have a wonderful day.')}</p>
+          <strong>${t('New here? A simple guide is ready for you')}</strong>
+          <p>${t('Step by step, with pictures: connect your computer, install Claude and Codex, and work with SYC-AI All in One. It takes about three minutes.')}</p>
           <div class="thanks-actions">
-            <a class="thanks-star" href="https://github.com/SYCC-AI/syc-ai" target="_blank" rel="noopener">★ ${t('Star SYC-AI on GitHub')}</a>
+            <a class="thanks-star" href="/help">${t('Open the guide')}</a>
             <button type="button" class="thanks-later">${t('Maybe later')}</button>
           </div>
         </div>`;
       const done = () => { box.remove(); try { localStorage.setItem(key, String(Date.now())); } catch {} };
       box.querySelector('.thanks-later').onclick = done;
-      box.querySelector('.thanks-star').addEventListener('click', () => setTimeout(done, 400));
+      box.querySelector('.thanks-star').addEventListener('click', done);
       document.querySelector('.dash')?.prepend(box);
     }
   } catch { /* storage blocked */ }

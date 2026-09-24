@@ -69,6 +69,30 @@ m() {
     *:root) echo "Running as root. Run SYC Node as a separate user 'syc-node' (recommended) or as root? [1=separate user, 2=root] ";;
     fa:rootuser) echo "کاربر syc-node ساخته شد؛ SYC Node با همین کاربر اجرا می‌شود.";;
     *:rootuser) echo "Created user 'syc-node'; SYC Node runs as that user.";;
+    fa:clis) echo "Claude Code و Codex هم الان روی این دستگاه نصب شوند؟ (بعداً هم از پنل می‌شود) [Y/n] ";;
+    ar:clis) echo "هل تريد تثبيت Claude Code وCodex على هذا الجهاز الآن أيضًا؟ (يمكن ذلك لاحقًا من اللوحة) [Y/n] ";;
+    ru:clis) echo "Установить на это устройство также Claude Code и Codex сейчас? (можно и позже из панели) [Y/n] ";;
+    zh:clis) echo "现在也在此设备上安装 Claude Code 和 Codex 吗？（之后也可在面板中安装）[Y/n] ";;
+    es:clis) echo "¿Instalar también Claude Code y Codex en este dispositivo ahora? (también se puede más tarde desde el panel) [Y/n] ";;
+    *:clis) echo "Install Claude Code and Codex on this device now too? (you can also do it later from the panel) [Y/n] ";;
+    fa:clising) echo "در حال نصب Claude Code و Codex … (چند دقیقه)";;
+    ar:clising) echo "جارٍ تثبيت Claude Code وCodex … (بضع دقائق)";;
+    ru:clising) echo "Устанавливаю Claude Code и Codex … (несколько минут)";;
+    zh:clising) echo "正在安装 Claude Code 和 Codex …（需要几分钟）";;
+    es:clising) echo "Instalando Claude Code y Codex … (unos minutos)";;
+    *:clising) echo "Installing Claude Code and Codex … (a few minutes)";;
+    fa:clisok) echo "Claude Code و Codex نصب شدند. در پنل روی «ورود» بزنید تا اکانتتان وصل شود.";;
+    ar:clisok) echo "تم تثبيت Claude Code وCodex. اضغط «تسجيل الدخول» في اللوحة لربط حسابك.";;
+    ru:clisok) echo "Claude Code и Codex установлены. Нажмите «Войти» в панели, чтобы подключить аккаунт.";;
+    zh:clisok) echo "Claude Code 和 Codex 已安装。在面板中点“登录”连接你的账户。";;
+    es:clisok) echo "Claude Code y Codex instalados. Pulsa «Iniciar sesión» en el panel para conectar tu cuenta.";;
+    *:clisok) echo "Claude Code and Codex are installed. Press “Sign in” in the panel to connect your account.";;
+    fa:clisfail) echo "نصب کامل نشد (جزئیات: ~/.syc-node/install-clis.log). از پنل با دکمهٔ «نصب» دوباره امتحان کنید.";;
+    ar:clisfail) echo "لم يكتمل التثبيت (التفاصيل: ~/.syc-node/install-clis.log). أعد المحاولة من اللوحة بزر «تثبيت».";;
+    ru:clisfail) echo "Установка не завершилась (подробности: ~/.syc-node/install-clis.log). Повторите из панели кнопкой «Установить».";;
+    zh:clisfail) echo "安装未完成（详情：~/.syc-node/install-clis.log）。请在面板中用“安装”按钮重试。";;
+    es:clisfail) echo "La instalación no terminó (detalles: ~/.syc-node/install-clis.log). Vuelve a intentarlo desde el panel con «Instalar».";;
+    *:clisfail) echo "The install did not finish (details: ~/.syc-node/install-clis.log). Try again from the panel with “Install”.";;
     *:needcurl) echo "curl and tar are required.";;
   esac
 }
@@ -183,6 +207,25 @@ elif has_tty; then
   "$BIN_DIR/syc-node" login --server "$SERVER" --lang "$L" < /dev/tty
 else
   say "$(m later)"
+fi
+
+# Claude Code and Codex: the same install the panel's "Install" button runs
+# (into ~/.syc-node/npm), offered here so a new device is ready in one step.
+# Asked only after sign-in and with a terminal; SYC_NODE_CLIS=yes|no answers it
+# for unattended installs. The accounts are still signed in from the panel.
+want_clis="${SYC_NODE_CLIS:-}"
+if [ -z "$want_clis" ] && [ -f "$HOME_DIR/config.json" ] && has_tty; then
+  printf '%s' "$(m clis)"; read -r want_clis < /dev/tty || want_clis=n
+  case "${want_clis:-y}" in [nN]*|2) want_clis=no;; *) want_clis=yes;; esac
+fi
+if [ "$want_clis" = yes ]; then
+  say "$(m clising)"
+  NPM_BIN="$(dirname "$NODE_BIN")/npm"; [ -x "$NPM_BIN" ] || NPM_BIN=npm
+  if "$NPM_BIN" install -g --prefix "$HOME_DIR/npm" @anthropic-ai/claude-code@latest @openai/codex@latest >>"$HOME_DIR/install-clis.log" 2>&1; then
+    say "$(m clisok)"
+  else
+    say "$(m clisfail)"
+  fi
 fi
 
 start_background() {

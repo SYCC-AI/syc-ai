@@ -70,6 +70,7 @@ test('AGENTS.md follows the settings and keeps the decisions engines wrote', () 
   assert.match(md, /new to this/);
   assert.match(md, /My shop sells tea\./);
   assert.match(md, /Caveman by Julius Brussee \(MIT/);
+  assert.match(md, /syc-node flag/);
   assert.equal(decisionsFrom(md), '- Use SQLite');
   assert.equal(decisionsFrom(renderAgentsMd(normalizeSettings({}))), '');
   assert.doesNotMatch(renderAgentsMd(normalizeSettings({ tokenSaver: false })), /Token saver/);
@@ -86,6 +87,11 @@ test('command lines: permissions map to each engine, resume keeps the conversati
   assert.ok(codex.args.includes('read-only'));
   assert.ok(engineCommand('codex', { settings: normalizeSettings({ permissions: 'full' }) }).args.includes('danger-full-access'));
   assert.ok(engineCommand('claude', { settings: normalizeSettings({ permissions: 'full' }) }).args.includes('bypassPermissions'));
+  // Every Claude run carries the SYC-AI rules and native deny rules for SYC-AI's own files, even with full access.
+  const full = engineCommand('claude', { settings: normalizeSettings({ permissions: 'full' }) }).args;
+  assert.match(full[full.indexOf('--append-system-prompt') + 1], /SYC-AI rules/);
+  assert.ok(full.includes('Read(~/.syc-node/panel/**)') && full.includes('Edit(~/.syc-node/config.json)'));
+  assert.ok(!full.some((a) => /workspace/.test(a) && a.startsWith('Edit(')), 'the workspace itself stays editable');
 });
 
 test('engine output is read: text, tools, usage windows and limits', () => {

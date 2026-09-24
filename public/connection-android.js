@@ -178,7 +178,7 @@ async function refresh() {
         <p class="muted">${t('The SYC-AI app is this panel on your phone, and it also connects the phone to your account.')}</p>
         <p><a class="get-button" href="https://syc-ai.com/download/syc-ai.apk">${t('Download SYC-AI for Android')}</a></p>`;
       signin.innerHTML = `<h2>${t('2 · Connect the phone')}</h2>
-        <p class="muted">${t('Open the SYC-AI app on the phone, sign in, go to Connection → Android and tap “Connect this phone”.')}</p>`;
+        <p class="muted">${t('Open the SYC-AI app on the phone, sign in, open “Connect your phone” and tap “Connect this phone”.')}</p>`;
       el('accessGuide').hidden = true;
     } else {
       renderApp(status.app);

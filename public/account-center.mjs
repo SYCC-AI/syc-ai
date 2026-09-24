@@ -52,14 +52,17 @@ export function createAccountCenterClient({ fetchImpl = fetch } = {}) {
   });
 }
 
+// The editions a customer can see. `starter` is an internal placeholder, never sold.
+const HIDDEN_EDITIONS = new Set(['starter']);
+
 export function renderPlanCards(plans = [], currentPlanId = '') {
-  return plans.map((plan) => {
+  return plans.filter((plan) => !HIDDEN_EDITIONS.has(plan.id)).map((plan) => {
     const current = plan.id === currentPlanId;
     const original = Number(plan.originalPriceMinor || 0);
     const effective = Number(plan.effectivePriceMinor || 0);
-    // An edition that is not open yet shows no price: it is announced when it opens.
+    // Every edition shows its monthly price, open or not, so the ladder is clear.
     const cost = !plan.available && !current
-      ? 'Price announced at launch'
+      ? (effective > 0 ? `${price(effective, plan.currency)} / month` : 'Price announced at launch')
       : original > effective
         ? `<s>${price(original, plan.currency)}</s> ${effective === 0 ? 'Free now' : price(effective, plan.currency)}`
         : price(effective, plan.currency) || 'Coming soon';
@@ -95,3 +98,22 @@ export function renderTicketThread(ticket = {}) {
     ${ticket.status === 'closed' ? '' : '<form id="ticketReplyForm"><label>Reply<textarea id="ticketReplyBody" maxlength="5000" required></textarea></label><button class="primary" type="submit">Send reply</button><p class="form-status" id="ticketReplyStatus" aria-live="polite"></p></form>'}
   </section>`;
 }
+
+// Payment methods come from the SYC-AI console. Cryptocurrencies are grouped by
+// coin with their networks; nothing here shows an address before payments open.
+export function renderPaymentMethods(payments = {}, t = (x) => x) {
+  const methods = Array.isArray(payments.methods) ? payments.methods : [];
+  if (!methods.length) return '';
+  const icon = { crypto: '₿', paypal: 'P', card: '💳' };
+  const coinIcon = { USDT: '₮', BTC: '₿', ETH: 'Ξ', XRP: '✕', BNB: '◆', SOL: '◎', USDC: '$', TRX: '▲', DOGE: 'Ð', TON: '◇' };
+  const groups = new Map();
+  for (const m of methods) {
+    const key = m.kind === 'crypto' ? m.label : m.id;
+    if (!groups.has(key)) groups.set(key, { kind: m.kind, label: m.label, networks: [], available: false });
+    const g = groups.get(key);
+    if (m.network) g.networks.push(m.network);
+    g.available = g.available || Boolean(m.available);
+  }
+  return [...groups.values()].map((g) => `<div class="pay-method"${g.available ? '' : ' aria-disabled="true"'}><span class="pm-icon">${escapeHtml(coinIcon[g.label] || icon[g.kind] || '•')}</span><div><b>${escapeHtml(g.label)}</b><small>${escapeHtml(g.networks.join(' · ') || '')}${g.networks.length ? ' — ' : ''}${escapeHtml(t(g.available ? 'Available' : 'Opens with paid editions'))}</small></div></div>`).join('');
+}
+

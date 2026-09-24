@@ -18,6 +18,8 @@
 //   syc-node phone notify|link|text <value> [--title T]
 //                                    hand something to the user's phone; it
 //                                    waits there until the person taps it
+//   syc-node flag "<short reason>"   an agent records a refused request aimed at
+//                                    SYC-AI itself (the user is told as well)
 //
 // Requires Node.js 20+. No dependencies.
 import { createInterface } from 'node:readline/promises';
@@ -30,7 +32,7 @@ import { createHash, createPublicKey, verify as verifySignature } from 'node:cry
 import { fileURLToPath } from 'node:url';
 import { promises as fsp } from 'node:fs';
 
-export const VERSION = '0.7.1';
+export const VERSION = '0.7.2';
 const DEFAULT_SERVER = 'https://syc-ai.com';
 const HOME = join(process.env.SYC_NODE_HOME || homedir(), '.syc-node');
 const CONFIG = join(HOME, 'config.json');
@@ -386,11 +388,11 @@ async function status() {
 }
 
 const PHONE_ERRORS = {
-  no_phone_connected: 'No phone is connected to this account (SYC Claw → sign in).',
+  no_phone_connected: 'No phone is connected to this account (SYC-AI app → Connect this phone).',
   phone_queue_full: 'The phone already has 20 requests waiting; wait until some are opened.',
   invalid_url: 'A link must start with https:// or http://.',
   empty_request: 'Nothing to send.',
-  phone_permission_off: 'The user has not allowed this on their phone. They can allow it in the SYC-AI panel: Connection → Android.',
+  phone_permission_off: 'The user has not allowed this on their phone. They can allow it in the SYC-AI panel: Connect your phone.',
 };
 async function phone() {
   const [kind, value] = [process.argv[3], process.argv[4]];
@@ -480,11 +482,34 @@ async function uninstall() {
   process.exit(0);
 }
 
+// Something aimed at SYC-AI itself, reported to the SYC-AI team:
+//   syc-node flag "<short reason>"          an agent refused a request and records it
+//   syc-node security <read|write> "<what>"  the permission hook refused a tool call
+// Also written to the local activity log, so the device owner sees it too.
+async function report(kind, detail) {
+  const config = loadConfig();
+  const text = String(detail || '').replace(/\s+/g, ' ').trim().slice(0, 500);
+  activity(`SECURITY ${kind}: ${text}`);
+  if (!config?.token) return { action: 'local_only' };
+  return api(config.server, '/api/node/security', { token: config.token, body: { kind, detail: text } });
+}
+async function flagCommand() {
+  const reason = process.argv.slice(3).join(' ').trim();
+  if (!reason) { console.log('usage: syc-node flag "<short reason>"   record a refused request for the SYC-AI team'); process.exit(2); }
+  try { await report('agent_flag', reason); console.log('Recorded for the SYC-AI team.'); }
+  catch (error) { console.log(`Recorded on this device; sending failed (${error.message}).`); }
+}
+async function security() {
+  const kind = { read: 'tamper_read', write: 'tamper_write' }[process.argv[3]];
+  if (!kind) process.exit(2);
+  try { await report(kind, process.argv.slice(4).join(' ')); } catch { /* the hook never waits on this */ }
+}
+
 const command = process.argv[2];
-const commands = { login, run, status, logout, phone, update, pause, resume, log, uninstall };
+const commands = { login, run, status, logout, phone, update, pause, resume, log, uninstall, flag: flagCommand, security };
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('syc-node.mjs') || process.argv[1]?.endsWith('syc-node')) {
   if (!commands[command]) {
-    console.log('usage: syc-node <login|run|status|logout|phone|update|pause|resume|log|uninstall> [--server URL] [--name NAME] [--lang en|fa|ar|ru|zh|es]');
+    console.log('usage: syc-node <login|run|status|logout|phone|update|pause|resume|log|uninstall|flag> [--server URL] [--name NAME] [--lang en|fa|ar|ru|zh|es]');
     process.exit(command ? 2 : 0);
   }
   commands[command]().catch((error) => { console.error(error.message); process.exit(1); });

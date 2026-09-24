@@ -43,6 +43,30 @@ $T = @{
   'ru:done' = '0JPQvtGC0L7QstC+LiDQntGC0LrRgNC+0LnRgtC1IGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDQstGL0LHQtdGA0LjRgtC1INGN0YLQviDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDRg9GB0YLQsNC90L7QstC40YLQtSBDbGF1ZGUg0LjQu9C4IENvZGV4LiDQo9C00LDQu9C40YLRjDogc3ljLW5vZGUgdW5pbnN0YWxs'
   'zh:done' = '5a6M5oiQ44CC5omT5byAIGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDpgInmi6nmraTorr7lpIflubblronoo4UgQ2xhdWRlIOaIliBDb2RleOOAguWNuOi9ve+8mnN5Yy1ub2RlIHVuaW5zdGFsbA=='
   'es:done' = 'TGlzdG8uIEFicmUgaHR0cHM6Ly9hcHAuc3ljLWFpLmNvbS9wcm9mYWdlIC0+IGVsaWdlIGVzdGUgZGlzcG9zaXRpdm8gZSBpbnN0YWxhIENsYXVkZSBvIENvZGV4LiBQYXJhIHF1aXRhcmxvOiBzeWMtbm9kZSB1bmluc3RhbGw='
+  'en:clis' = 'SW5zdGFsbCBDbGF1ZGUgQ29kZSBhbmQgQ29kZXggb24gdGhpcyBjb21wdXRlciBub3cgdG9vPyAoeW91IGNhbiBhbHNvIGRvIGl0IGxhdGVyIGZyb20gdGhlIHBhbmVsKSBbWS9uXQ=='
+  'fa:clis' = 'Q2xhdWRlIENvZGUg2YggQ29kZXgg2YfZhSDYp9mE2KfZhiDYsdmI24wg2KfbjNmGINqp2KfZhdm+24zZiNiq2LEg2YbYtdioINi02YjZhtiv2J8gKNio2LnYr9in2Ysg2YfZhSDYp9iyINm+2YbZhCDZhduM4oCM2LTZiNivKSBbWS9uXQ=='
+  'ar:clis' = '2YfZhCDYqtix2YrYryDYqtir2KjZitiqIENsYXVkZSBDb2RlINmIQ29kZXgg2LnZhNmJINmH2LDYpyDYp9mE2YPZhdio2YrZiNiq2LEg2KfZhNii2YYg2KPZiti22YvYp9ifICjZitmF2YPZhiDYsNmE2YMg2YTYp9it2YLZi9inINmF2YYg2KfZhNmE2YjYrdipKSBbWS9uXQ=='
+  'ru:clis' = '0KPRgdGC0LDQvdC+0LLQuNGC0Ywg0L3QsCDRjdGC0L7RgiDQutC+0LzQv9GM0Y7RgtC10YAg0YLQsNC60LbQtSBDbGF1ZGUgQ29kZSDQuCBDb2RleCDRgdC10LnRh9Cw0YE/ICjQvNC+0LbQvdC+INC4INC/0L7Qt9C20LUg0LjQtyDQv9Cw0L3QtdC70LgpIFtZL25d'
+  'zh:clis' = '546w5Zyo5Lmf5Zyo6L+Z5Y+w55S16ISR5LiK5a6J6KOFIENsYXVkZSBDb2RlIOWSjCBDb2RleCDlkJfvvJ/vvIjkuYvlkI7kuZ/lj6/lnKjpnaLmnb/kuK3lronoo4XvvIlbWS9uXQ=='
+  'es:clis' = 'wr9JbnN0YWxhciB0YW1iacOpbiBDbGF1ZGUgQ29kZSB5IENvZGV4IGVuIGVzdGUgZXF1aXBvIGFob3JhPyAodGFtYmnDqW4gc2UgcHVlZGUgbcOhcyB0YXJkZSBkZXNkZSBlbCBwYW5lbCkgW1kvbl0='
+  'en:clising' = 'SW5zdGFsbGluZyBDbGF1ZGUgQ29kZSBhbmQgQ29kZXggLi4uIChhIGZldyBtaW51dGVzKQ=='
+  'fa:clising' = '2K/YsSDYrdin2YQg2YbYtdioIENsYXVkZSBDb2RlINmIIENvZGV4IC4uLiAo2obZhtivINiv2YLbjNmC2Ycp'
+  'ar:clising' = '2KzYp9ix2Y0g2KrYq9io2YrYqiBDbGF1ZGUgQ29kZSDZiENvZGV4IC4uLiAo2KjYtti5INiv2YLYp9im2YIp'
+  'ru:clising' = '0KPRgdGC0LDQvdCw0LLQu9C40LLQsNGOIENsYXVkZSBDb2RlINC4IENvZGV4IC4uLiAo0L3QtdGB0LrQvtC70YzQutC+INC80LjQvdGD0YIp'
+  'zh:clising' = '5q2j5Zyo5a6J6KOFIENsYXVkZSBDb2RlIOWSjCBDb2RleCAuLi7vvIjpnIDopoHlh6DliIbpkp/vvIk='
+  'es:clising' = 'SW5zdGFsYW5kbyBDbGF1ZGUgQ29kZSB5IENvZGV4IC4uLiAodW5vcyBtaW51dG9zKQ=='
+  'en:clisok' = 'Q2xhdWRlIENvZGUgYW5kIENvZGV4IGFyZSBpbnN0YWxsZWQuIFByZXNzICJTaWduIGluIiBpbiB0aGUgcGFuZWwgdG8gY29ubmVjdCB5b3VyIGFjY291bnQu'
+  'fa:clisok' = 'Q2xhdWRlIENvZGUg2YggQ29kZXgg2YbYtdioINi02K/ZhtivLiDYr9ixINm+2YbZhCDYsdmI24wgwqvZiNix2YjYr8K7INio2LLZhtuM2K8g2KrYpyDYp9qp2KfZhtiq2KrYp9mGINmI2LXZhCDYtNmI2K8u'
+  'ar:clisok' = '2KrZhSDYqtir2KjZitiqIENsYXVkZSBDb2RlINmIQ29kZXguINin2LbYuti3IMKr2KrYs9is2YrZhCDYp9mE2K/YrtmI2YTCuyDZgdmKINin2YTZhNmI2K3YqSDZhNix2KjYtyDYrdiz2KfYqNmDLg=='
+  'ru:clisok' = 'Q2xhdWRlIENvZGUg0LggQ29kZXgg0YPRgdGC0LDQvdC+0LLQu9C10L3Riy4g0J3QsNC20LzQuNGC0LUgwqvQktC+0LnRgtC4wrsg0LIg0L/QsNC90LXQu9C4LCDRh9GC0L7QsdGLINC/0L7QtNC60LvRjtGH0LjRgtGMINCw0LrQutCw0YPQvdGCLg=='
+  'zh:clisok' = 'Q2xhdWRlIENvZGUg5ZKMIENvZGV4IOW3suWuieijheOAguWcqOmdouadv+S4reeCueKAnOeZu+W9leKAnei/nuaOpeS9oOeahOi0puaIt+OAgg=='
+  'es:clisok' = 'Q2xhdWRlIENvZGUgeSBDb2RleCBpbnN0YWxhZG9zLiBQdWxzYSDCq0luaWNpYXIgc2VzacOzbsK7IGVuIGVsIHBhbmVsIHBhcmEgY29uZWN0YXIgdHUgY3VlbnRhLg=='
+  'en:clisfail' = 'VGhlIGluc3RhbGwgZGlkIG5vdCBmaW5pc2ggKGRldGFpbHM6ICVVU0VSUFJPRklMRSVcLnN5Yy1ub2RlXGluc3RhbGwtY2xpcy5sb2cpLiBUcnkgYWdhaW4gZnJvbSB0aGUgcGFuZWwgd2l0aCAiSW5zdGFsbCIu'
+  'fa:clisfail' = '2YbYtdioINqp2KfZhdmEINmG2LTYryAo2KzYstim24zYp9iqOiAlVVNFUlBST0ZJTEUlXC5zeWMtbm9kZVxpbnN0YWxsLWNsaXMubG9nKS4g2KfYsiDZvtmG2YQg2KjYpyDYr9qp2YXZh9mUIMKr2YbYtdiowrsg2K/ZiNio2KfYsdmHINin2YXYqtit2KfZhiDaqdmG24zYry4='
+  'ar:clisfail' = '2YTZhSDZitmD2KrZhdmEINin2YTYqtir2KjZitiqICjYp9mE2KrZgdin2LXZitmEOiAlVVNFUlBST0ZJTEUlXC5zeWMtbm9kZVxpbnN0YWxsLWNsaXMubG9nKS4g2KPYudivINin2YTZhdit2KfZiNmE2Kkg2YXZhiDYp9mE2YTZiNit2Kkg2KjYstixIMKr2KrYq9io2YrYqsK7Lg=='
+  'ru:clisfail' = '0KPRgdGC0LDQvdC+0LLQutCwINC90LUg0LfQsNCy0LXRgNGI0LjQu9Cw0YHRjCAo0L/QvtC00YDQvtCx0L3QvtGB0YLQuDogJVVTRVJQUk9GSUxFJVwuc3ljLW5vZGVcaW5zdGFsbC1jbGlzLmxvZykuINCf0L7QstGC0L7RgNC40YLQtSDQuNC3INC/0LDQvdC10LvQuCDQutC90L7Qv9C60L7QuSDCq9Cj0YHRgtCw0L3QvtCy0LjRgtGMwrsu'
+  'zh:clisfail' = '5a6J6KOF5pyq5a6M5oiQ77yI6K+m5oOF77yaJVVTRVJQUk9GSUxFJVwuc3ljLW5vZGVcaW5zdGFsbC1jbGlzLmxvZ++8ieOAguivt+WcqOmdouadv+S4reeUqOKAnOWuieijheKAneaMiemSrumHjeivleOAgg=='
+  'es:clisfail' = 'TGEgaW5zdGFsYWNpw7NuIG5vIHRlcm1pbsOzIChkZXRhbGxlczogJVVTRVJQUk9GSUxFJVwuc3ljLW5vZGVcaW5zdGFsbC1jbGlzLmxvZykuIFZ1ZWx2ZSBhIGludGVudGFybG8gZGVzZGUgZWwgcGFuZWwgY29uIMKrSW5zdGFsYXLCuy4='
   'en:lang' = 'RW5nbGlzaA=='
   'fa:lang' = '2YHYp9ix2LPbjA=='
   'ar:lang' = '2KfZhNi52LHYqNmK2Kk='
@@ -93,5 +117,28 @@ if (Test-Path (Join-Path $Home_ 'config.json')) {
   Register-ScheduledTask -TaskName 'SYC Node' -Description 'Keeps this computer connected to your SYC-AI account (syc-ai.com). Remove with: syc-node uninstall' -Action $action -Trigger $trigger -Settings $settings -Force | Out-Null
   Start-ScheduledTask -TaskName 'SYC Node'
   Say (M 'running')
+
+  # Claude Code and Codex: the same install the panel's "Install" button runs
+  # (into .syc-node\npm), offered here so a new computer is ready in one step.
+  # SYC_NODE_CLIS=yes|no answers it for unattended installs. npm.cmd, not npm:
+  # npm.ps1 is refused where scripts are disabled. Package names are quoted
+  # because a bare @name is PowerShell splatting.
+  $wantClis = $env:SYC_NODE_CLIS
+  if (-not $wantClis) {
+    $answer = Read-Host (M 'clis')
+    $wantClis = if ($answer -match '^(n|no|2)') { 'no' } else { 'yes' }
+  }
+  if ($wantClis -eq 'yes') {
+    Say (M 'clising')
+    $npmPrefix = Join-Path $Home_ 'npm'
+    $log = Join-Path $Home_ 'install-clis.log'
+    # npm writes warnings to stderr; with 'Stop' Windows PowerShell 5.1 would
+    # turn the first one into a terminating error.
+    $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    & npm.cmd install -g --prefix $npmPrefix '@anthropic-ai/claude-code@latest' '@openai/codex@latest' *>> $log
+    $clisOk = ($LASTEXITCODE -eq 0)
+    $ErrorActionPreference = $prev
+    if ($clisOk) { Say (M 'clisok') } else { Say (M 'clisfail') }
+  }
 }
 Say (M 'done')

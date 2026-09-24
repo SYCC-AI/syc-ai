@@ -6,7 +6,7 @@
 import { createServer, request as httpRequest } from 'node:http';
 import { randomBytes, scryptSync, timingSafeEqual, createHmac, createCipheriv, createDecipheriv } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, writeFileSync, renameSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, renameSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createDeviceLink, CAPABILITIES } from './device-link.mjs';
@@ -83,7 +83,9 @@ const updates = activation && RELEASE_PUBLIC_KEY_FILE
 // Professional accounts run as separate loopback services; this server is the
 // only way in and it forwards a request only after the SYC-AI session checks out.
 const CODEX_PORT = Number(process.env.FREE_CODEX_PORT || 8785);
-const CODEX_STATIC = new Set(['/app.js', '/app.css', '/boot.js', '/command-center.js', '/command-center.css', '/transcript-view.js']);
+// The right-to-left stylesheets too: Persian and Arabic swap to them, and without
+// them Codex Web opened unstyled in both (found 2026-09-24).
+const CODEX_STATIC = new Set(['/app.js', '/app.css', '/app.rtl.css', '/boot.js', '/command-center.js', '/command-center.css', '/command-center.rtl.css', '/transcript-view.js']);
 
 const CLAUDE_PORT = Number(process.env.FREE_CLAUDE_PORT || 8786);
 const KIMI_PORT = Number(process.env.FREE_KIMI_PORT || 8788);
@@ -491,12 +493,66 @@ async function allInOneRoute(req, res, url, user) {
   }
 }
 
+// For the SYC-AI console (dev.sycc.ir → a customer → Activity): what this user
+// did inside the hosted panel. Loopback only, with the hub secret; nginx never
+// forwards /internal/ from the internet.
+function readJsonFile(file, fallback) { try { return JSON.parse(readFileSync(file, 'utf8')); } catch { return fallback; } }
+function treeInfo(dir, depth = 0) {
+  let bytes = 0; let files = 0; let newest = 0;
+  let entries = [];
+  try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return { bytes, files, newest }; }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) { if (depth < 6) { const sub = treeInfo(full, depth + 1); bytes += sub.bytes; files += sub.files; newest = Math.max(newest, sub.newest); } continue; }
+    try { const st = statSync(full); bytes += st.size; files += 1; newest = Math.max(newest, st.mtimeMs); } catch { /* vanished */ }
+  }
+  return { bytes, files, newest };
+}
+function panelUserActivity(username) {
+  const base = join(DATA_DIR, 'users', username);
+  if (!/^[a-z0-9][a-z0-9._-]{0,63}$/i.test(username) || !existsSync(base)) return null;
+  const claudeSessions = (() => { try { return readdirSync(join(base, 'claude', 'data', 'sessions')).filter((f) => f.endsWith('.json')); } catch { return []; } })()
+    .map((f) => readJsonFile(join(base, 'claude', 'data', 'sessions', f), null)).filter(Boolean);
+  const claudeUsage = claudeSessions.reduce((sum, s) => ({ input: sum.input + (s.usage?.inputTokens || 0), output: sum.output + (s.usage?.outputTokens || 0) }), { input: 0, output: 0 });
+  const codexHome = treeInfo(join(base, 'codex', 'home', 'sessions'));
+  const aioSessions = (() => { try { return readdirSync(join(base, 'syc', 'sessions')).filter((f) => f.endsWith('.json')); } catch { return []; } })()
+    .map((f) => readJsonFile(join(base, 'syc', 'sessions', f), null)).filter(Boolean);
+  const aioTurns = aioSessions.flatMap((s) => s.turns || []);
+  const storage = treeInfo(base);
+  return {
+    username,
+    storageBytes: storage.bytes, lastActivityAt: storage.newest ? new Date(storage.newest).toISOString() : null,
+    claude: {
+      sessions: claudeSessions.length, messages: claudeSessions.reduce((n, s) => n + (s.messages?.length || 0), 0),
+      tokensIn: claudeUsage.input, tokensOut: claudeUsage.output,
+      lastSessionAt: claudeSessions.reduce((m, s) => Math.max(m, Number(s.updatedAt) || 0), 0) || null,
+      titles: claudeSessions.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5).map((s) => String(s.title || '').slice(0, 80)),
+    },
+    codex: { conversationFiles: codexHome.files, lastActivityAt: codexHome.newest ? new Date(codexHome.newest).toISOString() : null },
+    allInOne: {
+      sessions: aioSessions.length, messages: aioTurns.filter((t) => t.role === 'user').length,
+      answersBy: aioTurns.filter((t) => t.role === 'assistant').reduce((m, t) => ({ ...m, [t.engine]: (m[t.engine] || 0) + 1 }), {}),
+      limitTakeovers: aioTurns.filter((t) => t.reason === 'fallback').length,
+      settings: (() => { const st = readJsonFile(join(base, 'syc', 'settings.json'), {}); return { permissions: st.permissions || 'edit', tokenSaver: st.tokenSaver !== false, accounts: st.accounts || null }; })(),
+      usage: readJsonFile(join(base, 'syc', 'usage.json'), {}),
+    },
+  };
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const path = url.pathname;
   const ip = String(req.headers['x-real-ip'] || req.socket.remoteAddress || '');
 
   try {
+    const internalUser = /^\/internal\/panel\/users\/([^/]+)$/.exec(path);
+    if (internalUser) {
+      const loopback = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress);
+      const secret = process.env.SYC_HUB_SECRET || '';
+      if (!loopback || !secret || req.headers['x-syc-hub'] !== secret) return json(res, 403, { error: 'forbidden' });
+      const data = panelUserActivity(decodeURIComponent(internalUser[1]));
+      return data ? json(res, 200, { data }) : json(res, 404, { error: 'no_panel_data' });
+    }
     if (onboarding && path.startsWith('/api/onboarding/')) {
       const body = req.method === 'POST' ? await readBody(req, 64 * 1024).catch(() => null) : undefined;
       if (req.method === 'POST' && body === null) return json(res, 400, { error: 'invalid_request' });
@@ -740,6 +796,12 @@ const server = createServer(async (req, res) => {
     if (path === '/connection-android.js') return serveFile(res, 'connection-android.js');
     if (path === '/connection-get.js') return serveFile(res, 'connection-get.js');
     if (path === '/communications' || path === '/communications/') return serveFile(res, 'communications.html');
+    // Features of the paid editions (shown, not usable yet) and the visual guide.
+    if (path === '/machines' || path === '/machines/') return serveFile(res, 'machines.html');
+    if (path === '/simulators' || path === '/simulators/') return serveFile(res, 'simulators.html');
+    if (path === '/locked-page.js') return serveFile(res, 'locked-page.js');
+    if (path === '/help' || path === '/help/') return serveFile(res, 'help.html');
+    if (path === '/help.js') return serveFile(res, 'help.js');
     if (path === '/communications.js') return serveFile(res, 'communications.js');
 
     // --- The panel's side of the phone link ----------------------------------
