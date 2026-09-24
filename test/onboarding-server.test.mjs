@@ -137,3 +137,49 @@ test('password change is relayed through one exact same-origin route', async () 
   });
   assert.equal(foreign.status, 403);
 });
+
+test('sign-in with a provider: start redirects, the callback bounces same-site, a new person finishes on the sign-in page', async () => {
+  const calls = [];
+  let callbackReply = { status: 200, body: { data: { result: 'signed_in' } }, setCookies: ['syc_session=s1'] };
+  const controlClient = { async call(operation, options) {
+    calls.push({ operation, options });
+    if (operation === 'oauthStart') return { status: 200, body: { data: { url: 'https://accounts.google.com/o/oauth2/v2/auth?state=x' } }, setCookies: ['syc_oauth=x'] };
+    if (operation === 'oauthCallback') return callbackReply;
+    if (operation === 'oauthTicket') return { status: 200, body: { data: { email: 'new@gmail.com' } }, setCookies: [] };
+    return { status: 201, body: { data: { user: {} } }, setCookies: ['syc_session=s2'] };
+  } };
+  const activation = { async activate() {}, async access() { return { mode: 'active' }; } };
+  const router = createOnboardingServer({ controlClient, activation, productOrigin: 'https://panel.example', hosted: true });
+
+  const start = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/google/start', headers: {} });
+  assert.equal(start.redirect, 'https://accounts.google.com/o/oauth2/v2/auth?state=x');
+  assert.deepEqual(start.setCookies, ['syc_oauth=x']);
+  assert.deepEqual(calls.at(-1).options.body, { provider: 'google' });
+  assert.equal(await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/evil/start', headers: {} }), null);
+
+  const back = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/google/callback', query: { code: 'c', state: 'x' }, headers: { cookie: 'syc_oauth=x' } });
+  assert.deepEqual(calls.at(-1).options.body, { provider: 'google', code: 'c', state: 'x' });
+  assert.equal(calls.at(-1).options.cookieHeader, 'syc_oauth=x');
+  // A page, not a redirect: the session cookie is SameSite=Strict and a
+  // redirect chain started on the provider's site would not send it.
+  assert.match(back.html, /http-equiv="refresh" content="0;url=\/main"/);
+  assert.deepEqual(back.setCookies, ['syc_session=s1']);
+
+  callbackReply = { status: 200, body: { data: { result: 'signup' } }, setCookies: ['syc_oauth_ticket=t'] };
+  const fresh = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { code: 'c', state: 'x' }, headers: {} });
+  assert.match(fresh.html, /url=\/login\?oauth=signup/);
+
+  callbackReply = { status: 400, body: { error: 'gmail_required' }, setCookies: [] };
+  const refused = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { error: 'access_denied' }, headers: {} });
+  assert.match(refused.html, /url=\/login\?oauth_error=access_denied/);
+  const noGmail = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { code: 'c', state: 'x' }, headers: {} });
+  assert.match(noGmail.html, /url=\/login\?oauth_error=gmail_required/);
+
+  const ticket = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/ticket', headers: {} });
+  assert.equal(ticket.body.data.email, 'new@gmail.com');
+  const foreign = await router.dispatch({ method: 'POST', pathname: '/api/onboarding/oauth/complete', headers: { origin: 'https://evil.example' }, body: {} });
+  assert.equal(foreign.status, 403);
+  const done = await router.dispatch({ method: 'POST', pathname: '/api/onboarding/oauth/complete', headers: { origin: 'https://panel.example' }, body: { username: 'newbie', password: 'p' } });
+  assert.equal(done.status, 201);
+  assert.equal(calls.at(-1).operation, 'oauthComplete');
+});

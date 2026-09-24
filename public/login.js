@@ -16,7 +16,20 @@ const ERRORS = {
   plan_unavailable: 'This plan is not available right now.',
   payment_required: 'This plan needs a payment, which is not available yet.',
   request_failed: 'Something went wrong. Try again.',
+  // Sign in with Google / GitHub.
+  email_unverified: 'Your Gmail address is not verified with that account yet.',
+  oauth_state_mismatch: 'The sign-in was started in another browser or tab. Please try again.',
+  oauth_state_expired: 'The sign-in took too long. Please try again.',
+  oauth_ticket_expired: 'This step expired. Please sign in with Google or GitHub again.',
+  oauth_cancelled: 'Sign-in was cancelled.',
+  access_denied: 'Sign-in was cancelled.',
+  oauth_exchange_failed: 'Google or GitHub did not confirm the sign-in. Please try again.',
+  oauth_failed: 'Google or GitHub did not confirm the sign-in. Please try again.',
+  provider_unavailable: 'This sign-in option is not available right now.',
 };
+// Google Workspace and GitHub accounts often carry a work address: say
+// exactly what is missing.
+const OAUTH_NO_GMAIL = 'SYC-AI accounts use a Gmail address, and the account you chose has no verified Gmail. Add and verify one there, or continue with another option.';
 const explain = (code) => t(ERRORS[code] || String(code || 'request_failed').replaceAll('_', ' '));
 const form = document.getElementById('loginForm');
 const fields = document.getElementById('onboardingFields');
@@ -28,6 +41,9 @@ let csrfToken = '';
 let catalog = null;
 let pendingChallengeId = '';
 let pendingEmail = '';
+// After Google / GitHub proved a new person's Gmail: { email, suggestedUsername, provider }.
+let oauthSignup = null;
+const oauthBox = document.getElementById('oauthBox');
 
 async function api(path, body) {
   const response = await fetch(path, {
@@ -58,9 +74,31 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '
 // Titles show the brand name in the accent blue.
 const setTitle = (text) => { title.innerHTML = escapeHtml(t(text)).replace('SYC-AI', '<b>SYC-AI</b>'); };
 
+function renderOAuthSignup() {
+  const provider = oauthSignup.provider === 'github' ? 'GitHub' : 'Google';
+  setTitle('Almost done');
+  subtitle.textContent = t('{provider} confirmed {email}. Choose a username and a password: SYC Node on your computers signs in with them.', { provider, email: oauthSignup.email });
+  fields.innerHTML = input('username', 'Username', 'text', 'username', 'user', 'Choose a username') + input('password', 'Password', 'password', 'new-password', 'lock', 'At least 12 characters');
+  document.getElementById('username').value = oauthSignup.suggestedUsername || '';
+  form.dataset.action = 'oauth-complete'; document.getElementById('submitLabel').textContent = t('Create account');
+  nav.querySelectorAll('[data-mode]').forEach((button) => { button.hidden = button.dataset.mode !== 'signin'; });
+  oauthBox.hidden = true;
+}
+
+// Google / GitHub buttons: on the sign-in and sign-up screens, for the
+// providers the service offers.
+function showOAuth(step) {
+  const offered = new Set(catalog?.oauthProviders || []);
+  document.getElementById('oauthGoogle').hidden = !offered.has('google');
+  document.getElementById('oauthGithub').hidden = !offered.has('github');
+  oauthBox.hidden = !offered.size || !(step === 'signin' || step === 'signup_request');
+}
+
 function render() {
   const state = flow.snapshot();
   error.textContent = '';
+  if (oauthSignup) { renderOAuthSignup(); return; }
+  showOAuth(state.step);
   nav.hidden = state.step === 'plan_selection' || state.step === 'activated';
   const current = { signin: 'signin', signup_request: 'signup', signup_verify: 'signup', recovery_request: state.purpose === 'reset_password' ? 'password' : 'username', recovery_verify: state.purpose === 'reset_password' ? 'password' : 'username' }[state.step];
   nav.querySelectorAll('[data-mode]').forEach((button) => { button.hidden = button.dataset.mode === current; });
@@ -121,6 +159,7 @@ fields.addEventListener('click', (event) => {
 
 nav.addEventListener('click', (event) => {
   const mode = event.target.closest('button')?.dataset.mode;
+  if (mode) oauthSignup = null;
   if (mode === 'signin') flow.dispatch('show_signin');
   if (mode === 'signup') flow.dispatch('show_signup');
   if (mode === 'username') flow.dispatch('show_recovery', { purpose: 'recover_username' });
@@ -158,6 +197,9 @@ form.addEventListener('submit', async (event) => {
           password: values.password,
         });
         flow.dispatch('recovered'); render(); break;
+      case 'oauth-complete':
+        await authenticated((await api('/api/onboarding/oauth/complete', { username: values.username, password: values.password })).user);
+        oauthSignup = null; break;
       case 'activate': {
         const result = await api('/api/onboarding/activate', { planId: flow.snapshot().selectedPlanId });
         flow.dispatch('activated', result); location.href = '/main'; break;
@@ -171,7 +213,16 @@ try {
   const bootstrap = await api('/api/onboarding/bootstrap');
   catalog = bootstrap.catalog; csrfToken = bootstrap.csrf.csrfToken;
   const session = await api('/api/onboarding/session').catch(() => null);
+  // Back from Google / GitHub: a new person finishes here; a refusal says why.
+  const params = new URLSearchParams(location.search);
+  const oauthError = params.get('oauth_error');
+  if (params.get('oauth') === 'signup' && !session?.user) {
+    oauthSignup = await api('/api/onboarding/oauth/ticket').catch(() => null);
+  }
+  if (params.has('oauth') || oauthError) history.replaceState(null, '', '/login');
   if (session?.user) await authenticated(session.user); else render();
+  if (oauthError) error.textContent = oauthError === 'gmail_required' ? t(OAUTH_NO_GMAIL) : explain(oauthError);
+  else if (params.get('oauth') === 'signup' && !oauthSignup && !session?.user) error.textContent = explain('oauth_ticket_expired');
 } catch { render(); error.textContent = t('The SYC-AI service is temporarily unavailable.'); }
 
 // Switching language re-renders the step that is on screen.

@@ -11,7 +11,24 @@ const ROUTES = new Map([
   ['GET /api/onboarding/tickets', 'ticketList'],
   ['POST /api/onboarding/tickets', 'ticketCreate'],
   ['POST /api/onboarding/password', 'passwordChange'],
+  ['GET /api/onboarding/oauth/ticket', 'oauthTicket'],
+  ['POST /api/onboarding/oauth/complete', 'oauthComplete'],
 ]);
+// Sign in with Google or GitHub. start and callback are top-level browser
+// navigations (GET); the callback answers with a tiny same-origin page that
+// moves on, because the session cookie is SameSite=Strict and a redirect
+// chain that began on the provider's site would arrive without it.
+const OAUTH_ROUTE = /^\/api\/onboarding\/oauth\/(google|github)\/(start|callback)$/;
+const OAUTH_ERROR = /^[a-z_]{3,40}$/;
+function bounce(target, setCookies = []) {
+  const safe = String(target).replace(/[^A-Za-z0-9/?=&_.-]/g, '');
+  return {
+    status: 200,
+    html: `<!doctype html><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta http-equiv="refresh" content="0;url=${safe}"><title>SYC-AI</title><a href="${safe}">Continue</a>`,
+    setCookies,
+  };
+}
+
 const TICKET_ID = '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
 const TICKET_THREAD = new RegExp(`^/api/onboarding/tickets/(${TICKET_ID})$`);
 const TICKET_REPLY = new RegExp(`^/api/onboarding/tickets/(${TICKET_ID})/replies$`);
@@ -67,6 +84,28 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
         body: { data: { catalog: catalog.body.data, csrf: csrf.body.data } },
         setCookies: [...(catalog.setCookies || []), ...(csrf.setCookies || [])],
       };
+    }
+    const oauthRoute = method === 'GET' && OAUTH_ROUTE.exec(pathname);
+    if (oauthRoute) {
+      const [, provider, step] = oauthRoute;
+      const context = securityContext(request);
+      if (step === 'start') {
+        const result = await controlClient.call('oauthStart', { ...context, body: { provider } });
+        const url = result.status === 200 ? String(result.body?.data?.url || '') : '';
+        if (!url.startsWith('https://')) return bounce(`/login?oauth_error=${OAUTH_ERROR.test(result.body?.error || '') ? result.body.error : 'provider_unavailable'}`);
+        return { status: 302, redirect: url, setCookies: result.setCookies || [] };
+      }
+      const query = request.query || {};
+      // The person pressed "Cancel" at the provider, or it reported an error.
+      if (query.error || !query.code) return bounce(`/login?oauth_error=${OAUTH_ERROR.test(String(query.error || '')) ? query.error : 'oauth_cancelled'}`);
+      const result = await controlClient.call('oauthCallback', {
+        ...context, body: { provider, code: String(query.code).slice(0, 512), state: String(query.state || '').slice(0, 256) },
+      });
+      if (result.status !== 200) {
+        const code = String(result.body?.error || '');
+        return bounce(`/login?oauth_error=${OAUTH_ERROR.test(code) ? code : 'oauth_failed'}`, result.setCookies || []);
+      }
+      return bounce(result.body?.data?.result === 'signup' ? '/login?oauth=signup' : '/main', result.setCookies || []);
     }
     const resolved = resolveOperation(method, pathname);
     const activating = method === 'POST' && pathname === '/api/onboarding/activate';

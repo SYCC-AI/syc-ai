@@ -559,12 +559,17 @@ const server = createServer(async (req, res) => {
       const result = await onboarding.dispatch({
         method: req.method,
         pathname: path,
+        query: Object.fromEntries(url.searchParams),
         headers: req.headers,
         body,
         clientAddress: ip,
       });
       if (!result) return json(res, 404, { error: 'not_found' });
       const headers = result.setCookies?.length ? { 'Set-Cookie': result.setCookies } : {};
+      // Sign in with Google / GitHub: a redirect to the provider, or the small
+      // page that continues after it (see onboarding-server.mjs).
+      if (result.redirect) return send(res, 302, '', { ...headers, Location: result.redirect, 'Cache-Control': 'no-store' });
+      if (result.html) return send(res, result.status, result.html, { ...headers, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
       return json(res, result.status, result.body, headers);
     }
     if (onboarding && path === '/auth/me' && req.method === 'GET') {

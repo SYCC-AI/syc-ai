@@ -31,12 +31,21 @@ const OPERATIONS = Object.freeze({
   ticketCreate: ['POST', '/api/user/tickets'],
   ticketThread: ['GET', 'ticket'],
   ticketReply: ['POST', 'ticket-reply'],
+  oauthStart: ['POST', '/api/public/oauth/start'],
+  oauthCallback: ['POST', '/api/public/oauth/callback'],
+  oauthTicket: ['GET', '/api/public/oauth/ticket'],
+  oauthComplete: ['POST', '/api/public/oauth/complete'],
   releaseCurrent: ['GET', '/api/installation/releases/current'],
   installationDownloadGrant: ['POST', '/api/installation/downloads/grant'],
 });
 // Operations the installation signs for itself, with no user session behind
 // them. The update check has to keep working while nobody is logged in.
 const INSTALLATION_SIGNED = new Set(['releaseCurrent', 'installationDownloadGrant']);
+// Cookies relayed between the browser and the control plane. The two sign-in
+// cookies (Google / GitHub) must survive the provider's cross-site redirect
+// back, so they are Lax; they are never readable by page scripts.
+const CONTROL_COOKIES = new Set(['syc_session', 'syc_csrf', 'syc_oauth', 'syc_oauth_ticket']);
+const LAX_COOKIES = new Set(['syc_oauth', 'syc_oauth_ticket']);
 const RESOURCE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 class ControlPlaneClientError extends Error {
@@ -86,7 +95,7 @@ function controlCookies(header = '') {
     const separator = part.indexOf('=');
     if (separator < 1) continue;
     const name = part.slice(0, separator).trim().toLowerCase();
-    if (name !== 'syc_session' && name !== 'syc_csrf') continue;
+    if (!CONTROL_COOKIES.has(name)) continue;
     if (selected.has(name)) throw new ControlPlaneClientError('ambiguous_control_cookie');
     const value = part.slice(separator + 1).trim();
     if (!value || value.length > 4096 || /[\s;,\x00-\x1f\x7f]/.test(value)) {
@@ -112,7 +121,7 @@ function hardenedCookies(headers) {
     const separator = first.indexOf('=');
     if (separator < 1) continue;
     const name = first.slice(0, separator).trim().toLowerCase();
-    if ((name !== 'syc_session' && name !== 'syc_csrf') || seen.has(name)) continue;
+    if (!CONTROL_COOKIES.has(name) || seen.has(name)) continue;
     const value = first.slice(separator + 1).trim();
     const attributes = new Map(parts.slice(1).map((part) => {
       const split = part.indexOf('=');
@@ -123,9 +132,14 @@ function hardenedCookies(headers) {
     const deleting = value === '' && attributes.get('max-age') === '0';
     if ((!value && !deleting) || value.length > 4096 || /[\s;,\x00-\x1f\x7f]/.test(value)) continue;
     seen.add(name);
-    let cookie = `${name}=${value}; Path=/; ${name === 'syc_session' ? 'HttpOnly; ' : ''}Secure; SameSite=Strict`;
+    const lax = LAX_COOKIES.has(name);
+    let cookie = `${name}=${value}; Path=/; ${name === 'syc_csrf' ? '' : 'HttpOnly; '}Secure; SameSite=${lax ? 'Lax' : 'Strict'}`;
     if (deleting) cookie += '; Max-Age=0';
-    else if (attributes.has('expires')) {
+    else if (lax) {
+      const maxAge = Number(attributes.get('max-age'));
+      if (!(Number.isInteger(maxAge) && maxAge > 0 && maxAge <= 3600)) continue;
+      cookie += `; Max-Age=${maxAge}`;
+    } else if (attributes.has('expires')) {
       const expiry = Date.parse(attributes.get('expires'));
       if (Number.isFinite(expiry)) cookie += `; Expires=${new Date(expiry).toUTCString()}`;
     }

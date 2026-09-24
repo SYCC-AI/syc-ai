@@ -185,3 +185,20 @@ test('gateway timeout also bounds a stalled response body', async () => {
   await assert.rejects(client.call('catalog'), { code: 'control_timeout' });
   assert.equal(signal.aborted, true);
 });
+
+test('sign-in with Google/GitHub: the state and ticket cookies pass both ways, Lax and HttpOnly', async () => {
+  const { client, calls } = fixture(response(200, { data: { result: 'signup' } }, [
+    'syc_oauth=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0',
+    'syc_oauth_ticket=ticket-1; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=1800',
+  ]));
+  const result = await client.call('oauthCallback', {
+    body: { provider: 'google', code: 'c', state: 's' },
+    cookieHeader: 'syc_oauth=s; other=x',
+  });
+  assert.equal(calls[0].url, 'https://control.example/api/public/oauth/callback');
+  assert.equal(calls[0].options.headers.cookie, 'syc_oauth=s');
+  assert.deepEqual(result.setCookies, [
+    'syc_oauth=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0',
+    'syc_oauth_ticket=ticket-1; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=1800',
+  ]);
+});

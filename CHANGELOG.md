@@ -2,6 +2,12 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.7.4 — 2026-09-24
+- **Sign in with Google or GitHub.** New people pick a username and a password once (SYC Node on your computers signs in with them); an existing account with the same Gmail simply signs in. SYC-AI accounts stay Gmail-based: GitHub needs a verified Gmail on the account.
+- **SYC Node 0.7.3:** the events of one program reach the panel in order. Before, a program's exit could overtake its last output — on Windows the panel then showed "device not answering" for Codex. Output that waits behind a slow connection is sent as one piece. Devices update themselves.
+- The operator console signs in with a second factor and shows how much of the daily e-mail quota is used.
+- Verified on Windows Server 2019: one-line install, Claude Code and Codex installed by the installer, both detected by the panel, clean `syc-node uninstall`.
+
 ## 0.7.3 — 2026-09-24
 - **Token doctor** (Claude Web → Usage reports → Token doctor): cache hits this week, long conversations whose cache has expired, the fixed part of every question, compression line, sign-in and stopped answers — plain advice in six languages, computed without asking a model.
 - **Cold-conversation warning** in Claude Web and Codex Web: returning to a long conversation after an hour or more offers a new conversation, since the next message would re-read the whole memory at full price. The choice stays yours.

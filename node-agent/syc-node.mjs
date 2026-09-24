@@ -32,7 +32,7 @@ import { createHash, createPublicKey, verify as verifySignature } from 'node:cry
 import { fileURLToPath } from 'node:url';
 import { promises as fsp } from 'node:fs';
 
-export const VERSION = '0.7.2';
+export const VERSION = '0.7.3';
 const DEFAULT_SERVER = 'https://syc-ai.com';
 const HOME = join(process.env.SYC_NODE_HOME || homedir(), '.syc-node');
 const CONFIG = join(HOME, 'config.json');
@@ -196,9 +196,51 @@ async function login() {
 // every result goes back with a POST. Nothing here opens a port.
 const children = new Map(); // procId → ChildProcess
 
-async function emit(config, event) {
-  try { await api(config.server, '/api/node/emit', { token: config.token, body: event }); }
+// Events of one process are sent one after another: sent in parallel, an
+// `exit` could reach the panel before the output it follows, and the output
+// was lost (seen on Windows: "codex --version" exited 0 with nothing to read).
+// Different processes and requests keep their own queues.
+export function createOrderedEmitter(send) {
+  const queues = new Map();
+  async function drain(key, queue) {
+    while (queue.items.length) {
+      const item = queue.items[0];
+      item.started = true;
+      try { await send(item.event); } catch { /* the next event still goes */ }
+      queue.items.shift();
+      item.resolve();
+    }
+    queues.delete(key);
+  }
+  return (event) => {
+    const key = event.procId || event.requestId || '';
+    let queue = queues.get(key);
+    const fresh = !queue;
+    if (fresh) { queue = { items: [] }; queues.set(key, queue); }
+    // Output that piles up while a send is in flight goes out as one event, so
+    // a chatty CLI on a slow line does not fall further and further behind.
+    const last = queue.items[queue.items.length - 1];
+    if (last && !last.started && (event.type === 'stdout' || event.type === 'stderr') && last.event.type === event.type
+      && String(last.event.data || '').length + String(event.data || '').length <= 60_000) {
+      last.event = { ...last.event, data: String(last.event.data || '') + String(event.data || '') };
+      return last.promise;
+    }
+    let resolve;
+    const promise = new Promise((done) => { resolve = done; });
+    queue.items.push({ event, started: false, resolve, promise });
+    if (fresh) drain(key, queue);
+    return promise;
+  };
+}
+
+let emitConfig = null;
+const sendEvent = createOrderedEmitter(async (event) => {
+  try { await api(emitConfig.server, '/api/node/emit', { token: emitConfig.token, body: event }); }
   catch (error) { if (error.status === 401) { console.error('This device was disconnected from the panel. Run: syc-node login'); process.exit(3); } }
+});
+function emit(config, event) {
+  emitConfig = config;
+  return sendEvent(event);
 }
 
 // Windows: `cmd` mangles multi-line and quoted arguments, so an npm shim
