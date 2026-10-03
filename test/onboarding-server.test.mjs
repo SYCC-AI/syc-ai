@@ -183,3 +183,57 @@ test('sign-in with a provider: start redirects, the callback bounces same-site, 
   assert.equal(done.status, 201);
   assert.equal(calls.at(-1).operation, 'oauthComplete');
 });
+
+test('sign-in with a provider from the Android app: the browser hands a one-time code to the app, only the app secret redeems it', async () => {
+  const { createHash } = await import('node:crypto');
+  let callbackReply = { status: 200, body: { data: { result: 'signed_in' } }, setCookies: ['syc_oauth=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0', 'syc_session=s1; Path=/; HttpOnly; Secure; SameSite=Strict'] };
+  const controlClient = { async call(operation) {
+    if (operation === 'oauthStart') return { status: 200, body: { data: { url: 'https://accounts.google.com/auth?state=x' } }, setCookies: ['syc_oauth=x'] };
+    if (operation === 'oauthCallback') return callbackReply;
+    return { status: 200, body: { data: {} }, setCookies: [] };
+  } };
+  let clock = 1_000_000;
+  const router = createOnboardingServer({ controlClient, activation: { async activate() {}, async access() { return { mode: 'active' }; } }, productOrigin: 'https://panel.example', hosted: true, now: () => clock });
+  const verifier = 'v'.repeat(43);
+  const challenge = createHash('sha256').update(verifier).digest('base64url');
+
+  const start = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/google/start', query: { app: 'android', challenge }, headers: {} });
+  assert.equal(start.redirect, 'https://accounts.google.com/auth?state=x');
+  assert.ok(start.setCookies.some((c) => c.startsWith(`syc_oauth_app=${challenge};`) && /SameSite=Lax/.test(c)));
+  // A malformed challenge is a normal browser sign-in.
+  const plain = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/google/start', query: { app: 'android', challenge: 'short' }, headers: {} });
+  assert.deepEqual(plain.setCookies, ['syc_oauth=x']);
+
+  const cookie = `syc_oauth=x; syc_oauth_app=${challenge}`;
+  const back = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/google/callback', query: { code: 'c', state: 'x' }, headers: { cookie } });
+  const code = /^sycai:\/\/signin\?code=([A-Za-z0-9_-]{32})$/.exec(back.redirect)?.[1];
+  assert.ok(code, back.redirect);
+  // The browser gets no session: only the cleared state and app cookies.
+  assert.ok(!back.setCookies.some((c) => c.startsWith('syc_session=')));
+  assert.ok(back.setCookies.some((c) => c.startsWith('syc_oauth_app=;') && /Max-Age=0/.test(c)));
+
+  const redeem = (body) => router.dispatch({ method: 'POST', pathname: '/api/onboarding/oauth/app/redeem', headers: {}, body });
+  assert.equal((await redeem({ code, verifier: 'w'.repeat(43) })).status, 403);
+  assert.equal((await redeem({ code: 'nope', verifier })).status, 400);
+  const ok = await redeem({ code, verifier });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.body.data.target, '/main');
+  assert.deepEqual(ok.setCookies, ['syc_session=s1; Path=/; HttpOnly; Secure; SameSite=Strict']);
+  // One use only.
+  assert.equal((await redeem({ code, verifier })).status, 400);
+
+  // A new person: the app gets the sign-up ticket and finishes on the sign-in page.
+  callbackReply = { status: 200, body: { data: { result: 'signup' } }, setCookies: ['syc_oauth_ticket=t; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=1800'] };
+  const fresh = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { code: 'c', state: 'x' }, headers: { cookie } });
+  const code2 = /code=(.+)$/.exec(fresh.redirect)[1];
+  // Three minutes, then the code is gone.
+  clock += 3 * 60_000 + 1;
+  assert.equal((await redeem({ code: code2, verifier })).status, 400);
+
+  // Refusals and provider errors go back to the app, which shows them on its sign-in page.
+  const cancelled = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { error: 'access_denied' }, headers: { cookie } });
+  assert.equal(cancelled.redirect, 'sycai://signin?error=access_denied');
+  callbackReply = { status: 400, body: { error: 'gmail_required' }, setCookies: [] };
+  const noGmail = await router.dispatch({ method: 'GET', pathname: '/api/onboarding/oauth/github/callback', query: { code: 'c', state: 'x' }, headers: { cookie } });
+  assert.equal(noGmail.redirect, 'sycai://signin?error=gmail_required');
+});

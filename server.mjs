@@ -383,7 +383,25 @@ async function hostedAccountsRoute(req, res, url, user) {
         }));
         return { deviceId: d.deviceId, name: d.name, platform: d.platform, accounts };
       }));
-      return json(res, 200, { devices: list, apps: Object.fromEntries(Object.entries(deviceAccounts.DEVICE_ACCOUNTS).map(([k, v]) => [k, { name: v.name }])) });
+      // Registered but not connected now (switched off, or SYC Node not started
+      // yet after a restart): the page names them instead of "connect a device".
+      let offline = [];
+      if (hostedControl) {
+        const known = await hostedControl.call('devices', {
+          cookieHeader: req.headers.cookie || '', csrfToken: '', userAgent: req.headers['user-agent'] || '',
+          clientAddress: String(req.headers['x-real-ip'] || req.socket.remoteAddress || ''),
+        }).catch(() => null);
+        const online = new Set(devices.map((d) => d.deviceId));
+        const recent = Date.now() - 30 * 86_400_000;
+        const byName = new Map();
+        for (const d of known?.body?.data || []) {
+          if (d.revokedAt || d.platform === 'android' || online.has(d.id) || !(Date.parse(d.lastSeenAt || '') > recent)) continue;
+          const had = byName.get(d.name);
+          if (!had || Date.parse(d.lastSeenAt) > Date.parse(had.lastSeenAt)) byName.set(d.name, { name: d.name, platform: d.platform, lastSeenAt: d.lastSeenAt });
+        }
+        offline = [...byName.values()].filter((d) => !devices.some((o) => o.name === d.name));
+      }
+      return json(res, 200, { devices: list, offline, apps: Object.fromEntries(Object.entries(deviceAccounts.DEVICE_ACCOUNTS).map(([k, v]) => [k, { name: v.name, panel: Boolean(v.panel), signIn: v.apiKey ? 'api-key' : 'link', ...(v.apiKey ? { keyUrl: v.apiKey.getUrl } : {}), ...(v.keyLogin ? { keyLogin: v.keyLogin.getUrl } : {}), ...(v.regions ? { regions: Object.keys(v.regions) } : {}), signOut: Boolean(v.apiKey || v.logout || v.acpLogout) }])) });
     }
     let m;
     if ((m = /^\/api\/hosted\/accounts\/([a-z]+)\/install$/.exec(path)) && req.method === 'POST') {
@@ -399,7 +417,17 @@ async function hostedAccountsRoute(req, res, url, user) {
     }
     if ((m = /^\/api\/hosted\/accounts\/([a-z]+(?:-2)?)\/login$/.exec(path)) && req.method === 'POST') {
       const body = await readBody(req).catch(() => ({}));
-      return json(res, 200, await deviceAccounts.startLogin(user.username, String(body.deviceId || ''), m[1]));
+      return json(res, 200, await deviceAccounts.startLogin(user.username, String(body.deviceId || ''), m[1], { region: body.region ? String(body.region) : undefined }));
+    }
+    // A pasted API key goes straight on to the device (~/.syc-node/.env there);
+    // it is never stored, logged or echoed back by this server.
+    if ((m = /^\/api\/hosted\/accounts\/([a-z]+(?:-2)?)\/api-key$/.exec(path)) && req.method === 'POST') {
+      const body = await readBody(req).catch(() => ({}));
+      return json(res, 200, await deviceAccounts.saveApiKey(user.username, String(body.deviceId || ''), m[1], body.key));
+    }
+    if ((m = /^\/api\/hosted\/accounts\/([a-z]+)\/logout$/.exec(path)) && req.method === 'POST') {
+      const body = await readBody(req).catch(() => ({}));
+      return json(res, 200, await deviceAccounts.signOut(user.username, String(body.deviceId || ''), m[1]));
     }
     if ((m = /^\/api\/hosted\/logins\/([0-9a-f-]{36})\/code$/.exec(path)) && req.method === 'POST') {
       const body = await readBody(req).catch(() => ({}));
@@ -493,7 +521,7 @@ async function allInOneRoute(req, res, url, user) {
   }
 }
 
-// For the SYC-AI console (dev.sycc.ir → a customer → Activity): what this user
+// For the SYC-AI console (operator console → a customer → Activity): what this user
 // did inside the hosted panel. Loopback only, with the hub secret; nginx never
 // forwards /internal/ from the internet.
 function readJsonFile(file, fallback) { try { return JSON.parse(readFileSync(file, 'utf8')); } catch { return fallback; } }
@@ -771,7 +799,7 @@ const server = createServer(async (req, res) => {
     if (path.startsWith('/auth/')) return json(res, 404, { error: 'not_found' });
 
     if (path === '/login') return onboarding ? serveFile(res, 'login.html') : (cookieUser(req) ? send(res, 302, '', { Location: '/' }) : serveFile(res, 'login.html'));
-    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/v2.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
+    if (path === '/login.js' || path === '/onboarding-state.mjs' || path === '/account-center.mjs' || path === '/main.css' || path === '/v2.css' || path === '/theme.js' || path === '/profile.js' || path === '/i18n.js' || path === '/app-update.js' || path === '/syc-logo.jpg' || path.startsWith('/assets/')) return serveFile(res, path);
 
     // Everything else requires a session.
     let user = cookieUser(req);
@@ -786,7 +814,8 @@ const server = createServer(async (req, res) => {
       user = decision.allow ? authorization.user : null;
       if (!decision.allow && decision.status === 403) return json(res, 403, { error: decision.reason });
     }
-    if (!user) return send(res, 302, '', { Location: `/login${path === '/' ? '' : `?next=${encodeURIComponent(path)}`}` });
+    // The link page carries the device's code in its query; keep it across sign-in.
+    if (!user) return send(res, 302, '', { Location: `/login${path === '/' ? '' : `?next=${encodeURIComponent(path === '/link' ? path + url.search : path)}`}` });
     if (path === '/' || path === '/index.html') return send(res, 302, '', { Location: '/main' });
     if (path === '/main' || path === '/main/') return serveFile(res, 'main.html');
     if (path === '/main.js') return serveFile(res, 'main.js');
@@ -806,6 +835,11 @@ const server = createServer(async (req, res) => {
     if (path === '/simulators' || path === '/simulators/') return serveFile(res, 'simulators.html');
     if (path === '/locked-page.js') return serveFile(res, 'locked-page.js');
     if (path === '/help' || path === '/help/') return serveFile(res, 'help.html');
+    // Connect a computer or the phone's runtime that shows a code (no password on the device).
+    if (path === '/link' || path === '/link/') return serveFile(res, 'link.html');
+    if (path === '/link.js') return serveFile(res, 'link.js');
+    // Inside the phone app: progress of Claude and Codex on the phone, and its link code.
+    if (path === '/phone-runtime.js') return serveFile(res, 'phone-runtime.js');
     if (path === '/help.js') return serveFile(res, 'help.js');
     if (path === '/communications.js') return serveFile(res, 'communications.js');
 

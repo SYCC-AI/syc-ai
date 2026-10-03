@@ -46,3 +46,14 @@ document.getElementById('installApp').addEventListener('click', async () => {
   if (!me?.user) { location.href = '/login'; return; }
   window.SycProfile?.init(me.user);
 })();
+
+// Inside the SYC-AI Android app this phone already has it: no download button.
+if (/SYC-AI-Android\//.test(navigator.userAgent)) {
+  const card = document.getElementById('androidCard');
+  if (card) card.innerHTML = `<h2>${window.SYC?.t ? window.SYC.t('2 · Android') : '2 · Android'}</h2><p class="muted">${window.SYC?.t ? window.SYC.t('You are using the SYC-AI app on this phone. It updates itself when a new version comes out.') : 'You are using the SYC-AI app on this phone. It updates itself when a new version comes out.'}</p>`;
+}
+
+// Windows on ARM: say so next to the download (Chromium browsers only report it).
+navigator.userAgentData?.getHighEntropyValues?.(['architecture', 'platform']).then((ua) => {
+  if (ua.platform === 'Windows' && ua.architecture === 'arm') document.getElementById('winArm')?.removeAttribute('hidden');
+}).catch(() => {});

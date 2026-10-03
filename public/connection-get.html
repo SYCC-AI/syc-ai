@@ -7,9 +7,9 @@
   <title>SYC</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
   <link rel="manifest" href="/assets/app.webmanifest">
-  <script src="/i18n.js?v=19"></script>
+  <script src="/i18n.js?v=34"></script>
   <link rel="stylesheet" href="/main.css?v=22">
-  <link rel="stylesheet" href="/v2.css?v=5">
+  <link rel="stylesheet" href="/v2.css?v=16">
 </head>
 <body class="v2 profage-section">
   <div class="watermark" aria-hidden="true"></div>
@@ -36,7 +36,7 @@
       <p><a class="get-link" href="https://app.syc-ai.com/">app.syc-ai.com</a></p>
     </section>
 
-    <section class="device-card">
+    <section class="device-card" id="androidCard">
       <h2 data-i18n>2 · Android</h2>
       <p class="muted" data-i18n>The SYC-AI app is this panel on your phone.</p>
       <p><a class="get-button" href="https://syc-ai.com/download/syc-ai.apk" data-i18n>Download SYC-AI for Android</a></p>
@@ -44,17 +44,16 @@
       <p><a class="get-link" href="/connection/android" data-i18n>2 · Connect the phone</a></p>
     </section>
 
-    <section class="device-card" id="computers">
-      <h2 data-i18n>3 · Linux</h2>
-      <p class="muted" data-i18n>Installs SYC Node, so this panel runs your Claude and Codex accounts on that computer. Run it in a terminal:</p>
-      <div class="get-command"><code>curl -fsSL https://syc-ai.com/node/install.sh | bash</code><button type="button" class="ghost" data-copy data-i18n>Copy</button></div>
-    </section>
 
-    <section class="device-card">
-      <h2 data-i18n>4 · Desktop (Windows / macOS)</h2>
+    <section class="device-card" id="computers">
+      <h2 data-i18n>3 · Desktop (Windows / macOS)</h2>
       <p class="muted" data-i18n>Open app.syc-ai.com in Chrome or Edge and choose “Install SYC-AI” (the install icon in the address bar). It opens in its own window with its own icon.</p>
       <p><button type="button" class="get-button" id="installApp" hidden data-i18n>Install SYC-AI on this computer</button></p>
-      <p class="muted" data-i18n>To run your accounts on a Windows computer, also install SYC Node. Run it in PowerShell:</p>
+      <p class="muted" data-i18n>To run your accounts on a Windows computer, download SYC-AI for Windows: Claude Code and Codex come with it, nothing else to install.</p>
+      <p><a class="get-button" href="https://syc-ai.com/download/SYC-AI-Setup.exe" data-i18n>Download SYC-AI for Windows</a></p>
+      <p class="muted" data-i18n>If Windows says “Windows protected your PC”, press “More info”, then “Run anyway”. SYC-AI does not have a paid publisher certificate yet; the file comes only from syc-ai.com.</p>
+      <p class="muted" id="winArm" hidden data-i18n>This computer has an ARM processor. SYC-AI for Windows has not been tested on ARM yet; Windows 11 may run it through its built-in x64 emulation.</p>
+      <p class="muted" data-i18n>Or from PowerShell:</p>
       <div class="get-command"><code>irm https://syc-ai.com/node/install.ps1 | iex</code><button type="button" class="ghost" data-copy data-i18n>Copy</button></div>
     </section>
   </main>
@@ -62,7 +61,8 @@
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
   <script src="/theme.js?v=1"></script>
-  <script src="/profile.js?v=6"></script>
-  <script src="/connection-get.js?v=1"></script>
+  <script src="/profile.js?v=7"></script>
+  <script src="/connection-get.js?v=3"></script>
+  <script src="/app-update.js?v=2" defer></script>
 </body>
 </html>

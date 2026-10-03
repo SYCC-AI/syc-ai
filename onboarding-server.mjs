@@ -1,3 +1,5 @@
+import { createHash, randomBytes } from 'node:crypto';
+
 const ROUTES = new Map([
   ['GET /api/onboarding/session', 'session'],
   ['POST /api/onboarding/otp', 'requestOtp'],
@@ -12,6 +14,8 @@ const ROUTES = new Map([
   ['POST /api/onboarding/tickets', 'ticketCreate'],
   ['POST /api/onboarding/password', 'passwordChange'],
   ['GET /api/onboarding/oauth/ticket', 'oauthTicket'],
+  ['POST /api/onboarding/link/describe', 'linkDescribe'],
+  ['POST /api/onboarding/link/approve', 'linkApprove'],
   ['POST /api/onboarding/oauth/complete', 'oauthComplete'],
 ]);
 // Sign in with Google or GitHub. start and callback are top-level browser
@@ -28,6 +32,21 @@ function bounce(target, setCookies = []) {
     setCookies,
   };
 }
+
+// Google / GitHub from the Android app (roadmap 2.3). Google refuses sign-in
+// inside an app's WebView, so the app opens the start page in the phone's
+// browser with ?app=android&challenge=<base64url sha256 of a secret only the
+// app holds> (PKCE, RFC 7636). The callback then does not sign the browser in:
+// it keeps the sign-in cookies for three minutes under a one-time code and
+// sends the browser to sycai://signin?code=…; the app redeems that code with
+// its secret (POST /api/onboarding/oauth/app/redeem) and puts the cookies into
+// its own window. Another app that catches the sycai:// link has no secret.
+const APP_COOKIE = 'syc_oauth_app';
+const CHALLENGE = /^[A-Za-z0-9_-]{43}$/;
+const HANDOFF_MS = 3 * 60_000;
+const appCookie = (value, maxAge) => `${APP_COOKIE}=${value}; HttpOnly; Secure; SameSite=Lax; Path=/api/onboarding/oauth/; Max-Age=${maxAge}`;
+const cookieValue = (header, name) => new RegExp(`(?:^|;\\s*)${name}=([^;]+)`).exec(String(header || ''))?.[1] || '';
+const toApp = (query) => ({ status: 302, redirect: `sycai://signin?${query}`, setCookies: [appCookie('', 0)] });
 
 const TICKET_ID = '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
 const TICKET_THREAD = new RegExp(`^/api/onboarding/tickets/(${TICKET_ID})$`);
@@ -68,6 +87,10 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
   let origin;
   try { origin = new URL(productOrigin).origin; } catch { throw new TypeError('valid product origin is required'); }
 
+  // One-time sign-in handoffs for the Android app: code → { challenge, setCookies, target, expires }.
+  const handoffs = new Map();
+  function sweep() { const at = now(); for (const [code, entry] of handoffs) if (entry.expires <= at) handoffs.delete(code); }
+
   async function dispatch(request = {}) {
     const method = String(request.method || '').toUpperCase();
     const pathname = String(request.pathname || '');
@@ -89,23 +112,53 @@ export function createOnboardingServer({ controlClient, activation, productOrigi
     if (oauthRoute) {
       const [, provider, step] = oauthRoute;
       const context = securityContext(request);
+      const query = request.query || {};
       if (step === 'start') {
+        const forApp = query.app === 'android' && CHALLENGE.test(String(query.challenge || ''));
         const result = await controlClient.call('oauthStart', { ...context, body: { provider } });
         const url = result.status === 200 ? String(result.body?.data?.url || '') : '';
-        if (!url.startsWith('https://')) return bounce(`/login?oauth_error=${OAUTH_ERROR.test(result.body?.error || '') ? result.body.error : 'provider_unavailable'}`);
-        return { status: 302, redirect: url, setCookies: result.setCookies || [] };
+        if (!url.startsWith('https://')) {
+          const code = OAUTH_ERROR.test(result.body?.error || '') ? result.body.error : 'provider_unavailable';
+          return forApp ? toApp(`error=${code}`) : bounce(`/login?oauth_error=${code}`);
+        }
+        const setCookies = [...(result.setCookies || []), ...(forApp ? [appCookie(query.challenge, 600)] : [])];
+        return { status: 302, redirect: url, setCookies };
       }
-      const query = request.query || {};
+      const challenge = cookieValue(context.cookieHeader, APP_COOKIE);
+      const forApp = CHALLENGE.test(challenge);
       // The person pressed "Cancel" at the provider, or it reported an error.
-      if (query.error || !query.code) return bounce(`/login?oauth_error=${OAUTH_ERROR.test(String(query.error || '')) ? query.error : 'oauth_cancelled'}`);
+      if (query.error || !query.code) {
+        const code = OAUTH_ERROR.test(String(query.error || '')) ? query.error : 'oauth_cancelled';
+        return forApp ? toApp(`error=${code}`) : bounce(`/login?oauth_error=${code}`);
+      }
       const result = await controlClient.call('oauthCallback', {
         ...context, body: { provider, code: String(query.code).slice(0, 512), state: String(query.state || '').slice(0, 256) },
       });
       if (result.status !== 200) {
-        const code = String(result.body?.error || '');
-        return bounce(`/login?oauth_error=${OAUTH_ERROR.test(code) ? code : 'oauth_failed'}`, result.setCookies || []);
+        const code = OAUTH_ERROR.test(String(result.body?.error || '')) ? result.body.error : 'oauth_failed';
+        if (forApp) return { ...toApp(`error=${code}`), setCookies: [...(result.setCookies || []), appCookie('', 0)] };
+        return bounce(`/login?oauth_error=${code}`, result.setCookies || []);
       }
-      return bounce(result.body?.data?.result === 'signup' ? '/login?oauth=signup' : '/main', result.setCookies || []);
+      const target = result.body?.data?.result === 'signup' ? '/login?oauth=signup' : '/main';
+      if (!forApp) return bounce(target, result.setCookies || []);
+      // The browser only loses its short-lived sign-in cookies; the session goes to the app.
+      const cookies = result.setCookies || [];
+      const isClearing = (c) => /;\s*Max-Age=0\b/i.test(c) || /^[^=]+=;/.test(c);
+      sweep();
+      const code = randomBytes(24).toString('base64url');
+      handoffs.set(code, { challenge, setCookies: cookies.filter((c) => !isClearing(c)), target, expires: now() + HANDOFF_MS });
+      return { status: 302, redirect: `sycai://signin?code=${code}`, setCookies: [...cookies.filter(isClearing), appCookie('', 0)] };
+    }
+    // The app redeems its one-time code with the secret behind the challenge.
+    if (method === 'POST' && pathname === '/api/onboarding/oauth/app/redeem') {
+      sweep();
+      const code = String(request.body?.code || '');
+      const verifier = String(request.body?.verifier || '');
+      const entry = handoffs.get(code);
+      if (!entry || !/^[A-Za-z0-9_-]{43,128}$/.test(verifier)) return failure(400, 'oauth_ticket_expired');
+      if (createHash('sha256').update(verifier).digest('base64url') !== entry.challenge) return failure(403, 'oauth_failed');
+      handoffs.delete(code);
+      return { status: 200, body: { data: { target: entry.target } }, setCookies: entry.setCookies };
     }
     const resolved = resolveOperation(method, pathname);
     const activating = method === 'POST' && pathname === '/api/onboarding/activate';

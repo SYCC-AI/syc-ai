@@ -47,34 +47,28 @@ m() {
     zh:signin) echo "请登录你的 SYC-AI 账户：";;
     es:signin) echo "Inicia sesión con tu cuenta de SYC-AI:";;
     *:signin) echo "Sign in with your SYC-AI account:";;
-    fa:later) echo "بعداً اجرا کنید: syc-node login";;
-    ar:later) echo "شغّل لاحقًا: syc-node login";;
-    ru:later) echo "Выполните позже: syc-node login";;
-    zh:later) echo "稍后运行：syc-node login";;
-    es:later) echo "Ejecuta más tarde: syc-node login";;
-    *:later) echo "Run later: syc-node login";;
+    fa:later) echo "بعداً اجرا کنید: syc-node login --link";;
+    ar:later) echo "شغّل لاحقًا: syc-node login --link";;
+    ru:later) echo "Выполните позже: syc-node login --link";;
+    zh:later) echo "稍后运行：syc-node login --link";;
+    es:later) echo "Ejecuta más tarde: syc-node login --link";;
+    *:later) echo "Run later: syc-node login --link";;
     fa:service) echo "SYC Node در پس‌زمینه اجرا می‌شود و بعد از راه‌اندازی مجدد هم وصل می‌ماند.";;
     ar:service) echo "يعمل SYC Node في الخلفية ويبقى متصلًا بعد إعادة التشغيل.";;
     ru:service) echo "SYC Node работает в фоне и остаётся подключённым после перезагрузки.";;
     zh:service) echo "SYC Node 已在后台运行，重启后仍会保持连接。";;
     es:service) echo "SYC Node se ejecuta en segundo plano y sigue conectado tras reiniciar.";;
     *:service) echo "SYC Node is running in the background and stays connected after a reboot.";;
-    fa:done) echo "تمام شد. باز کنید: $PANEL/profage ← همین دستگاه را انتخاب کنید و Claude یا Codex را نصب کنید. برای حذف: syc-node uninstall";;
-    ar:done) echo "تم. افتح $PANEL/profage ← اختر هذا الجهاز وثبّت Claude أو Codex. للإزالة: syc-node uninstall";;
-    ru:done) echo "Готово. Откройте $PANEL/profage → выберите это устройство и установите Claude или Codex. Удалить: syc-node uninstall";;
-    zh:done) echo "完成。打开 $PANEL/profage → 选择此设备并安装 Claude 或 Codex。卸载：syc-node uninstall";;
-    es:done) echo "Listo. Abre $PANEL/profage → elige este dispositivo e instala Claude o Codex. Para quitarlo: syc-node uninstall";;
-    *:done) echo "Done. Open $PANEL/profage → choose this device and install Claude or Codex. To remove it later: syc-node uninstall";;
+    fa:done) echo "تمام شد. باز کنید: $PANEL/profage ← همین دستگاه را انتخاب کنید و روی Claude و Codex «ورود» را بزنید. برای حذف: syc-node uninstall";;
+    ar:done) echo "تم. افتح $PANEL/profage ← اختر هذا الجهاز واضغط «تسجيل الدخول» في Claude وCodex. للإزالة: syc-node uninstall";;
+    ru:done) echo "Готово. Откройте $PANEL/profage -> выберите это устройство и нажмите «Войти» у Claude и Codex. Удалить: syc-node uninstall";;
+    zh:done) echo "完成。打开 $PANEL/profage -> 选择此设备，在 Claude 和 Codex 上点“登录”。卸载：syc-node uninstall";;
+    es:done) echo "Listo. Abre $PANEL/profage -> elige este dispositivo y pulsa «Iniciar sesión» en Claude y Codex. Para quitarlo: syc-node uninstall";;
+    *:done) echo "Done. Open $PANEL/profage -> choose this device and press “Sign in” on Claude and Codex. To remove it later: syc-node uninstall";;
     fa:root) echo "با root اجرا شده. SYC Node زیر یک کاربر جدا به نام syc-node اجرا شود (پیشنهادی) یا با root؟ [۱=کاربر جدا، ۲=root] ";;
     *:root) echo "Running as root. Run SYC Node as a separate user 'syc-node' (recommended) or as root? [1=separate user, 2=root] ";;
     fa:rootuser) echo "کاربر syc-node ساخته شد؛ SYC Node با همین کاربر اجرا می‌شود.";;
     *:rootuser) echo "Created user 'syc-node'; SYC Node runs as that user.";;
-    fa:clis) echo "Claude Code و Codex هم الان روی این دستگاه نصب شوند؟ (بعداً هم از پنل می‌شود) [Y/n] ";;
-    ar:clis) echo "هل تريد تثبيت Claude Code وCodex على هذا الجهاز الآن أيضًا؟ (يمكن ذلك لاحقًا من اللوحة) [Y/n] ";;
-    ru:clis) echo "Установить на это устройство также Claude Code и Codex сейчас? (можно и позже из панели) [Y/n] ";;
-    zh:clis) echo "现在也在此设备上安装 Claude Code 和 Codex 吗？（之后也可在面板中安装）[Y/n] ";;
-    es:clis) echo "¿Instalar también Claude Code y Codex en este dispositivo ahora? (también se puede más tarde desde el panel) [Y/n] ";;
-    *:clis) echo "Install Claude Code and Codex on this device now too? (you can also do it later from the panel) [Y/n] ";;
     fa:clising) echo "در حال نصب Claude Code و Codex … (چند دقیقه)";;
     ar:clising) echo "جارٍ تثبيت Claude Code وCodex … (بضع دقائق)";;
     ru:clising) echo "Устанавливаю Claude Code и Codex … (несколько минут)";;
@@ -202,22 +196,18 @@ if [ -f "$HOME_DIR/config.json" ] && "$BIN_DIR/syc-node" status 2>/dev/null | gr
   say "This device is already connected; keeping its token."
 elif [ -n "${SYC_NODE_USER:-}" ]; then
   "$BIN_DIR/syc-node" login --server "$SERVER" --lang "$L" < /dev/null
-elif has_tty; then
-  say "$(m signin)"
-  "$BIN_DIR/syc-node" login --server "$SERVER" --lang "$L" < /dev/tty
 else
-  say "$(m later)"
+  # No password on this device: it shows a link and a code; the person
+  # approves it wherever they are signed in to SYC-AI (computer or phone).
+  "$BIN_DIR/syc-node" login --link --server "$SERVER" --lang "$L" < /dev/null || say "$(m later)"
 fi
 
-# Claude Code and Codex: the same install the panel's "Install" button runs
-# (into ~/.syc-node/npm), offered here so a new device is ready in one step.
-# Asked only after sign-in and with a terminal; SYC_NODE_CLIS=yes|no answers it
-# for unattended installs. The accounts are still signed in from the panel.
-want_clis="${SYC_NODE_CLIS:-}"
-if [ -z "$want_clis" ] && [ -f "$HOME_DIR/config.json" ] && has_tty; then
-  printf '%s' "$(m clis)"; read -r want_clis < /dev/tty || want_clis=n
-  case "${want_clis:-y}" in [nN]*|2) want_clis=no;; *) want_clis=yes;; esac
-fi
+# Claude Code and Codex come with every install on Windows and Linux (only the
+# web version is without them): the same npm install the panel's "Install"
+# button runs, into ~/.syc-node/npm, right after sign-in. SYC_NODE_CLIS=no is
+# the only way to skip it. The accounts are then signed in from the panel.
+want_clis="${SYC_NODE_CLIS:-yes}"
+[ -f "$HOME_DIR/config.json" ] || want_clis=no
 if [ "$want_clis" = yes ]; then
   say "$(m clising)"
   NPM_BIN="$(dirname "$NODE_BIN")/npm"; [ -x "$NPM_BIN" ] || NPM_BIN=npm

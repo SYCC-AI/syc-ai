@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050914">
+  <meta name="referrer" content="no-referrer">
+  <title>Connect a device — SYC-AI</title>
+  <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
+  <script src="/i18n.js?v=34"></script>
+  <link rel="stylesheet" href="/main.css?v=22">
+  <link rel="stylesheet" href="/v2.css?v=16">
+</head>
+<body class="v2 link-page">
+  <div class="watermark" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand">
+      <a class="back" href="/main" aria-label="Back" data-i18n-attr="aria-label"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></a>
+      <div><strong data-i18n>Connect a device</strong><span data-i18n>Your computer or phone joins your SYC-AI account</span></div>
+    </div>
+    <div class="topbar-right"><div class="avatar-menu" id="avatarMenu"></div></div>
+  </header>
+  <main class="dash link-main">
+    <section class="link-card">
+      <label class="link-code-label" for="code" data-i18n>Code shown on the device</label>
+      <input id="code" class="link-code" maxlength="9" autocomplete="off" spellcheck="false" placeholder="ABCD-2345" dir="ltr">
+      <div class="link-device" id="device" hidden>
+        <span class="link-device-icon" id="deviceIcon" aria-hidden="true"></span>
+        <div><b id="deviceName" data-no-i18n></b><small id="devicePlatform"></small></div>
+      </div>
+      <p class="link-warn" data-i18n>Only connect a device you set up yourself just now. It will run your AI accounts for you.</p>
+      <button type="button" class="link-go" id="connect" disabled data-i18n>Connect this device</button>
+      <p class="link-status" id="status" role="status" aria-live="polite"></p>
+      <a class="link-next" id="next" href="/profage" hidden data-i18n>Open Professional monthly accounts</a>
+    </section>
+  </main>
+  <script src="/theme.js?v=1"></script>
+  <script src="/profile.js?v=7"></script>
+  <script src="/link.js?v=1"></script>
+  <script src="/app-update.js?v=2" defer></script>
+</body>
+</html>

@@ -8,6 +8,7 @@
 // event stream — happens asynchronously behind it; stdin written before the
 // process exists is buffered and flushed in order.
 import { EventEmitter } from 'node:events';
+import { createHash } from 'node:crypto';
 
 const HUB_BASE = process.env.SYC_HUB_BASE || 'http://127.0.0.1:8798';
 const HUB_SECRET = process.env.SYC_HUB_SECRET || '';
@@ -29,13 +30,27 @@ async function hubJson(path, body) {
 export async function hubDevices() { return hubJson('/internal/hub/devices'); }
 export async function hubDevice(deviceId) { return (await hubDevices()).find((d) => d.deviceId === deviceId) || null; }
 
+// Signed device configuration (SYC-AI memory/DEVICE-CONFIG-SIGNING.md): a write
+// marked `sign` is signed by the device hub for that one device (SYC Node 0.7.5+
+// keeps a signed copy); `head` signs only the text up to and including that
+// marker, so what engines add below it (All in One's Decisions) stays free.
+// A spawn's `verify` names the exact files and hashes the run depends on.
+export function configScope(head = '') { return head ? `head:${Buffer.from(String(head), 'utf8').toString('base64url')}` : 'file'; }
+export function configDigest(text, head = '') {
+  const value = String(text ?? '');
+  const at = head ? value.indexOf(head) : -1;
+  return createHash('sha256').update(at < 0 ? value : value.slice(0, at + head.length), 'utf8').digest('hex');
+}
+export const signedEntry = (path, content, head = '') => ({ path, scope: configScope(head), sha256: configDigest(content, head) });
+
 // Small file operations on the device. Paths may start with `~/`; the agent expands them.
 export const deviceFs = {
   read: (deviceId, path) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'read', path }).then((r) => r?.data ?? ''),
-  write: (deviceId, path, data) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'write', path, data }),
+  write: (deviceId, path, data, { sign = false, head = '' } = {}) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'write', path, data, ...(sign ? { sign: true, scope: configScope(head) } : {}) }),
   append: (deviceId, path, data) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'append', path, data }),
   mkdir: (deviceId, path) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'mkdir', path }),
   rm: (deviceId, path) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'rm', path, recursive: true }),
+  exists: (deviceId, path) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'exists', path }).then((r) => Boolean(r?.exists)),
   list: (deviceId, path) => hubJson(`/internal/hub/devices/${deviceId}/fs`, { op: 'list', path }),
 };
 
@@ -102,10 +117,14 @@ class RemoteChild extends EventEmitter {
     this.emit('close', this.exitCode, this.signalCode);
   }
 
-  async _start({ bin, args, cwd, env, prepare = [], timeoutMs }) {
+  async _start({ bin, args, cwd, env, prepare = [], verify = [], timeoutMs }) {
     try {
-      for (const file of prepare) await deviceFs.write(this.deviceId, file.path, file.content);
-      const { procId } = await hubJson(`/internal/hub/devices/${this.deviceId}/spawn`, { bin, args, cwd, env, timeoutMs });
+      const signed = [...verify];
+      for (const file of prepare) {
+        await deviceFs.write(this.deviceId, file.path, file.content, file.sign ? { sign: true, head: file.head } : undefined);
+        if (file.sign) signed.push(signedEntry(file.path, file.content, file.head));
+      }
+      const { procId } = await hubJson(`/internal/hub/devices/${this.deviceId}/spawn`, { bin, args, cwd, env, timeoutMs, ...(signed.length ? { verify: signed } : {}) });
       this.procId = procId;
       if (this._pendingKill) { await this._send('kill', { signal: this._pendingKill }); }
       for (const text of this._stdinQueue) await this._send('stdin', { data: text });
@@ -145,11 +164,12 @@ class RemoteChild extends EventEmitter {
   }
 }
 
-// Spawn `bin args` on the device. `prepare` is a list of {path, content}
-// written to the device before the process starts (settings, hook scripts).
-export function spawnOnDevice(deviceId, { bin, args = [], cwd, env, prepare = [], timeoutMs } = {}) {
+// Spawn `bin args` on the device. `prepare` is a list of {path, content, sign?, head?}
+// written to the device before the process starts (settings, hook scripts);
+// `verify` lists files written earlier with signedEntry() that the run needs.
+export function spawnOnDevice(deviceId, { bin, args = [], cwd, env, prepare = [], verify = [], timeoutMs } = {}) {
   const child = new RemoteChild(deviceId);
-  queueMicrotask(() => { child._start({ bin, args, cwd, env, prepare, timeoutMs }); });
+  queueMicrotask(() => { child._start({ bin, args, cwd, env, prepare, verify, timeoutMs }); });
   return child;
 }
 

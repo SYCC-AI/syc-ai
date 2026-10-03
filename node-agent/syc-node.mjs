@@ -32,7 +32,7 @@ import { createHash, createPublicKey, verify as verifySignature } from 'node:cry
 import { fileURLToPath } from 'node:url';
 import { promises as fsp } from 'node:fs';
 
-export const VERSION = '0.7.3';
+export const VERSION = '0.7.5';
 const DEFAULT_SERVER = 'https://syc-ai.com';
 const HOME = join(process.env.SYC_NODE_HOME || homedir(), '.syc-node');
 const CONFIG = join(HOME, 'config.json');
@@ -119,12 +119,12 @@ function activity(line) {
 
 // ---- messages in the language the installer chose ------------------------------
 const MESSAGES = {
-  en: { user: 'SYC-AI username: ', pass: 'SYC-AI password: ', name: 'Device name', connected: 'Connected as device', notConnected: 'Not connected. Run: syc-node login', paused: 'Paused: the panel cannot use this device until you run "syc-node resume".', resumed: 'Resumed: the panel can use this device again.', removed: 'SYC Node was removed from this device.' },
-  fa: { user: 'نام کاربری SYC-AI: ', pass: 'رمز SYC-AI: ', name: 'نام دستگاه', connected: 'وصل شد؛ نام دستگاه', notConnected: 'وصل نیست. اجرا کنید: syc-node login', paused: 'متوقف شد: تا «syc-node resume» را نزنید، پنل از این دستگاه استفاده نمی‌کند.', resumed: 'دوباره فعال شد: پنل می‌تواند از این دستگاه استفاده کند.', removed: 'SYC Node از این دستگاه حذف شد.' },
-  ar: { user: 'اسم مستخدم SYC-AI: ', pass: 'كلمة مرور SYC-AI: ', name: 'اسم الجهاز', connected: 'تم الاتصال باسم الجهاز', notConnected: 'غير متصل. شغّل: syc-node login', paused: 'تم الإيقاف المؤقت: لن تستخدم اللوحة هذا الجهاز حتى تشغّل "syc-node resume".', resumed: 'تم الاستئناف: يمكن للوحة استخدام هذا الجهاز مجددًا.', removed: 'تمت إزالة SYC Node من هذا الجهاز.' },
-  ru: { user: 'Имя пользователя SYC-AI: ', pass: 'Пароль SYC-AI: ', name: 'Имя устройства', connected: 'Подключено как устройство', notConnected: 'Не подключено. Выполните: syc-node login', paused: 'Пауза: панель не использует это устройство, пока вы не выполните "syc-node resume".', resumed: 'Возобновлено: панель снова может использовать это устройство.', removed: 'SYC Node удалён с этого устройства.' },
-  zh: { user: 'SYC-AI 用户名：', pass: 'SYC-AI 密码：', name: '设备名称', connected: '已连接，设备名', notConnected: '未连接。请运行：syc-node login', paused: '已暂停：在你运行 "syc-node resume" 之前，面板不会使用此设备。', resumed: '已恢复：面板可以再次使用此设备。', removed: '已从此设备移除 SYC Node。' },
-  es: { user: 'Usuario de SYC-AI: ', pass: 'Contraseña de SYC-AI: ', name: 'Nombre del dispositivo', connected: 'Conectado como dispositivo', notConnected: 'Sin conexión. Ejecuta: syc-node login', paused: 'En pausa: el panel no usará este dispositivo hasta que ejecutes "syc-node resume".', resumed: 'Reanudado: el panel puede volver a usar este dispositivo.', removed: 'SYC Node se eliminó de este dispositivo.' },
+  en: { user: 'SYC-AI username: ', pass: 'SYC-AI password: ', name: 'Device name', connected: 'Connected as device', notConnected: 'Not connected. Run: syc-node login', paused: 'Paused: the panel cannot use this device until you run "syc-node resume".', resumed: 'Resumed: the panel can use this device again.', removed: 'SYC Node was removed from this device.', linkOpen: 'Open this link where you are signed in to SYC-AI (any computer or phone) and press Connect:', linkCode: 'Code on this device:', linkWait: 'Waiting for your OK… (10 minutes)', linkExpired: 'The code expired. Run: syc-node login --link' },
+  fa: { user: 'نام کاربری SYC-AI: ', pass: 'رمز SYC-AI: ', name: 'نام دستگاه', connected: 'وصل شد؛ نام دستگاه', notConnected: 'وصل نیست. اجرا کنید: syc-node login', paused: 'متوقف شد: تا «syc-node resume» را نزنید، پنل از این دستگاه استفاده نمی‌کند.', resumed: 'دوباره فعال شد: پنل می‌تواند از این دستگاه استفاده کند.', removed: 'SYC Node از این دستگاه حذف شد.', linkOpen: 'این لینک را جایی که در SYC-AI وارد شده‌اید (هر کامپیوتر یا گوشی) باز کنید و «اتصال» را بزنید:', linkCode: 'کد این دستگاه:', linkWait: 'منتظر تأیید شما… (۱۰ دقیقه)', linkExpired: 'کد منقضی شد. اجرا کنید: syc-node login --link' },
+  ar: { user: 'اسم مستخدم SYC-AI: ', pass: 'كلمة مرور SYC-AI: ', name: 'اسم الجهاز', connected: 'تم الاتصال باسم الجهاز', notConnected: 'غير متصل. شغّل: syc-node login', paused: 'تم الإيقاف المؤقت: لن تستخدم اللوحة هذا الجهاز حتى تشغّل "syc-node resume".', resumed: 'تم الاستئناف: يمكن للوحة استخدام هذا الجهاز مجددًا.', removed: 'تمت إزالة SYC Node من هذا الجهاز.', linkOpen: 'افتح هذا الرابط حيث سجّلت الدخول إلى SYC-AI (أي حاسوب أو هاتف) واضغط ربط:', linkCode: 'رمز هذا الجهاز:', linkWait: 'بانتظار موافقتك… (10 دقائق)', linkExpired: 'انتهت صلاحية الرمز. شغّل: syc-node login --link' },
+  ru: { user: 'Имя пользователя SYC-AI: ', pass: 'Пароль SYC-AI: ', name: 'Имя устройства', connected: 'Подключено как устройство', notConnected: 'Не подключено. Выполните: syc-node login', paused: 'Пауза: панель не использует это устройство, пока вы не выполните "syc-node resume".', resumed: 'Возобновлено: панель снова может использовать это устройство.', removed: 'SYC Node удалён с этого устройства.', linkOpen: 'Откройте эту ссылку там, где вы вошли в SYC-AI (любой компьютер или телефон), и нажмите «Подключить»:', linkCode: 'Код этого устройства:', linkWait: 'Ждём вашего подтверждения… (10 минут)', linkExpired: 'Код истёк. Выполните: syc-node login --link' },
+  zh: { user: 'SYC-AI 用户名：', pass: 'SYC-AI 密码：', name: '设备名称', connected: '已连接，设备名', notConnected: '未连接。请运行：syc-node login', paused: '已暂停：在你运行 "syc-node resume" 之前，面板不会使用此设备。', resumed: '已恢复：面板可以再次使用此设备。', removed: '已从此设备移除 SYC Node。', linkOpen: '在已登录 SYC-AI 的地方（任何电脑或手机）打开此链接并点“连接”：', linkCode: '此设备的代码：', linkWait: '等待你的确认…（10 分钟）', linkExpired: '代码已过期。请运行：syc-node login --link' },
+  es: { user: 'Usuario de SYC-AI: ', pass: 'Contraseña de SYC-AI: ', name: 'Nombre del dispositivo', connected: 'Conectado como dispositivo', notConnected: 'Sin conexión. Ejecuta: syc-node login', paused: 'En pausa: el panel no usará este dispositivo hasta que ejecutes "syc-node resume".', resumed: 'Reanudado: el panel puede volver a usar este dispositivo.', removed: 'SYC Node se eliminó de este dispositivo.', linkOpen: 'Abre este enlace donde tengas la sesión de SYC-AI iniciada (cualquier ordenador o teléfono) y pulsa Conectar:', linkCode: 'Código de este dispositivo:', linkWait: 'Esperando tu confirmación… (10 minutos)', linkExpired: 'El código caducó. Ejecuta: syc-node login --link' },
 };
 function lang() {
   const wanted = String(flag('lang', process.env.SYC_LANG || loadConfig()?.lang || 'en')).slice(0, 2).toLowerCase();
@@ -174,11 +174,65 @@ export function detectTools() {
   return tools;
 }
 
+const DEFAULT_PANEL = 'https://app.syc-ai.com';
+const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
+
+// Best effort: the person may just as well open the link on their phone.
+function openBrowser(url) {
+  if (process.env.SYC_NODE_NO_BROWSER) return;
+  try {
+    const opener = osPlatform === 'win32' ? ['cmd', ['/c', 'start', '', url]]
+      : osPlatform === 'darwin' ? ['open', [url]]
+        : (process.env.DISPLAY || process.env.WAYLAND_DISPLAY) ? ['xdg-open', [url]] : null;
+    if (opener) spawn(opener[0], opener[1], { stdio: 'ignore', detached: true, windowsHide: true }).unref();
+  } catch { /* the link is printed anyway */ }
+}
+
+// No password on the device: it shows a code, the signed-in person approves
+// it in the panel (/link), and the next poll brings this device's token. The
+// pending code is also written to link-code.json for the phone app to read.
+async function linkLogin(server, name) {
+  const panel = flag('panel', process.env.SYC_PANEL || DEFAULT_PANEL).replace(/\/+$/, '');
+  const started = await api(server, '/api/node/link/start', { body: { name, platform: platform(), agentVersion: VERSION } });
+  const url = `${panel}/link?code=${encodeURIComponent(started.code)}`;
+  const pending = join(HOME, 'link-code.json');
+  mkdirSync(HOME, { recursive: true, mode: 0o700 });
+  writeFileSync(pending, JSON.stringify({ code: started.code, url, expiresAt: started.expiresAt }), { mode: 0o600 });
+  stdout.write(`${say('linkOpen')}\n\n  ${url}\n\n${say('linkCode')} ${started.code}\n${say('linkWait')}\n`);
+  openBrowser(url);
+  try {
+    const deadline = Date.parse(started.expiresAt) || Date.now() + 600_000;
+    const every = Math.max(0.05, Number(started.intervalSeconds) || 3) * 1000;
+    while (Date.now() < deadline) {
+      await sleep(every);
+      let state;
+      try { state = await api(server, '/api/node/link/poll', { body: { linkId: started.linkId } }); } catch (error) {
+        if (error.status === 404) break;
+        continue; // a network blip; try again
+      }
+      if (state.status === 'approved') return state;
+    }
+    throw Object.assign(new Error(say('linkExpired')), { code: 'link_expired' });
+  } finally {
+    try { rmSync(pending, { force: true }); } catch { /* gone */ }
+  }
+}
+
 async function login() {
   const server = flag('server', loadConfig()?.server || DEFAULT_SERVER);
+  stdout.write(`SYC Node ${VERSION} — connect this ${platform()} device to ${server}\n`);
+  // --link (or no username given to a non-interactive install): connect with a code.
+  const byLink = process.argv.includes('--link') || process.env.SYC_NODE_LINK === '1';
+  if (byLink) {
+    const name = flag('name', process.env.SYC_NODE_NAME || hostname());
+    const enrolled = await linkLogin(server, name);
+    saveConfig({ server, deviceId: enrolled.deviceId, token: enrolled.token, name, lang: lang(), createdAt: new Date().toISOString() });
+    activity(`linked as device "${name}" (${enrolled.deviceId})`);
+    stdout.write(`${say('connected')} "${name}" (${enrolled.deviceId}).\n`);
+    return;
+  }
   const rl = createInterface({ input: stdin, output: stdout });
   try {
-    stdout.write(`SYC Node ${VERSION} — connect this ${platform()} device to ${server}\n`);
     // Non-interactive installs (automation, tests) may pass the credentials in the environment.
     const username = process.env.SYC_NODE_USER || await rl.question(say('user'));
     const password = process.env.SYC_NODE_PASSWORD || await rl.question(say('pass'));
@@ -266,12 +320,145 @@ function windowsTarget(bin, args) {
   return null;
 }
 
+// ---- signed device configuration (0.7.5) --------------------------------------
+// The files SYC-AI writes here for its own use (Claude's settings and permission
+// hook, the managed part of All in One's AGENTS.md) arrive signed by SYC-AI for
+// THIS device. A write is checked before it lands and a signed copy is kept in
+// ~/.syc-node/panel/.signed. Before a run the panel names the exact files and
+// hashes it expects: a file changed on the device is put back from the signed
+// copy and reported; without a valid copy the run is refused. Files under
+// ~/.syc-node/panel are re-checked while the run lasts. Unsigned writes (an
+// older panel) behave as before. Design: SYC-AI memory/DEVICE-CONFIG-SIGNING.md.
+const DEVICE_CONFIG_KEYS = {
+  'dcfg-76f4e00843b6': `-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEA11KbttiHKmm8Tjw7t+CxgMCOU6goQ71JX8KwCKQmYzU=
+-----END PUBLIC KEY-----`,
+};
+const CONFIG_CHECK_MS = Math.min(60_000, Math.max(500, Number(process.env.SYC_NODE_CONFIG_CHECK_MS) || 5000));
+const sha256hex = (text) => createHash('sha256').update(String(text), 'utf8').digest('hex');
+const headOf = (scope) => (scope === 'file' ? '' : typeof scope === 'string' && /^head:[A-Za-z0-9_-]{1,200}$/.test(scope) ? Buffer.from(scope.slice(5), 'base64url').toString('utf8') : null);
+
+export function configDigest(text, head = '') {
+  const value = String(text ?? '');
+  const at = head ? value.indexOf(head) : -1;
+  return sha256hex(at < 0 ? value : value.slice(0, at + head.length));
+}
+
+// null when the envelope is good for this device, path and content; else why not.
+export function checkEnvelope(e, { deviceId, path, data, keys = DEVICE_CONFIG_KEYS }) {
+  if (!e || typeof e !== 'object' || e.v !== 1) return 'malformed';
+  for (const field of ['keyId', 'deviceId', 'path', 'scope', 'sha256', 'issuedAt', 'sig']) if (typeof e[field] !== 'string' || !e[field] || /[\r\n]/.test(e[field])) return 'malformed';
+  const head = headOf(e.scope);
+  if (head === null) return 'malformed';
+  if (!Object.hasOwn(keys, e.keyId)) return 'unknown_key';
+  const message = Buffer.from(['syc-device-config/v1', e.keyId, e.deviceId, e.path, e.scope, e.sha256, e.issuedAt, ''].join('\n'));
+  let good = false;
+  try { good = verifySignature(null, message, createPublicKey(keys[e.keyId]), Buffer.from(e.sig, 'base64')); } catch { good = false; }
+  if (!good) return 'bad_signature';
+  if (e.deviceId !== deviceId) return 'other_device';
+  if (e.path !== path) return 'other_path';
+  if (data !== undefined && configDigest(data, head) !== e.sha256) return 'content_mismatch';
+  return null;
+}
+
+const configFile = (path, home) => insideHome(typeof path === 'string' && path.startsWith('~/.syc-node/') ? join(home, path.slice('~/.syc-node/'.length)) : path, home);
+const signedCopyFile = (full, home) => join(home, 'panel', '.signed', `${sha256hex(full).slice(0, 40)}.json`);
+function writeAtomic(file, text) {
+  mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
+  const staged = `${file}.${process.pid}.tmp`;
+  writeFileSync(staged, text, { mode: 0o600 });
+  renameSync(staged, file);
+}
+
+// A signed write from the panel: checked, then the file and its signed copy.
+function acceptSignedWrite(command, full, deviceId, home = HOME) {
+  const data = String(command.data ?? '');
+  const problem = (command.encoding || 'utf8') !== 'utf8' ? 'encoding' : checkEnvelope(command.envelope, { deviceId, path: command.path, data });
+  if (problem) { activity(`REFUSED signed file (${problem}): ${String(command.path).slice(0, 160)}`); return { error: `signature_${problem}` }; }
+  writeAtomic(signedCopyFile(full, home), JSON.stringify({ envelope: command.envelope, data }));
+  writeAtomic(full, data);
+  return { result: { ok: true } };
+}
+
+// Checks the files a run depends on. { ok, restored: [paths] } or
+// { ok: false, restored, tamper, problem } — tamper=false for a malformed list.
+// Only the panel's own files (~/.syc-node/panel: settings, permission hook)
+// count as tampering — agents are already refused writes there. The shared
+// workspace notes (All in One AGENTS.md / CLAUDE.md) are the engines' and the
+// user's working memory: a change there is quietly put back (or left for the
+// panel to rewrite) and never counts toward the automatic suspension.
+export function verifySignedConfig(list, { deviceId, home = HOME, keys = DEVICE_CONFIG_KEYS, only = null } = {}) {
+  const restored = [];
+  const repaired = [];
+  const panelDir = join(home, 'panel') + pathSep;
+  for (const item of list || []) {
+    const full = configFile(item?.path, home);
+    const head = headOf(item?.scope);
+    if (!full || head === null || !/^[0-9a-f]{64}$/.test(String(item?.sha256 || ''))) return { ok: false, restored, tamper: false, problem: `unusable entry ${String(item?.path).slice(0, 120)}` };
+    if (only && !only(full)) continue;
+    let current = null;
+    try { current = readFileSync(full, 'utf8'); } catch { /* missing counts as changed */ }
+    if (current !== null && configDigest(current, head) === item.sha256) continue;
+    let copy = null;
+    try { copy = JSON.parse(readFileSync(signedCopyFile(full, home), 'utf8')); } catch { /* none */ }
+    const copyGood = copy && typeof copy.data === 'string' && copy.envelope?.sha256 === item.sha256 && copy.envelope?.scope === item.scope
+      && !checkEnvelope(copy.envelope, { deviceId, path: item.path, data: copy.data, keys });
+    const soft = !full.startsWith(panelDir);
+    if (!copyGood) {
+      if (soft) { repaired.push(`${item.path} (no signed copy; the panel writes it again)`); continue; }
+      return { ok: false, restored, repaired, tamper: true, problem: `${item.path} was changed on this device and has no valid signed copy` };
+    }
+    let next = copy.data;
+    const signedAt = head ? copy.data.indexOf(head) : -1;
+    if (signedAt >= 0) {
+      const tailAt = current === null ? -1 : current.indexOf(head);
+      next = copy.data.slice(0, signedAt + head.length) + (tailAt >= 0 ? current.slice(tailAt + head.length) : '');
+    }
+    try { writeAtomic(full, next); } catch (error) {
+      if (soft) { repaired.push(`${item.path} (could not be restored: ${error.code || error.message})`); continue; }
+      return { ok: false, restored, repaired, tamper: true, problem: `${item.path} could not be restored (${error.code || error.message})` };
+    }
+    (soft ? repaired : restored).push(item.path);
+  }
+  return { ok: true, restored, repaired };
+}
+
+// Reports what a check found; false when the run must not go on.
+function signedConfigOutcome(check, when) {
+  for (const path of check.restored) report('tamper_write', `signed SYC-AI file changed on the device, restored from the signed copy (${when}): ${path}`).catch(() => {});
+  for (const path of check.repaired || []) activity(`workspace note put back (${when}): ${path}`);
+  if (check.ok) return true;
+  if (check.tamper) report('tamper_write', `signed SYC-AI file changed on the device, run refused (${when}): ${check.problem}`).catch(() => {});
+  else activity(`REFUSED run: ${check.problem}`);
+  return false;
+}
+
+function watchSignedConfig(config, procId, child, list) {
+  const panelDir = join(HOME, 'panel') + pathSep;
+  const timer = setInterval(() => {
+    if (!children.has(procId)) { clearInterval(timer); return; }
+    const check = verifySignedConfig(list, { deviceId: config.deviceId, only: (full) => full.startsWith(panelDir) });
+    if (!signedConfigOutcome(check, 'while running')) {
+      clearInterval(timer);
+      emit(config, { type: 'error', procId, message: 'config_tampered' });
+      try { child.kill('SIGTERM'); } catch { /* gone */ }
+    }
+  }, CONFIG_CHECK_MS);
+  timer.unref();
+  child.on('close', () => clearInterval(timer));
+}
+
 function handleSpawn(config, command) {
   const { procId, bin, args = [], timeoutMs } = command;
   if (isPaused()) { activity(`refused (paused): ${bin}`); emit(config, { type: 'error', procId, message: 'device_paused' }); return; }
   if (!commandAllowed(bin, args)) {
     activity(`REFUSED command not on the list: ${String(bin).slice(0, 60)} ${JSON.stringify(args).slice(0, 200)}`);
     emit(config, { type: 'error', procId, message: 'command_not_allowed' });
+    return;
+  }
+  const signedFiles = Array.isArray(command.verify) && command.verify.length ? command.verify : null;
+  if (signedFiles && !signedConfigOutcome(verifySignedConfig(signedFiles, { deviceId: config.deviceId }), 'before the run')) {
+    emit(config, { type: 'error', procId, message: 'config_tampered' });
     return;
   }
   const env = safeEnv(command.env);
@@ -289,6 +476,7 @@ function handleSpawn(config, command) {
       : spawn(bin, expanded, { cwd, env: { ...process.env, ...(env || {}) }, stdio: ['pipe', 'pipe', 'pipe'], shell: osPlatform === 'win32' && !/[\\/]/.test(bin), windowsHide: true });
   } catch (error) { emit(config, { type: 'error', procId, message: error.message }); return; }
   children.set(procId, child);
+  if (signedFiles) watchSignedConfig(config, procId, child, signedFiles);
   emit(config, { type: 'spawned', procId, pid: child.pid });
   // Coalesce output into ~50 ms batches so a chatty CLI does not become thousands of POSTs.
   const queue = { stdout: '', stderr: '' }; let flushTimer = null;
@@ -306,7 +494,7 @@ function handleSpawn(config, command) {
 
 const expand = (p) => (typeof p === 'string' && (p === '~' || p.startsWith('~/')) ? join(homedir(), p.slice(2)) : p);
 
-async function handleFs(command) {
+async function handleFs(command, config = null) {
   const { op, data, encoding = 'utf8', limit = 1_048_576 } = command;
   if (isPaused()) return { error: 'device_paused' };
   const path = insideHome(command.path);
@@ -317,6 +505,7 @@ async function handleFs(command) {
   if (['write', 'rm'].includes(op)) activity(`${op} ${path}`);
   try {
     if (op === 'read') { const buf = await fsp.readFile(path); return { result: buf.length > limit ? { truncated: true, data: buf.subarray(0, limit).toString(encoding) } : { data: buf.toString(encoding) } }; }
+    if (op === 'write' && command.envelope) return acceptSignedWrite(command, path, config?.deviceId);
     if (op === 'write') { await fsp.mkdir(join(path, '..'), { recursive: true }); await fsp.writeFile(path, Buffer.from(String(data ?? ''), encoding)); return { result: { ok: true } }; }
     if (op === 'list') { const entries = await fsp.readdir(path, { withFileTypes: true }); return { result: entries.slice(0, 2000).map((e) => ({ name: e.name, dir: e.isDirectory() })) }; }
     if (op === 'stat') { const st = await fsp.stat(path); return { result: { size: st.size, dir: st.isDirectory(), mtime: st.mtimeMs } }; }
@@ -333,7 +522,7 @@ async function handleCommand(config, command) {
     case 'spawn': handleSpawn(config, command); break;
     case 'stdin': { const child = children.get(command.procId); if (!child) break; if (command.end) child.stdin.end(); else child.stdin.write(command.data ?? ''); break; }
     case 'kill': { const child = children.get(command.procId); if (child) child.kill(command.signal || 'SIGTERM'); break; }
-    case 'fs': { const reply = await handleFs(command); await emit(config, { type: 'fs', requestId: command.requestId, ...reply }); break; }
+    case 'fs': { const reply = await handleFs(command, config); await emit(config, { type: 'fs', requestId: command.requestId, ...reply }); break; }
     case 'ping': break;
     default: if (command.requestId) await emit(config, { type: 'unsupported', requestId: command.requestId, error: 'unsupported_command' });
   }

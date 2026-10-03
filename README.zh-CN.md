@@ -4,108 +4,166 @@
 
 # SYC-AI
 
-### All You Need With AI — In One.
+### Claude Code 和 Codex，同一个对话。<br>一个额度用完，另一个接着干。
 
-**关于 AI 的一切，尽在一处。你所有的 AI 订阅——Claude、Codex 等——在一个会话、一个项目文件夹、一份记忆中。运行在你自己的电脑上，可从网页、手机或桌面操控。**
-
-[English](README.md) · [فارسی](README.fa.md) · **中文** · [Русский](README.ru.md) · [العربية](README.ar.md) · [Español](README.es.md)
+同一个项目文件夹，同一份记忆：用你自己的两个订阅，跑在你自己的 Android 手机或 Windows 电脑上。<br>
+支持六种语言。
 
 [![tests](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml/badge.svg)](https://github.com/SYCC-AI/syc-ai/actions/workflows/test.yml)
 [![release](https://img.shields.io/github/v/release/SYCC-AI/syc-ai?label=release&color=4f8cff)](https://github.com/SYCC-AI/syc-ai/releases/latest)
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-8b7bff.svg)](LICENSE)
+[![Main is free until 31 Dec 2026](https://img.shields.io/badge/Main-free%20until%2031%20Dec%202026-34d399.svg)](#editions)
 
-[**免费开始 →**](https://app.syc-ai.com/login?lang=zh)
+[English](README.md) · [فارسی](README.fa.md) · **中文** · [Русский](README.ru.md) · [العربية](README.ar.md) · [Español](README.es.md)
 
 </div>
 
-<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI"></p>
+<p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI 导览：登录、专业账户、一个 All in One 对话（Claude 达到用量上限后由 Codex 继续同一条消息）、设置和专业会话"></p>
 
-## 为什么选择 SYC-AI
+- **一个对话，两个引擎。**
+  - Claude 负责规划，Codex 负责构建，简短问题交给更轻量的模型；全部在同一个文件夹里，共用一份 `AGENTS.md`。
+  - 某个订阅达到上限时，同一条消息会交给你的*另一个*引擎继续，并附上它错过内容的简短交接。
+  - 绝不会切换到同一提供商的第二个账户。
+- **无需手动配置。**
+  - Android 应用和 Windows 应用自带 Claude Code 和 Codex。
+  - 设备通过你确认的代码加入你的账户；在手机上会自动完成。
+  - 登录 Claude 和 Codex 由你自己在自己的浏览器中完成。
+- **看清你的用量。**
+  - 每个账户的 5 小时和每周用量。
+  - Token 医生。
+  - 在你重新打开一个昂贵的“冷”对话之前发出提醒。
+  - 全部在本地计算，不询问任何模型。
 
-你同时为 Claude **和** ChatGPT 付费，但它们各自待在自己的终端里，各有各的记忆，只在一台机器上。任务做到一半，一个订阅用完了额度，工作就停了。你无法从手机开启会话，也不知道智能体什么时候在等你批准。
+**获取：** [免费注册](https://app.syc-ai.com/login?lang=zh)（Google、GitHub 或 Gmail）→ Android：[**syc-ai.apk**](https://syc-ai.com/download/syc-ai.apk) · Windows：[**SYC-AI-Setup.exe**](https://syc-ai.com/download/SYC-AI-Setup.exe)
 
-**SYC-AI 把这一切放在一处。** 连接一次电脑，然后打开 **SYC-AI — All in One**：在一个会话里，Claude 负责规划，Codex 负责构建，简短问题交给更轻量的模型——都在同一个项目文件夹、同一份记忆中。当一个订阅达到上限时，下一个引擎会接着处理同一条消息。你的登录信息和文件都留在你自己的电脑上。
-
-<p align="center"><img src="screenshots/all-in-one.png" width="860" alt="SYC-AI All in One"></p>
+<sub>SYC-AI 是 SYC 的独立产品，与 Anthropic 或 OpenAI 无关联。你按各服务商的条款使用自己的账户。官方、未经修改的命令行工具运行在你的设备上。</sub>
 
 ## 功能
 
-按使用 AI 编程智能体的人最常提出的需求排序。
+<p align="center"><img src="screenshots/all-in-one.png" width="860" alt="SYC-AI All in One：Claude 规划，Codex 构建，一个会话、一份记忆，侧边显示两个账户的用量"></p>
 
 | | 功能 | 对你意味着什么 |
 |---|---|---|
-| ✨ | **SYC-AI — All in One** | 一个会话连接你所有的引擎。每条消息交给最合适的引擎——规划给 Claude，构建给 Codex，简短问题给更轻量的模型——或交给你选的那个。同一个项目文件夹和一份共享记忆（`AGENTS.md`），引擎轮换时不会丢失任何东西。 |
+| ✨ | **SYC-AI — All in One** | 一个会话同时连接 Claude 和 Codex。每条消息交给最合适的引擎——规划给 Claude，构建给 Codex，简短问题给更轻量的模型——或交给你选的那个。同一个项目文件夹和一份共享记忆（`AGENTS.md`），引擎轮换时不会丢失任何东西。 |
 | 🔁 | **额度用完，工作不停** | 当一个订阅达到用量上限时，同一条消息会按*你的*顺序由下一个引擎继续，并附上简短的交接说明。（SYC-AI 绝不会为绕过限制而跳到同一提供商的第二个账户。） |
 | 📊 | **所有用量一目了然** | 每个已连接账户的 5 小时和每周用量及重置时间——读取时不会向模型发送任何内容。 |
-| 🪙 | **省 token，默认开启** | 简短准确的回答，不做无用的读取，使用注明作者的开源技能。作者测得输出 token 最多减少 65%。 |
-| 📱 | **从手机启动和操控** | 在网页、Android 应用或桌面上开启新会话——而不只是查看。 |
-| 🔔 | **智能体需要你时手机提醒** | 当智能体等待你批准或长任务完成时，手机会提醒你。由你开启；不会自动打开任何东西。 |
+| 🩺 | **Token 医生与冷对话提醒** | 检查你在 Claude 和 Codex 中的对话把 token 花在哪里——缓存命中率、缓存已过期的对话、每次提问的固定部分——并给出通俗建议。当你在一小时或更久之后继续一个长对话时，SYC-AI 会提醒你：下一条消息会按全价重新读取整个对话。这些都不询问模型。 |
+| 🪙 | **省 token，默认开启** | 简短准确的回答，不做无用的读取，使用注明作者的开源技能（Caveman、Superpowers）。 |
+| 📱 | **内置 Claude Code 和 Codex 的 Android 应用** | 智能体直接在手机上运行。首次启动时，应用会在私有空间中安装官方、未经修改的命令行工具，并把手机连接到你的账户。可在应用内用 Google 或 GitHub 登录。 |
+| 🪟 | **内置 Claude Code 和 Codex 的 Windows 应用** | 一个 Setup.exe，无需管理员权限：Node.js、SYC Node、Claude Code 和 Codex 一次下载。电脑通过你确认的代码加入账户——无需在设备上输入 SYC-AI 密码。 |
+| 🔔 | **智能体需要你时提醒你** | 当智能体等待你批准或长任务完成时，手机会提醒你。由你开启；不会自动打开任何东西。 |
 | 🧑‍🔧 | **专业会话** | 网站构建器、Bug 修复、代码审查、研究助手、写作与翻译、数据分析、新手教练、游戏制作——一键开始，或下载为 `AGENTS.md` 用于任何终端智能体。 |
 | 👥 | **每个提供商两个账户** | 同一设备上的个人和工作 Claude 或 Codex 登录；由你选择每个引擎使用哪一个。 |
-| 💻 | **运行在你自己的电脑上** | AI CLI 用你自己的账户安装并登录在你的设备上。登录信息和文件都留在那里。 |
-| ✅ | **由你决定智能体能做什么** | 只读、在项目中工作或完全访问——用通俗的话说明。 |
-| ⚡ | **无需终端** | 一条命令连接电脑，并在缺少时为你安装 Node.js。之后一切都是按钮。 |
-| 🛡️ | **开源设备代理** | [SYC Node](node-agent/) 只运行 AI CLI，只访问自己的文件夹，记录每个请求，并可随时暂停。 |
+| ✅ | **由你决定智能体能做什么** | 只读、在项目中工作或完全访问——按会话设置，用通俗的话说明。 |
+| 🛡️ | **开源设备代理** | [SYC Node](node-agent/) 只运行 AI 命令行工具，只访问自己的文件夹，记录每个请求，并可随时暂停。SYC-AI 在你设备上的配置文件带有签名，被改动时会被恢复。 |
 | 🔏 | **签名更新，可回滚** | 面板和 SYC Node 只安装 SYC 签名的版本，检查失败时恢复上一版本。 |
-| 🌍 | **六种语言** | English、中文、Español、العربية、Русский 和 فارسی——面板、安装程序和智能体的回答。 |
+| 🌍 | **六种语言** | English、中文、Español、العربية、Русский 和 فارسی——面板、应用和智能体的回答。 |
 
-**即将加入 SYC-AI：** All in One 中的 Gemini、Cursor 和 Kimi · 使用官方登录的连接器（GitHub、Google Drive、Gmail、Notion、Telegram、Figma）· 个人图像工作室 · 短视频工作室 · 一键建站与开店 · 文档与翻译 · 学生研究台 · 游戏制作工坊 · 理财与财务智能体 · 智能 Telegram 机器人（仅限主动订阅的受众）· 团队与公司面板 · 手机上的日常助手。
+**目前的引擎：** Claude Code 和 Codex 已经过测试，可在所有会话中使用。Gemini、Cursor 和 Kimi 现在已可在你的设备上登录，它们的聊天面板即将推出。Qwen 即将推出。
+
+## 诚实对比
+
+| | **SYC-AI** | Anthropic Remote Control | Happy | Paseo | CloudCLI |
+|---|---|---|---|---|---|
+| 智能体 | Claude Code + Codex（Gemini、Cursor、Kimi：可登录，聊天即将推出） | Claude Code | Claude Code、Codex | Claude Code、Codex、Copilot、OpenCode、Pi | Claude Code、Cursor CLI、Codex |
+| 两个引擎共享一个对话和同一份记忆 | **是**（All in One） | —（单一引擎） | 未宣传 | 未宣传（一个界面，各自独立的智能体） | 未宣传 |
+| 订阅达到上限时换另一个引擎继续 | **是**，仅限不同提供商，绝不使用同一提供商的第二个账户 | — | 未宣传 | 未宣传 | 未宣传 |
+| 替你安装智能体命令行工具 | **是**（内置于 Android 和 Windows 应用） | 需自行安装 Claude Code | 需自行安装 CLI，再 `npm i -g happy` | CLI 是前提条件 | 使用你现有的 CLI 会话 |
+| 手机 | Android 应用（APK），在手机上运行 Claude Code + Codex。暂无 iOS | Claude 应用，iOS + Android | iOS、Android、网页 | iOS、Android | 浏览器 |
+| 智能体需要你时提醒 | 是（需开启） | 是（推送） | 是（推送） | README 未说明 | README 未说明 |
+| 对话经过哪里 | syc-ai.com（保存在会话历史中；非端到端加密） | Anthropic | 端到端加密中继 | 你的守护进程；可选 E2E 中继 | 你的机器（或其 Cloud） |
+| 需要账户 | 是（Google、GitHub 或 Gmail） | Claude 订阅 | — | 不强制登录 | 否（自托管） |
+| 许可 | BSL 1.1（源代码可用；仓库中有 SYC Node 源码） | 专有 | MIT | Apache-2.0 | AGPL-3.0 |
+| 价格 | Main 在 2026 年 12 月 31 日前免费，之后每月 1.75 美元 | 包含在 Claude 套餐中 | 免费 | 免费 | 自托管免费；Cloud 每月 7 欧元起 |
+
+<sub>“未宣传”指该项目的 README（2026-09-25 读取）没有提到，并不表示无法实现。欢迎在 [Issues](https://github.com/SYCC-AI/syc-ai/issues) 中指正。</sub>
 
 ## 开始使用
 
-一个账户，四种方式。在 **[app.syc-ai.com](https://app.syc-ai.com/login?lang=zh)** 使用 Gmail 地址、用户名和密码注册。
+1. 在 **[app.syc-ai.com](https://app.syc-ai.com/login?lang=zh)** **注册**，可用 Google、GitHub，或 Gmail 地址加密码。SYC-AI 账户基于 Gmail：使用 GitHub 登录时，你的 GitHub 账户需要有已验证的 Gmail 地址。
+2. **获取应用：**
 
-| | 平台 | 方法 |
-|---|---|---|
-| 🌐 | **网页** | 在任意浏览器中打开 **[app.syc-ai.com](https://app.syc-ai.com/login?lang=zh)**。 |
-| 📱 | **Android** | **[下载 SYC-AI 应用](https://syc-ai.com/download/syc-ai.apk)**（APK）——手机上的面板，也用于接收手机提醒。 |
-| 🐧 | **Linux / macOS** | `curl -fsSL https://syc-ai.com/node/zh/install.sh \| bash` |
-| 🪟 | **Windows** | `irm https://syc-ai.com/node/zh/install.ps1 \| iex`——在 Chrome 或 Edge 中选择“安装 SYC-AI”即可把面板作为桌面应用。 |
+   | | 平台 | 方法 |
+   |---|---|---|
+   | 📱 | **Android** | **[下载 syc-ai.apk](https://syc-ai.com/download/syc-ai.apk)**（尚未上架 Google Play；确认后 Android 即可安装）。打开并登录。首次启动时会在手机上安装 Claude Code 和 Codex——需要几分钟——并自动把手机连接到你的账户。 |
+   | 🪟 | **Windows (x64)** | **[下载 SYC-AI-Setup.exe](https://syc-ai.com/download/SYC-AI-Setup.exe)** 并运行，无需管理员权限。它会显示一个简短代码和一个链接：在任何已登录 SYC-AI 的地方（这台电脑或手机）打开链接，并在 10 分钟内点击 **连接此设备**。 |
+   | 🌐 | **网页** | 任意浏览器中的 **[app.syc-ai.com](https://app.syc-ai.com/login?lang=zh)** 显示你的个人资料、套餐和设备状态。连接 Claude 和 Codex 需要 Android 或 Windows 应用。 |
 
-然后打开 **专业账户**，在 Claude 或 Codex 上点击 **安装**，并在你自己的浏览器中 **登录** 一次即可。
+3. **登录 Claude 和 Codex。** 在 **专业账户** 中，点击每个引擎的 **登录**，在你自己的浏览器中登录一次。然后打开 **SYC-AI — All in One** 开始工作。
 
-> 这些是中文安装链接：安装程序启动时会询问“English 还是中文？”。缺少 Node.js 时会自动安装；在 Linux 上以 root 运行时会创建独立的 `syc-node` 用户。随时可以用 `syc-node uninstall` 全部移除。
+> Windows Setup.exe 目前还没有代码签名，Windows SmartScreen 可能会要求你确认（**更多信息 → 仍要运行**）。随时可在 **应用和功能** 中卸载。
 
 ## 工作原理
 
-- 你的电脑主动**向外**连接 syc-ai.com，不在你的机器上开放任何端口，也不需要服务器。
-- 面板让 SYC Node 启动你已安装的 AI 命令行工具。该工具用你自己的账户直接与 Anthropic 或 OpenAI 通信。
-- 你的消息和智能体的回答会经过面板，并保存在你的会话历史中，以便在其他设备上继续。
+- 你的设备主动**向外**连接 syc-ai.com。设备上不开放任何端口，也不需要服务器（[阅读代理代码](node-agent/syc-node.mjs)）。
+- 面板让 SYC Node 启动你设备上安装的 AI 命令行工具。该工具用你自己的账户直接与 Anthropic 或 OpenAI 通信。
+- 你的消息和智能体的回复会经过面板并保存在会话历史中，方便你在其他设备上继续。它们不是端到端加密的。
 
 ## 你的数据在哪里
 
-| 留在你的电脑上 | 保存在 syc-ai.com | 由你掌控 |
+| 留在你的设备上 | 保存在 syc-ai.com | 由你掌控 |
 |---|---|---|
-| 你的 Claude 和 OpenAI 登录（由命令行工具保存） | 你的 SYC-AI 账户（邮箱、用户名、密码哈希） | `syc-node pause`——恢复前面板无法使用该设备 |
-| 你的文件和项目 | 会话历史，方便随处继续 | `syc-node log`——面板向设备发出的每个请求 |
-| 智能体执行的命令 | 设备名称、提醒、工单 | `syc-node uninstall` · 在个人资料中下载你的数据 |
+| 你的 Claude 和 OpenAI 登录信息（由命令行工具保存） | 你的 SYC-AI 账户（邮箱、用户名、密码哈希） | 暂停 SYC Node——在你恢复之前，面板无法使用该设备 |
+| 你的文件和项目 | 你的会话历史，方便随处继续 | 活动日志——面板对你设备发出的每个请求 |
+| 智能体执行的命令 | 设备名称、提醒、工单 | 随时卸载 · 在个人资料中下载你的数据 |
 
-详情：[隐私声明](https://syc-ai.com/privacy) · [使用条款](https://syc-ai.com/terms)。
+完整说明：[隐私声明](https://syc-ai.com/privacy) · [条款](https://syc-ai.com/terms)。
 
 ## SYC Node——你设备上的代理
 
-SYC Node 是一个无依赖的单文件（[`node-agent/syc-node.mjs`](node-agent/syc-node.mjs)）：**只**运行 AI 命令行工具（`claude`、`codex`、`gemini`、`cursor-agent`、`kimi`、`qwen`）、用 npm 安装这些工具以及官方 Cursor 安装程序，**拒绝任何其他程序**；**只**在 `~/.syc-node` 内读写；移除任何可能把工具重定向到其他服务器或预加载代码的环境变量；在 `~/.syc-node/activity.log` 中**记录每个请求**；并且**只**用 SYC 发布密钥签名的版本更新自己。
+SYC Node 是一个无依赖的单文件（[`node-agent/syc-node.mjs`](node-agent/syc-node.mjs)），包含在 Android 和 Windows 应用中。它：
+
+- **只运行** AI 命令行工具（`claude`、`codex`、`gemini`、`cursor-agent`、`kimi`、`qwen`）、把这些包用 npm 安装到 `~/.syc-node/npm`，以及官方 Cursor 安装程序；**拒绝任何其他程序**；
+- **只在 `~/.syc-node` 内读写**；其外的路径一律拒绝；
+- **丢弃任何**可能把命令行工具重定向到其他服务器或预加载代码的环境变量；
+- **校验签名**：它写入的每个 SYC-AI 配置文件都要验签，被改动的文件会被恢复；
+- **记录每个请求**到 `~/.syc-node/activity.log`；
+- **只用** SYC 发布密钥签名的版本更新自己。
+
+## 六种语言
+
+面板、应用和智能体的回答支持 **English、中文、Español、العربية、Русский 和 فارسی**。应用跟随你手机或 Windows 的语言设置。
+
+<a id="editions"></a>
 
 ## 版本
 
 | 版本 | 状态 |
 |---|---|
-| **SYC-AI (Main)** | 现已可用——**发布期间免费** |
-| Plus · Pro · Immortal Edition | 即将推出。选择前会显示价格；付款尚未开放。 |
+| **SYC-AI (Main)** | 现已可用——**2026 年 12 月 31 日前免费**，之后每月 1.75 美元 |
+| Plus · Pro · Immortal Edition | 即将推出（每月 4、15 和 90 美元）。选择前会显示价格；付款尚未开放。 |
+
+## 即将推出
+
+在 SYC-AI 中与 Gemini、Cursor、Kimi 和 Qwen 聊天 · 官方登录的连接器（GitHub、Google Drive、Gmail、Notion、Telegram、Figma）· 个人图像工作室 · 短视频工作室 · 一键建站和开店 · 文档与翻译 · 学生研究台 · 游戏制作工坊 · 理财与金融智能体 · 智能 Telegram 机器人（仅限主动订阅的受众）· 团队和公司面板 · 手机上的日常助手。
 
 ## 常见问题
 
-**免费吗？** SYC-AI (Main) 在发布期间免费。付费版本稍后推出，选择前会显示价格。
+**免费吗？** SYC-AI (Main) 在 2026 年 12 月 31 日前免费，之后每月 1.75 美元。付费版本稍后推出，选择前会显示价格；付款尚未开放。
 
-**需要服务器吗？** 不需要。你自己的笔记本或电脑就够了，服务器也可以。
+**需要服务器吗？** 不需要。你的 Android 手机或 Windows 电脑就够了。
 
-**我的代码会发送给你们吗？** 文件留在你的电脑上。对话——你的消息和可能引用部分文件的回答——会经过 syc-ai.com 并保存在会话历史中。
+**需要先安装 Claude Code 或 Codex 吗？** 不需要。两者都内置在 Android 应用和 Windows 应用中。你只需在面板中登录一次自己的 Claude 和 ChatGPT 账户。
 
-**与 Anthropic、OpenAI 或 Google 有关联吗？** 没有。SYC-AI 是独立产品，你按各服务商的条款使用自己的账户。
+**在浏览器里能做什么？** 网页面板显示你的个人资料、套餐与升级，以及设备状态。使用 Claude 和 Codex 需要 Android 或 Windows 应用，因为智能体运行在你的设备上。
+
+**我的代码会发送给你们吗？** 文件留在你的设备上。对话——你的消息和可能引用部分文件的回答——会经过 syc-ai.com 并保存在会话历史中。
+
+**SYC Node 能在我的设备上做什么？** 只能启动 AI 命令行工具、用 npm 安装这些工具，以及在 `~/.syc-node` 内读写。其他一切都会被拒绝并记录。你可以随时暂停或移除它。[阅读代码](node-agent/syc-node.mjs)。
+
+**SYC-AI 会绕过我订阅的用量限制吗？** 不会。每个引擎都在你自己的账户和它自己的限制下运行。当一个订阅达到上限时，SYC-AI 可以用你同样付费的*另一个*引擎继续同一项工作（例如 Claude 之后用 Codex）。它绝不会在同一提供商的多个账户之间轮换来绕过限制。
+
+**有 iPhone、Mac 或 Linux 版吗？** 没有。SYC-AI 运行在 Android 和 Windows 上。在其他设备上，网页面板可显示你的个人资料、套餐和设备。
+
+**与 Anthropic、OpenAI 或 Google 有关联吗？** 没有。SYC-AI 是独立产品，你按各服务商的条款使用自己的账户。Claude、Codex、Gemini、Cursor、Kimi 和 Qwen 是其各自所有者的商标。
 
 ## 自行托管
 
-自托管版本会把整个面板安装到你自己的 Linux 服务器上——命令和要求见[英文 README](README.md#self-host)。
+希望在自己的服务器上运行整个面板的组织，可以发邮件到 syc@syc-ai.com 申请自托管版本。
+
+## 安全
+
+发布版本和 SYC Node 更新都使用 Ed25519 签名；面板在写入任何字节之前会校验大小和 SHA-256，以事务方式应用更新，失败时回滚。会话使用安全 Cookie 和 CSRF 防护；密码使用 scrypt 哈希；设备令牌只以哈希形式保存。私下报告漏洞：[SECURITY.md](SECURITY.md)。
 
 ## 社区
 
@@ -115,8 +173,8 @@ SYC Node 是一个无依赖的单文件（[`node-agent/syc-node.mjs`](node-agent
 
 ## 致谢
 
-SYC-AI 的省 token 功能建立在开源成果之上，产品中凡用到之处都会注明：Julius Brussee 的 [Caveman](https://github.com/JuliusBrussee/caveman)（MIT）和 Jesse Vincent 的 [Superpowers](https://github.com/obra/superpowers) 技能（MIT）。它们的许可证随技能一起放在 [`skills/`](skills/) 中。
+SYC-AI 的省 token 功能建立在开源成果之上，产品中凡用到之处都会注明：Julius Brussee 的 [Caveman](https://github.com/JuliusBrussee/caveman) 技能（仅技能部分，MIT）和 Jesse Vincent 的 [Superpowers](https://github.com/obra/superpowers) 技能（MIT）。它们的许可证随技能一起放在 [`skills/`](skills/) 中。
 
 ## 许可
 
-源代码可用（source-available），采用 [Business Source License 1.1](LICENSE)。`SYC` 和 `SYC-AI` 是 SYC 的商标。
+源代码可用（source-available），采用 [Business Source License 1.1](LICENSE)。`SYC` 和 `SYC-AI` 是 SYC 的商标。SYC-AI 与 Anthropic、OpenAI、Google、Cursor、Moonshot AI 或阿里巴巴无关联。

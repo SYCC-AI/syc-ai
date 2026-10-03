@@ -87,7 +87,26 @@ function renderOAuthSignup() {
 
 // Google / GitHub buttons: on the sign-in and sign-up screens, for the
 // providers the service offers.
+// Inside the Android app the provider's page opens in the phone's browser,
+// which does not share the app's cookies: from app 1.3.4 the app itself starts
+// it (SYCApp.signInWith) and takes the sign-in back through a one-time code
+// (onboarding-server.mjs). Older apps cannot, so there people who signed up
+// with Google or GitHub use their password.
+const IN_ANDROID_APP = /SYC-AI-Android\//.test(navigator.userAgent);
+const APP_SIGN_IN = typeof window.SYCApp?.signInWith === 'function';
+if (APP_SIGN_IN) {
+  for (const [id, provider] of [['oauthGoogle', 'google'], ['oauthGithub', 'github']]) {
+    document.getElementById(id).addEventListener('click', (event) => { event.preventDefault(); window.SYCApp.signInWith(provider); });
+  }
+}
 function showOAuth(step) {
+  if (IN_ANDROID_APP && !APP_SIGN_IN) {
+    oauthBox.hidden = !(catalog?.oauthProviders || []).length || step !== 'signin';
+    document.getElementById('oauthGoogle').hidden = true;
+    document.getElementById('oauthGithub').hidden = true;
+    document.getElementById('oauthAppNote').hidden = false;
+    return;
+  }
   const offered = new Set(catalog?.oauthProviders || []);
   document.getElementById('oauthGoogle').hidden = !offered.has('google');
   document.getElementById('oauthGithub').hidden = !offered.has('github');

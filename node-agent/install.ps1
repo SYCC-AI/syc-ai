@@ -37,18 +37,12 @@ $T = @{
   'ru:running' = 'U1lDIE5vZGUg0LfQsNC/0YPRidC10L0gKNCf0LvQsNC90LjRgNC+0LLRidC40Log0LfQsNC00LDQvdC40Lk6ICJTWUMgTm9kZSIpLg=='
   'zh:running' = 'U1lDIE5vZGUg5q2j5Zyo6L+Q6KGM77yI5Lu75Yqh6K6h5YiS56iL5bqP77ya4oCcU1lDIE5vZGXigJ3vvInjgII='
   'es:running' = 'U1lDIE5vZGUgZXN0w6EgZW4gbWFyY2hhIChQcm9ncmFtYWRvciBkZSB0YXJlYXM6ICJTWUMgTm9kZSIpLg=='
-  'en:done' = 'RG9uZS4gT3BlbiBodHRwczovL2FwcC5zeWMtYWkuY29tL3Byb2ZhZ2UgLT4gY2hvb3NlIHRoaXMgZGV2aWNlIGFuZCBpbnN0YWxsIENsYXVkZSBvciBDb2RleC4gVG8gcmVtb3ZlIGl0IGxhdGVyOiBzeWMtbm9kZSB1bmluc3RhbGw='
-  'fa:done' = '2KrZhdin2YUg2LTYry4g2KjYp9iyINqp2YbbjNivOiBodHRwczovL2FwcC5zeWMtYWkuY29tL3Byb2ZhZ2Ug4oaQINmH2YXbjNmGINiv2LPYqtqv2KfZhyDYsdinINin2YbYqtiu2KfYqCDaqdmG24zYryDZiCBDbGF1ZGUg24zYpyBDb2RleCDYsdinINmG2LXYqCDaqdmG24zYry4g2KjYsdin24wg2K3YsNmBOiBzeWMtbm9kZSB1bmluc3RhbGw='
-  'ar:done' = '2KrZhS4g2KfZgdiq2K0gaHR0cHM6Ly9hcHAuc3ljLWFpLmNvbS9wcm9mYWdlIOKGkCDYp9iu2KrYsSDZh9iw2Kcg2KfZhNis2YfYp9iyINmI2KvYqNmR2KogQ2xhdWRlINij2YggQ29kZXguINmE2YTYpdiy2KfZhNipOiBzeWMtbm9kZSB1bmluc3RhbGw='
-  'ru:done' = '0JPQvtGC0L7QstC+LiDQntGC0LrRgNC+0LnRgtC1IGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDQstGL0LHQtdGA0LjRgtC1INGN0YLQviDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDRg9GB0YLQsNC90L7QstC40YLQtSBDbGF1ZGUg0LjQu9C4IENvZGV4LiDQo9C00LDQu9C40YLRjDogc3ljLW5vZGUgdW5pbnN0YWxs'
-  'zh:done' = '5a6M5oiQ44CC5omT5byAIGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDpgInmi6nmraTorr7lpIflubblronoo4UgQ2xhdWRlIOaIliBDb2RleOOAguWNuOi9ve+8mnN5Yy1ub2RlIHVuaW5zdGFsbA=='
-  'es:done' = 'TGlzdG8uIEFicmUgaHR0cHM6Ly9hcHAuc3ljLWFpLmNvbS9wcm9mYWdlIC0+IGVsaWdlIGVzdGUgZGlzcG9zaXRpdm8gZSBpbnN0YWxhIENsYXVkZSBvIENvZGV4LiBQYXJhIHF1aXRhcmxvOiBzeWMtbm9kZSB1bmluc3RhbGw='
-  'en:clis' = 'SW5zdGFsbCBDbGF1ZGUgQ29kZSBhbmQgQ29kZXggb24gdGhpcyBjb21wdXRlciBub3cgdG9vPyAoeW91IGNhbiBhbHNvIGRvIGl0IGxhdGVyIGZyb20gdGhlIHBhbmVsKSBbWS9uXQ=='
-  'fa:clis' = 'Q2xhdWRlIENvZGUg2YggQ29kZXgg2YfZhSDYp9mE2KfZhiDYsdmI24wg2KfbjNmGINqp2KfZhdm+24zZiNiq2LEg2YbYtdioINi02YjZhtiv2J8gKNio2LnYr9in2Ysg2YfZhSDYp9iyINm+2YbZhCDZhduM4oCM2LTZiNivKSBbWS9uXQ=='
-  'ar:clis' = '2YfZhCDYqtix2YrYryDYqtir2KjZitiqIENsYXVkZSBDb2RlINmIQ29kZXgg2LnZhNmJINmH2LDYpyDYp9mE2YPZhdio2YrZiNiq2LEg2KfZhNii2YYg2KPZiti22YvYp9ifICjZitmF2YPZhiDYsNmE2YMg2YTYp9it2YLZi9inINmF2YYg2KfZhNmE2YjYrdipKSBbWS9uXQ=='
-  'ru:clis' = '0KPRgdGC0LDQvdC+0LLQuNGC0Ywg0L3QsCDRjdGC0L7RgiDQutC+0LzQv9GM0Y7RgtC10YAg0YLQsNC60LbQtSBDbGF1ZGUgQ29kZSDQuCBDb2RleCDRgdC10LnRh9Cw0YE/ICjQvNC+0LbQvdC+INC4INC/0L7Qt9C20LUg0LjQtyDQv9Cw0L3QtdC70LgpIFtZL25d'
-  'zh:clis' = '546w5Zyo5Lmf5Zyo6L+Z5Y+w55S16ISR5LiK5a6J6KOFIENsYXVkZSBDb2RlIOWSjCBDb2RleCDlkJfvvJ/vvIjkuYvlkI7kuZ/lj6/lnKjpnaLmnb/kuK3lronoo4XvvIlbWS9uXQ=='
-  'es:clis' = 'wr9JbnN0YWxhciB0YW1iacOpbiBDbGF1ZGUgQ29kZSB5IENvZGV4IGVuIGVzdGUgZXF1aXBvIGFob3JhPyAodGFtYmnDqW4gc2UgcHVlZGUgbcOhcyB0YXJkZSBkZXNkZSBlbCBwYW5lbCkgW1kvbl0='
+  'en:done' = 'RG9uZS4gT3BlbiBodHRwczovL2FwcC5zeWMtYWkuY29tL3Byb2ZhZ2UgLT4gY2hvb3NlIHRoaXMgZGV2aWNlIGFuZCBwcmVzcyAiU2lnbiBpbiIgb24gQ2xhdWRlIGFuZCBDb2RleC4gVG8gcmVtb3ZlIGl0IGxhdGVyOiBzeWMtbm9kZSB1bmluc3RhbGw='
+  'fa:done' = '2KrZhdin2YUg2LTYry4g2KjYp9iyINqp2YbbjNivOiBodHRwczovL2FwcC5zeWMtYWkuY29tL3Byb2ZhZ2Ug4oaQINmH2YXbjNmGINiv2LPYqtqv2KfZhyDYsdinINin2YbYqtiu2KfYqCDaqdmG24zYryDZiCDYsdmI24wgQ2xhdWRlINmIIENvZGV4IMKr2YjYsdmI2K/CuyDYsdinINio2LLZhtuM2K8uINio2LHYp9uMINit2LDZgTogc3ljLW5vZGUgdW5pbnN0YWxs'
+  'ar:done' = '2KrZhS4g2KfZgdiq2K0gaHR0cHM6Ly9hcHAuc3ljLWFpLmNvbS9wcm9mYWdlIOKGkCDYp9iu2KrYsSDZh9iw2Kcg2KfZhNis2YfYp9iyINmI2KfYtti62LcgwqvYqtiz2KzZitmEINin2YTYr9iu2YjZhMK7INmB2YogQ2xhdWRlINmIQ29kZXguINmE2YTYpdiy2KfZhNipOiBzeWMtbm9kZSB1bmluc3RhbGw='
+  'ru:done' = '0JPQvtGC0L7QstC+LiDQntGC0LrRgNC+0LnRgtC1IGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDQstGL0LHQtdGA0LjRgtC1INGN0YLQviDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDQvdCw0LbQvNC40YLQtSDCq9CS0L7QudGC0LjCuyDRgyBDbGF1ZGUg0LggQ29kZXguINCj0LTQsNC70LjRgtGMOiBzeWMtbm9kZSB1bmluc3RhbGw='
+  'zh:done' = '5a6M5oiQ44CC5omT5byAIGh0dHBzOi8vYXBwLnN5Yy1haS5jb20vcHJvZmFnZSAtPiDpgInmi6nmraTorr7lpIfvvIzlnKggQ2xhdWRlIOWSjCBDb2RleCDkuIrngrnigJznmbvlvZXigJ3jgILljbjovb3vvJpzeWMtbm9kZSB1bmluc3RhbGw='
+  'es:done' = 'TGlzdG8uIEFicmUgaHR0cHM6Ly9hcHAuc3ljLWFpLmNvbS9wcm9mYWdlIC0+IGVsaWdlIGVzdGUgZGlzcG9zaXRpdm8geSBwdWxzYSDCq0luaWNpYXIgc2VzacOzbsK7IGVuIENsYXVkZSB5IENvZGV4LiBQYXJhIHF1aXRhcmxvOiBzeWMtbm9kZSB1bmluc3RhbGw='
   'en:clising' = 'SW5zdGFsbGluZyBDbGF1ZGUgQ29kZSBhbmQgQ29kZXggLi4uIChhIGZldyBtaW51dGVzKQ=='
   'fa:clising' = '2K/YsSDYrdin2YQg2YbYtdioIENsYXVkZSBDb2RlINmIIENvZGV4IC4uLiAo2obZhtivINiv2YLbjNmC2Ycp'
   'ar:clising' = '2KzYp9ix2Y0g2KrYq9io2YrYqiBDbGF1ZGUgQ29kZSDZiENvZGV4IC4uLiAo2KjYtti5INiv2YLYp9im2YIp'
@@ -105,28 +99,55 @@ Set-Content -Path (Join-Path $Bin 'syc-node.cmd') -Value "@echo off`r`nnode `"$H
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 if ($userPath -notlike "*$Bin*") { [Environment]::SetEnvironmentVariable('Path', "$Bin;$userPath", 'User'); $env:Path = "$Bin;$env:Path" }
 
-Say (M 'signin')
-& node (Join-Path $Home_ 'syc-node.mjs') login --server $Server --lang $L
+# No password on this computer: it shows a link and a code and opens the
+# browser; the person approves it where they are signed in to SYC-AI.
+# SYC_NODE_USER/SYC_NODE_PASSWORD still work for unattended installs.
+$status = ''
+if (Test-Path (Join-Path $Home_ 'config.json')) { $status = (& node (Join-Path $Home_ 'syc-node.mjs') status 2>$null | Out-String) }
+if ($status -match '^Connected') {
+  Say 'This computer is already connected; keeping its connection.'
+} elseif ($env:SYC_NODE_USER) {
+  Say (M 'signin')
+  & node (Join-Path $Home_ 'syc-node.mjs') login --server $Server --lang $L
+} else {
+  & node (Join-Path $Home_ 'syc-node.mjs') login --link --server $Server --lang $L
+}
 if (Test-Path (Join-Path $Home_ 'config.json')) {
-  # Hidden window: a tiny VBScript launcher so no console stays open on the desktop.
-  $vbs = Join-Path $Home_ 'syc-node-hidden.vbs'
-  Set-Content -Path $vbs -Encoding ASCII -Value "CreateObject(`"WScript.Shell`").Run `"`"`"$($node.Source)`"`" `"`"$Home_\syc-node.mjs`"`" run`", 0, False"
-  $action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument "`"$vbs`""
+  # No window and no script host: Windows' own console host runs node headless
+  # (Windows 10 1809+ / Server 2019+). A hidden .vbs launcher did the same, but
+  # Microsoft Defender quarantines that pattern.
+  Remove-Item (Join-Path $Home_ 'syc-node-hidden.vbs') -Force -ErrorAction SilentlyContinue
+  $conhost = Join-Path $env:WINDIR 'System32\conhost.exe'
+  $action = New-ScheduledTaskAction -Execute $conhost -Argument "--headless `"$($node.Source)`" `"$Home_\syc-node.mjs`" run"
   $trigger = New-ScheduledTaskTrigger -AtLogOn
   $settings = New-ScheduledTaskSettingsSet -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero)
   Register-ScheduledTask -TaskName 'SYC Node' -Description 'Keeps this computer connected to your SYC-AI account (syc-ai.com). Remove with: syc-node uninstall' -Action $action -Trigger $trigger -Settings $settings -Force | Out-Null
   Start-ScheduledTask -TaskName 'SYC Node'
   Say (M 'running')
 
-  # Claude Code and Codex: the same install the panel's "Install" button runs
-  # (into .syc-node\npm), offered here so a new computer is ready in one step.
-  # SYC_NODE_CLIS=yes|no answers it for unattended installs. npm.cmd, not npm:
-  # npm.ps1 is refused where scripts are disabled. Package names are quoted
-  # because a bare @name is PowerShell splatting.
-  $wantClis = $env:SYC_NODE_CLIS
-  if (-not $wantClis) {
-    $answer = Read-Host (M 'clis')
-    $wantClis = if ($answer -match '^(n|no|2)') { 'no' } else { 'yes' }
+  # Claude Code and Codex come with every install on Windows and Linux (only the
+  # web version is without them): the same npm install the panel's "Install"
+  # button runs, into .syc-node\npm. SYC_NODE_CLIS=no is the only way to skip
+  # it. npm.cmd, not npm: npm.ps1 is refused where scripts are disabled.
+  # Package names are quoted because a bare @name is PowerShell splatting.
+  $wantClis = if ($env:SYC_NODE_CLIS -ne 'no') { 'yes' } else { 'no' }
+  # SYC-AI-Setup.exe carries both (SYC_BUNDLED_CLIS = its clis folder): they are
+  # copied, not downloaded. The one-line installer still uses npm.
+  $bundled = $env:SYC_BUNDLED_CLIS
+  if ($wantClis -eq 'yes' -and $bundled -and (Test-Path (Join-Path $bundled 'claude.cmd'))) {
+    Say (M 'clising')
+    $npmPrefix = Join-Path $Home_ 'npm'
+    New-Item -ItemType Directory -Force -Path $npmPrefix | Out-Null
+    $clisOk = $true
+    try {
+      foreach ($old in @('@anthropic-ai\claude-code', '@openai\codex')) {
+        $p = Join-Path $npmPrefix "node_modules\$old"
+        if (Test-Path $p) { Remove-Item -Recurse -Force $p }
+      }
+      Copy-Item -Recurse -Force (Join-Path $bundled '*') $npmPrefix
+    } catch { $clisOk = $false }
+    if ($clisOk) { Say (M 'clisok') } else { Say (M 'clisfail') }
+    $wantClis = 'done'
   }
   if ($wantClis -eq 'yes') {
     Say (M 'clising')

@@ -31,6 +31,8 @@ const OPERATIONS = Object.freeze({
   ticketCreate: ['POST', '/api/user/tickets'],
   ticketThread: ['GET', 'ticket'],
   ticketReply: ['POST', 'ticket-reply'],
+  linkDescribe: ['POST', '/api/user/devices/link/describe'],
+  linkApprove: ['POST', '/api/user/devices/link/approve'],
   oauthStart: ['POST', '/api/public/oauth/start'],
   oauthCallback: ['POST', '/api/public/oauth/callback'],
   oauthTicket: ['GET', '/api/public/oauth/ticket'],

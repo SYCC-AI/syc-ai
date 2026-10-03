@@ -1,6 +1,7 @@
 // SYC-AI (All in One) page: sessions, one conversation across engines, usage
 // of every connected account and the settings that shape how engines work.
 const t = (s) => (window.SYC?.t ? window.SYC.t(s) : s);
+const err = (c) => (window.SYC?.err ? window.SYC.err(c) : c);
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const store = { get: (k) => { try { return localStorage.getItem(k) || ''; } catch { return ''; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } } };
@@ -161,7 +162,7 @@ function turnHtml(turn) {
   const tools = turn.tools?.length ? `<details class="aio-tools"><summary>${esc(t('Actions'))} (${turn.tools.length})</summary>${turn.tools.map((x) => `<div><b>${esc(x.name)}</b> <code>${esc(x.detail)}</code></div>`).join('')}</details>` : '';
   let tail = '';
   if (turn.quota) tail = `<div class="aio-quota">${esc(t('This subscription reached its usage limit'))}${turn.quota.resetsAt ? ` · ${esc(t('resets'))} ${esc(when(turn.quota.resetsAt))}` : ''}.</div>`;
-  else if (turn.error) tail = `<div class="aio-quota err">${esc(t(turn.error === 'device_unavailable' ? 'Your device did not answer. Is SYC Node running and online?' : turn.error === 'device_paused' ? 'SYC Node is paused on this device (syc-node resume).' : turn.error))}</div>`;
+  else if (turn.error) tail = `<div class="aio-quota err">${esc(turn.error === 'device_paused' ? t('SYC Node is paused on this device (syc-node resume).') : err(turn.error))}</div>`;
   if (turn.stopped) tail += `<div class="aio-note">${esc(t('Stopped.'))}</div>`;
   const usage = turn.usage ? `<small class="aio-tokens">${esc(t('tokens'))}: ${esc(t('in'))} ${fmt(turn.usage.input)} · ${esc(t('cached'))} ${fmt(turn.usage.cached)} · ${esc(t('out'))} ${fmt(turn.usage.output)}</small>` : '';
   return `<div class="aio-msg bot engine-${esc(turn.engine)}">${head}${tools}<div class="aio-body" dir="auto">${markdown(turn.text) || (turn.quota || turn.error ? '' : `<span class="aio-note">${esc(t('(no text)'))}</span>`)}</div>${tail}${usage}</div>`;
@@ -237,7 +238,7 @@ async function send(text, engine = engineChoice) {
   } catch (error) {
     setBusy(false);
     $('messageInput').value = message;
-    alert(t(error.message === 'busy' ? 'This session is still working. Wait for it or press Stop.' : error.message === 'no_device' ? 'Connect a device first (Connection → Get SYC-AI).' : error.message));
+    alert(error.message === 'busy' ? t('This session is still working. Wait for it or press Stop.') : error.message === 'no_device' ? t('Connect a device first (Connection → Get SYC-AI).') : err(error.message));
   }
 }
 
@@ -325,8 +326,19 @@ function closeLayers() { document.querySelectorAll('.aio-layer').forEach((l) => 
   });
   $('newSession').onclick = async () => { current = null; await ensureSession(); $('messageInput').focus(); };
   $('sessionTitle').onchange = async () => { if (!current) return; await api(`/api/syc/sessions/${current.id}/rename`, { method: 'POST', body: { title: $('sessionTitle').value } }); loadState(); };
-  $('toggleSide').onclick = () => document.body.classList.toggle('aio-side-open');
-  $('openUsage').onclick = () => document.body.classList.toggle('aio-usage-open');
+  // Drawers (sessions, accounts): the ☰/chart buttons open them; the ✕, a tap
+  // on the dimmed page, Escape or the phone's Back close them.
+  const closeDrawers = () => document.body.classList.remove('aio-side-open', 'aio-usage-open');
+  const openDrawer = (cls) => {
+    const open = !document.body.classList.contains(cls);
+    closeDrawers();
+    if (open) { document.body.classList.add(cls); history.pushState({ aioDrawer: 1 }, ''); }
+  };
+  $('toggleSide').onclick = () => openDrawer('aio-side-open');
+  $('openUsage').onclick = () => openDrawer('aio-usage-open');
+  document.querySelectorAll('[data-close-drawer]').forEach((b) => { b.onclick = closeDrawers; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawers(); });
+  window.addEventListener('popstate', closeDrawers);
   $('refreshUsage').onclick = async () => {
     const button = $('refreshUsage'); button.disabled = true; button.textContent = t('Reading…');
     try { state.usage = (await api('/api/syc/usage/refresh', { method: 'POST', body: { deviceId: $('deviceSelect').value } })).usage; renderUsage(); }
@@ -376,7 +388,7 @@ function closeLayers() { document.querySelectorAll('.aio-layer').forEach((l) => 
       state.settings = saved.settings; updateHint();
       status.textContent = t('Saved. Your next message uses these settings.'); status.className = 'aio-note ok';
       setTimeout(closeLayers, 700);
-    } catch (error) { status.textContent = error.message; status.className = 'aio-note err'; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'aio-note err'; }
   };
   document.querySelectorAll('.aio-layer').forEach((layer) => {
     layer.onclick = (e) => { if (e.target === layer || e.target.hasAttribute('data-close')) closeLayers(); };

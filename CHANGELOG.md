@@ -2,6 +2,16 @@
 
 Signed releases and their assets: [Releases](https://github.com/SYCC-AI/syc-ai/releases).
 
+## 0.7.5 — 2026-10-03
+- **SYC-AI for Windows: [SYC-AI-Setup.exe](https://syc-ai.com/download/SYC-AI-Setup.exe).** One download, no administrator rights. Node.js, Claude Code and Codex come inside it; it connects the computer with a code and adds a *SYC-AI* shortcut. Uninstall from *Apps & features*. The app shows a notice when an update is out.
+- **SYC-AI for Android 1.3.4: [syc-ai.apk](https://syc-ai.com/download/syc-ai.apk).** Claude Code and Codex now run on the phone itself. The app sets them up on first start and connects the phone to your account. You can sign in with Google or GitHub inside the app. A phone that was removed from your account can be connected again with one tap. The app also tells you clearly when the phone is low on space.
+- **Connect a device with a code.** You never type your SYC-AI password on the device. Open the link wherever you are signed in and press *Connect this device*.
+- **Token doctor in Codex Web**, like the one in Claude Web. It works without asking a model.
+- **Gemini, Cursor and Kimi:** you can sign in to them on your device. Their chat panel is coming; Claude and Codex are the engines you can work with today.
+- **Signed device configuration.** SYC-AI's own settings files on your device are signed. SYC Node 0.7.5 checks the signatures and puts back any file that was changed.
+- The web panel shows your profile, plan and device status. To connect Claude and Codex, use the Android or Windows app.
+- Fixes: Claude Web opens a conversation at its last message. Clearer error messages, in six languages.
+
 ## 0.7.4 — 2026-09-24
 - **Sign in with Google or GitHub.** New people pick a username and a password once (SYC Node on your computers signs in with them); an existing account with the same Gmail simply signs in. SYC-AI accounts stay Gmail-based: GitHub needs a verified Gmail on the account.
 - **SYC Node 0.7.3:** the events of one program reach the panel in order. Before, a program's exit could overtake its last output — on Windows the panel then showed "device not answering" for Codex. Output that waits behind a slow connection is sent as one piece. Devices update themselves.

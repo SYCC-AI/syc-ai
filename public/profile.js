@@ -1,4 +1,5 @@
 (() => {
+  const err = (c) => (window.SYC?.err ? window.SYC.err(c) : c);
   const esc = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[character]));
@@ -196,7 +197,7 @@
       const data = await request('/auth/profile');
       currentUser = data.user; avatarDataUrl = ''; render(); await loadAccountData();
     } catch (error) {
-      const status = document.getElementById('profileInfoStatus'); status.textContent = error.message; status.className = 'form-status error';
+      const status = document.getElementById('profileInfoStatus'); status.textContent = err(error.message); status.className = 'form-status error';
     } finally { modal.classList.remove('is-loading'); document.getElementById('profileClose').focus(); }
   }
 
@@ -229,7 +230,7 @@
       document.getElementById('ticketList').innerHTML = service.module.renderTicketList(tickets);
     } catch (error) {
       const list = document.getElementById('ticketList');
-      if (list) list.innerHTML = `<p class="form-status error">${esc(error.message)}</p>`;
+      if (list) list.innerHTML = `<p class="form-status error">${esc(err(error.message))}</p>`;
     }
   }
 
@@ -251,7 +252,7 @@
       document.getElementById('ticketList').hidden = true;
       document.getElementById('ticketCreateForm').hidden = true;
     } catch (error) {
-      document.getElementById('ticketList').innerHTML = `<p class="form-status error">${esc(error.message)}</p>`;
+      document.getElementById('ticketList').innerHTML = `<p class="form-status error">${esc(err(error.message))}</p>`;
     }
   }
 
@@ -272,7 +273,7 @@
       status.textContent = 'Ticket created.'; status.className = 'form-status success';
       await loadAccountData();
       await showTicket(ticket.id);
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; }
     finally { button.disabled = false; }
   }
 
@@ -286,7 +287,7 @@
       const service = await center();
       await service.client.reply(selectedTicketId, document.getElementById('ticketReplyBody').value);
       await showTicket(selectedTicketId);
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; button.disabled = false; }
   }
 
   async function changeCentralPassword(event) {
@@ -302,7 +303,7 @@
       status.textContent = tr('Password changed. Your other sessions were signed out.'); status.className = 'form-status success';
     } catch (error) {
       const messages = { current_password_wrong: 'The current password is not right.', weak_password: 'Use at least 12 characters, and not your username.', rate_limited: 'Too many tries. Wait a few minutes.' };
-      status.textContent = tr(messages[error.message] || error.message); status.className = 'form-status error';
+      status.textContent = (messages[error.message] ? tr(messages[error.message]) : err(error.message)); status.className = 'form-status error';
     } finally { button.disabled = false; }
   }
 
@@ -318,7 +319,7 @@
       await service.client.createTicket({ subject: 'Please delete my account', category: 'technical', severity: 'medium',
         body: 'I ask the SYC-AI team to delete my account and its data. (Sent from Profile → Account details → Privacy.)' });
       status.textContent = tr('Request sent. You will find the answer in Support.'); status.className = 'form-status success';
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; button.disabled = false; }
   }
 
   async function exportAccount() {
@@ -334,7 +335,7 @@
       link.href = url; link.download = 'syc-ai-account-export.json'; link.click();
       URL.revokeObjectURL(url);
       status.textContent = 'Export downloaded.'; status.className = 'form-status success';
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; }
     finally { button.disabled = false; }
   }
 
@@ -414,22 +415,22 @@
   async function startTwoFactor(event) {
     event.preventDefault(); const button = event.currentTarget.querySelector('button'); const status = document.getElementById('twoFactorStatus'); button.disabled = true; status.textContent = 'Creating a secure key…';
     try { const data = await post('/auth/profile/2fa/start', { currentPassword: document.getElementById('twoFactorStartPassword').value }); renderTwoFactor(data); document.getElementById('twoFactorEnableCode').focus(); }
-    catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+    catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; button.disabled = false; }
   }
   async function enableTwoFactor(event) {
     event.preventDefault(); const button = event.currentTarget.querySelector('.primary'); const status = document.getElementById('twoFactorStatus'); button.disabled = true; status.textContent = 'Checking the code…';
     try { const data = await post('/auth/profile/2fa/enable', { code: document.getElementById('twoFactorEnableCode').value }); currentUser = data.user; renderTwoFactor(null, 'Two-factor authentication is now on.'); }
-    catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+    catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; button.disabled = false; }
   }
   async function disableTwoFactor(event) {
     event.preventDefault(); const button = event.currentTarget.querySelector('button'); const status = document.getElementById('twoFactorStatus'); button.disabled = true; status.textContent = 'Checking…';
     try { const data = await post('/auth/profile/2fa/disable', { currentPassword: document.getElementById('twoFactorDisablePassword').value, code: document.getElementById('twoFactorDisableCode').value }); currentUser = data.user; renderTwoFactor(null, 'Two-factor authentication is now off.'); }
-    catch (error) { status.textContent = error.message; status.className = 'form-status error'; button.disabled = false; }
+    catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; button.disabled = false; }
   }
   async function revokeSessions() {
     const status = document.getElementById('profileSessionsStatus'); status.textContent = 'Signing out other sessions…'; status.className = 'form-status';
     try { await post('/auth/profile/sessions/revoke', {}); status.textContent = 'All other sessions were signed out.'; status.className = 'form-status success'; }
-    catch (error) { status.textContent = error.message; status.className = 'form-status error'; }
+    catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; }
   }
 
   // Avatar button at the top right: click opens the profile, hovering on a
@@ -518,7 +519,7 @@
         address: document.getElementById('profileAddress').value, avatarDataUrl,
       });
       currentUser = data.user; avatarDataUrl = ''; render(); status.textContent = 'Profile saved.'; status.className = 'form-status success';
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; }
     finally { button.disabled = false; }
   }
 
@@ -531,7 +532,7 @@
     try {
       await post('/auth/profile/password', { currentPassword: document.getElementById('profileCurrentPassword').value, newPassword });
       form.reset(); status.textContent = 'Password changed; other sessions were signed out.'; status.className = 'form-status success';
-    } catch (error) { status.textContent = error.message; status.className = 'form-status error'; }
+    } catch (error) { status.textContent = err(error.message); status.className = 'form-status error'; }
     finally { button.disabled = false; }
   }
 

@@ -16,6 +16,7 @@ import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { CONNECTORS, IDEAS, SKILLS, TEMPLATES } from './all-in-one-catalog.mjs';
 import { accountEnv } from './device-accounts.mjs';
+import { signedEntry } from './remote-runner.mjs';
 
 export const ENGINES = Object.freeze({
   claude: { name: 'Claude', provider: 'anthropic', models: ['default', 'opus', 'sonnet', 'haiku'] },
@@ -369,6 +370,10 @@ export function createAllInOne({ dataDir, devicesFor, accountStatusQuick, spawn,
       .sort((a, b) => b.updatedAt - a.updatedAt);
   }
 
+  const DECISIONS_HEAD = '\n## Decisions\n';
+  const CLAUDE_MD = '@AGENTS.md\n';
+  const signedProjects = new Map(); // `${deviceId}\n${root}` → what the next run must find there
+
   async function ownedDevice(username, deviceId) {
     const devices = await devicesFor(username);
     const device = devices.find((d) => d.deviceId === deviceId) || (deviceId ? null : devices[0]);
@@ -398,12 +403,17 @@ export function createAllInOne({ dataDir, devicesFor, accountStatusQuick, spawn,
 
   // Keep the project's AGENTS.md (and the CLAUDE.md that points at it) and the
   // chosen skills in step with the settings, keeping the Decisions engines wrote.
+  // Both are signed for the device (memory/DEVICE-CONFIG-SIGNING.md): AGENTS.md
+  // up to its Decisions heading, which engines add to; every run then names the
+  // exact hashes, and SYC Node 0.7.5+ restores or refuses a changed copy.
   async function prepareProject(username, deviceId, settings) {
     const root = `~/.syc-node/workspace/syc-ai/${settings.project}`;
     let decisions = '';
     try { decisions = decisionsFrom(await deviceFs.read(deviceId, `${root}/AGENTS.md`)); } catch { /* first run */ }
-    await deviceFs.write(deviceId, `${root}/AGENTS.md`, renderAgentsMd(settings, { decisions }));
-    await deviceFs.write(deviceId, `${root}/CLAUDE.md`, '@AGENTS.md\n');
+    const agentsMd = renderAgentsMd(settings, { decisions });
+    await deviceFs.write(deviceId, `${root}/AGENTS.md`, agentsMd, { sign: true, head: DECISIONS_HEAD });
+    await deviceFs.write(deviceId, `${root}/CLAUDE.md`, CLAUDE_MD, { sign: true });
+    signedProjects.set(`${deviceId}\n${root}`, [signedEntry(`${root}/AGENTS.md`, agentsMd, DECISIONS_HEAD), signedEntry(`${root}/CLAUDE.md`, CLAUDE_MD)]);
     const markerFile = join(userDir(username), `skills-${deviceId}-${settings.project}.json`);
     const installed = readJson(markerFile, {});
     for (const skill of SKILLS.filter((s) => s.repo && settings.skills.includes(s.id) && installed[s.id] !== s.commit)) {
@@ -431,7 +441,8 @@ export function createAllInOne({ dataDir, devicesFor, accountStatusQuick, spawn,
     return new Promise((resolve) => {
       const { bin, args } = engineCommand(engine, { model, settings, sessionId: engineState?.sessionId });
       const env = accountEnv(accountId(engine, settings.accounts[engine]));
-      const child = spawn(deviceId, { bin, args, cwd, timeoutMs: 3 * 60 * 60 * 1000, ...(env ? { env } : {}) });
+      const verify = signedProjects.get(`${deviceId}\n${cwd}`);
+      const child = spawn(deviceId, { bin, args, cwd, timeoutMs: 3 * 60 * 60 * 1000, ...(env ? { env } : {}), ...(verify ? { verify } : {}) });
       const state = running.get(key);
       if (state) state.child = child;
       const result = { texts: [], tools: [], sessionId: engineState?.sessionId || null, usage: null, quota: null, error: null };

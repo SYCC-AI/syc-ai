@@ -120,6 +120,7 @@ test('priority suggestion reads the kind of work, without calling any model', ()
 function fakeDevice(scripts) {
   const calls = [];
   const files = new Map();
+  const signed = new Map();
   const spawn = (deviceId, command) => {
     const child = new EventEmitter();
     child.stdout = new EventEmitter(); child.stderr = new EventEmitter();
@@ -133,10 +134,10 @@ function fakeDevice(scripts) {
   };
   const deviceFs = {
     read: async (d, p) => { if (!files.has(p)) throw new Error('ENOENT'); return files.get(p); },
-    write: async (d, p, data) => { files.set(p, data); },
+    write: async (d, p, data, options) => { files.set(p, data); if (options) signed.set(p, options); },
     rm: async (d, p) => { for (const k of [...files.keys()]) if (k.startsWith(p)) files.delete(k); },
   };
-  return { calls, files, spawn, deviceFs };
+  return { calls, files, signed, spawn, deviceFs };
 }
 
 async function service(scripts, ready = { claude: true, codex: true }) {
@@ -240,5 +241,27 @@ test('a second account is used only when the user picks it, with its own login f
     assert.equal(saved.engines.claude.slot, 2);
     assert.equal(saved.turns.at(-1).account, 2);
     assert.deepEqual(normalizeSettings({ accounts: { claude: 3, codex: 2 } }).accounts, { claude: 1, codex: 2 });
+  } finally { cleanup(); }
+});
+
+test('the managed AGENTS.md and CLAUDE.md are signed for the device and every run names what it expects', async () => {
+  const { configDigest, configScope } = await import('../remote-runner.mjs');
+  const { aio, device, cleanup } = await service([
+    [{ type: 'system', subtype: 'init', session_id: 'c-1' }, { type: 'assistant', message: { content: [{ type: 'text', text: 'ok' }] } }, { type: 'result', result: 'ok', session_id: 'c-1' }],
+  ]);
+  try {
+    const session = aio.createSession('ana', {});
+    const { work } = await aio.sendMessage('ana', session.id, { text: 'hello there' });
+    await work;
+    const agents = '~/.syc-node/workspace/syc-ai/main/AGENTS.md';
+    const claude = '~/.syc-node/workspace/syc-ai/main/CLAUDE.md';
+    assert.deepEqual(device.signed.get(agents), { sign: true, head: '\n## Decisions\n' });
+    assert.deepEqual(device.signed.get(claude), { sign: true });
+    assert.deepEqual(device.calls[0].verify, [
+      { path: agents, scope: configScope('\n## Decisions\n'), sha256: configDigest(device.files.get(agents), '\n## Decisions\n') },
+      { path: claude, scope: 'file', sha256: configDigest('@AGENTS.md\n') },
+    ]);
+    // Third-party skill files are not SYC-AI's own configuration.
+    assert.equal([...device.signed.keys()].some((p) => p.includes('/skills/')), false);
   } finally { cleanup(); }
 });

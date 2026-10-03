@@ -12,6 +12,7 @@ const CAPABILITIES = [
 ];
 
 const t = (text) => (window.SYC?.t ? window.SYC.t(text) : text);
+const err = (c) => (window.SYC?.err ? window.SYC.err(c) : c);
 const el = (id) => document.getElementById(id);
 
 let toastTimer = 0;
@@ -101,7 +102,7 @@ async function connectThisPhone() {
     say('This phone is now connected.');
     setTimeout(refresh, 2500);
   } catch (error) {
-    say(t('Could not connect this phone.') + ' ' + error.message);
+    say(t('Could not connect this phone.') + ' ' + err(error.message));
   }
 }
 
@@ -153,7 +154,7 @@ function renderDevice(device, hosted = false, requests = []) {
         say('Saved.');
       } catch (error) {
         input.checked = !input.checked;
-        say(error.message);
+        say(err(error.message));
       }
     };
   });
@@ -164,7 +165,7 @@ function renderDevice(device, hosted = false, requests = []) {
       if (thisPhone) bridge.unlinkPhone();
       say('The phone was disconnected.'); refresh();
     }
-    catch (error) { say(error.message); }
+    catch (error) { say(err(error.message)); }
   };
 }
 
@@ -180,6 +181,8 @@ async function refresh() {
       signin.innerHTML = `<h2>${t('2 · Connect the phone')}</h2>
         <p class="muted">${t('Open the SYC-AI app on the phone, sign in, open “Connect your phone” and tap “Connect this phone”.')}</p>`;
       el('accessGuide').hidden = true;
+      // Inside the app there is nothing to install: only this phone's state stays.
+      if (appBridge()) { install.hidden = true; signin.hidden = true; }
     } else {
       renderApp(status.app);
       // Once access is on, the unlock steps are no longer needed.
@@ -188,7 +191,7 @@ async function refresh() {
     renderDevice(status.device, Boolean(status.hosted), status.requests);
     window.SYC?.i18n?.apply?.();
   } catch (error) {
-    say(error.message);
+    say(err(error.message));
   }
 }
 

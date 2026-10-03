@@ -7,9 +7,9 @@
   <title>SYC-AI · All in One</title>
   <link rel="icon" href="/assets/syc-logo.svg" type="image/svg+xml">
   <link rel="manifest" href="/assets/app.webmanifest">
-  <script src="/i18n.js?v=19"></script>
+  <script src="/i18n.js?v=34"></script>
   <link rel="stylesheet" href="/main.css?v=22">
-  <link rel="stylesheet" href="/v2.css?v=5">
+  <link rel="stylesheet" href="/v2.css?v=16">
 </head>
 <body class="v2 aio-page">
   <header class="topbar">
@@ -36,6 +36,12 @@
 
   <div class="aio-shell">
     <aside class="aio-side" id="aioSide">
+      <div class="aio-drawer-head">
+        <b data-i18n>Sessions</b>
+        <button type="button" class="aio-icon-btn aio-drawer-close" data-close-drawer aria-label="Close" data-i18n-attr="aria-label">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
       <div class="aio-new">
         <button type="button" class="aio-plus" id="newSession" title="New session" data-i18n-attr="title"><span aria-hidden="true">+</span> <span data-i18n>New session</span></button>
         <button type="button" class="aio-plus gold" id="newSpecial" title="Specialized sessions" data-i18n-attr="title"><span aria-hidden="true">+</span> <span data-i18n>Specialized</span></button>
@@ -88,12 +94,18 @@
     </main>
 
     <aside class="aio-usage" id="usagePanel">
-      <h2 data-i18n>Your accounts</h2>
+      <div class="aio-drawer-head">
+        <h2 data-i18n>Your accounts</h2>
+        <button type="button" class="aio-icon-btn aio-drawer-close" data-close-drawer aria-label="Close" data-i18n-attr="aria-label">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
       <div id="usageCards"></div>
       <button type="button" class="aio-ghost" id="refreshUsage" data-i18n>Refresh Codex usage</button>
       <p class="aio-note" data-i18n>Claude usage updates after each Claude answer. Nothing is sent to a model to read it.</p>
     </aside>
   </div>
+  <div class="aio-scrim" id="aioScrim" data-close-drawer aria-hidden="true"></div>
 
   <!-- Specialized sessions (the yellow +) -->
   <div class="aio-layer hidden" id="specialLayer">
@@ -208,7 +220,8 @@
   </div>
 
   <script src="/theme.js?v=1"></script>
-  <script src="/profile.js?v=6"></script>
-  <script type="module" src="/syc.js?v=2"></script>
+  <script src="/profile.js?v=7"></script>
+  <script type="module" src="/syc.js?v=4"></script>
+  <script src="/app-update.js?v=2" defer></script>
 </body>
 </html>
