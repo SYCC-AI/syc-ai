@@ -13,6 +13,7 @@
 [![release](https://img.shields.io/github/v/release/SYCC-AI/syc-ai?label=release&color=4f8cff)](https://github.com/SYCC-AI/syc-ai/releases/latest)
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-8b7bff.svg)](LICENSE)
 [![Main is free until 31 Dec 2026](https://img.shields.io/badge/Main-free%20until%2031%20Dec%202026-34d399.svg)](#editions)
+[![Free Professional: about 60 free AI models](https://img.shields.io/badge/Free%20Professional-60%20free%20AI%20models-f5c45a.svg)](https://syc-ai.com/free-professional/)
 
 [English](README.md) · [فارسی](README.fa.md) · **中文** · [Русский](README.ru.md) · [العربية](README.ar.md) · [Español](README.es.md)
 
@@ -20,6 +21,9 @@
 
 <p align="center"><img src="screenshots/demo.gif" width="860" alt="SYC-AI 导览：登录、专业账户、一个 All in One 对话（Claude 达到用量上限后由 Codex 继续同一条消息）、设置和专业会话"></p>
 
+- **新功能：Free Professional —— 人人免费。** 无需订阅，无需 API 密钥。
+  - 一个编程会话里约 60 个免费 AI 模型，每天测试并排名。从最强的开始；某个模型的免费额度用完时，下一个在同样的文件里接着做。
+  - 你可以自己挑选任意模型，也可以让 Claude 或 Codex 只写计划、由免费模型完成工作，并实时显示"第 3 步 / 共 8 步"的进度。[了解原理 →](https://syc-ai.com/free-professional/)
 - **一个对话，两个引擎。**
   - Claude 负责规划，Codex 负责构建，简短问题交给更轻量的模型；全部在同一个文件夹里，共用一份 `AGENTS.md`。
   - 某个订阅达到上限时，同一条消息会交给你的*另一个*引擎继续，并附上它错过内容的简短交接。
@@ -45,6 +49,7 @@
 | | 功能 | 对你意味着什么 |
 |---|---|---|
 | ✨ | **SYC-AI — All in One** | 一个会话同时连接 Claude 和 Codex。每条消息交给最合适的引擎——规划给 Claude，构建给 Codex，简短问题给更轻量的模型——或交给你选的那个。同一个项目文件夹和一份共享记忆（`AGENTS.md`），引擎轮换时不会丢失任何东西。 |
+| 🆓 | **Free Professional —— 人人免费** | 约 60 个每天测试并排名的免费 AI 模型，在你自己设备上的同一个编程会话里：最强的先上，免费额度用完就由下一个接手。可自己挑选模型，或让 Claude 或 Codex 只写计划、免费模型逐步完成。无需订阅和 API 密钥；合理使用上限为每天 800 次请求。 |
 | 🔁 | **额度用完，工作不停** | 当一个订阅达到用量上限时，同一条消息会按*你的*顺序由下一个引擎继续，并附上简短的交接说明。（SYC-AI 绝不会为绕过限制而跳到同一提供商的第二个账户。） |
 | 📊 | **所有用量一目了然** | 每个已连接账户的 5 小时和每周用量及重置时间——读取时不会向模型发送任何内容。 |
 | 🩺 | **Token 医生与冷对话提醒** | 检查你在 Claude 和 Codex 中的对话把 token 花在哪里——缓存命中率、缓存已过期的对话、每次提问的固定部分——并给出通俗建议。当你在一小时或更久之后继续一个长对话时，SYC-AI 会提醒你：下一条消息会按全价重新读取整个对话。这些都不询问模型。 |

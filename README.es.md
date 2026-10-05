@@ -13,6 +13,7 @@ En seis idiomas.
 [![release](https://img.shields.io/github/v/release/SYCC-AI/syc-ai?label=release&color=4f8cff)](https://github.com/SYCC-AI/syc-ai/releases/latest)
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-8b7bff.svg)](LICENSE)
 [![Main is free until 31 Dec 2026](https://img.shields.io/badge/Main-free%20until%2031%20Dec%202026-34d399.svg)](#editions)
+[![Free Professional: about 60 free AI models](https://img.shields.io/badge/Free%20Professional-60%20free%20AI%20models-f5c45a.svg)](https://syc-ai.com/free-professional/)
 
 [English](README.md) · [فارسی](README.fa.md) · [中文](README.zh-CN.md) · [Русский](README.ru.md) · [العربية](README.ar.md) · **Español**
 
@@ -20,6 +21,9 @@ En seis idiomas.
 
 <p align="center"><img src="screenshots/demo.gif" width="860" alt="Recorrido por SYC-AI: inicio de sesión, cuentas profesionales, una conversación All in One en la que Claude llega a su límite de uso y Codex continúa el mismo mensaje, ajustes y sesiones especializadas"></p>
 
+- **Nuevo: Free Professional — gratis para todos.** Sin suscripción y sin clave de API.
+  - Unos 60 modelos de IA gratuitos en una sola sesión de programación, probados y clasificados cada día. Empieza el más potente; cuando se agota su cuota gratuita, el siguiente sigue en los mismos archivos.
+  - Elige tú cualquier modelo, o deja que Claude o Codex solo escriban el plan mientras los modelos gratuitos hacen el trabajo, con el progreso en vivo («paso 3 de 8»). [Cómo funciona →](https://syc-ai.com/free-professional/)
 - **Una conversación, dos motores.**
   - Claude planifica, Codex construye y las preguntas rápidas van a un modelo más ligero, todo en una carpeta con un `AGENTS.md` compartido.
   - Cuando una suscripción llega a su límite, el mismo mensaje sigue en tu *otro* motor, con un breve resumen de lo que se perdió.
@@ -45,6 +49,7 @@ En seis idiomas.
 | | Función | Qué significa para ti |
 |---|---|---|
 | ✨ | **SYC-AI — All in One** | Una sesión para Claude y Codex. Cada mensaje va al que mejor le corresponde —la planificación a Claude, la construcción a Codex, las preguntas cortas a un modelo más ligero— o al que tú elijas. Una carpeta de proyecto y una memoria compartida (`AGENTS.md`), para que nada se pierda cuando los motores se turnan. |
+| 🆓 | **Free Professional — gratis para todos** | Unos 60 modelos de IA gratuitos, probados y clasificados cada día, en una sola sesión en tu dispositivo: empieza el más potente y, cuando se agota su cuota gratuita, sigue el siguiente. Elige tú el modelo, o deja que Claude o Codex solo escriban el plan y los modelos gratuitos lo construyan paso a paso. Sin suscripción ni clave de API; uso justo de 800 solicitudes al día. |
 | 🔁 | **Tu trabajo sigue cuando llega el límite** | Cuando una suscripción alcanza su límite de uso, el mismo mensaje continúa con el siguiente motor en *tu* orden, con un breve traspaso de lo ocurrido. (SYC-AI nunca salta a una segunda cuenta del mismo proveedor para esquivar su límite.) |
 | 📊 | **Todo tu uso en un solo lugar** | El uso de 5 horas y semanal de cada cuenta conectada, con la hora de reinicio, leído sin enviar nada a un modelo. |
 | 🩺 | **Doctor de tokens y aviso de conversación fría** | Un chequeo de en qué gastan tokens tus conversaciones en Claude y en Codex —aciertos de caché, conversaciones cuya caché ha caducado, la parte fija de cada pregunta— con consejos sencillos. Si retomas una conversación larga tras una hora o más, SYC-AI te avisa de que el siguiente mensaje volvería a leerla entera a precio completo. Nada de esto consulta a un modelo. |

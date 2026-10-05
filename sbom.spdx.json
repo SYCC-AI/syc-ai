@@ -3,9 +3,9 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "SYC-AI local publication candidate",
-  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-18056257c6bdc878551024f162ad53ce4df7e77849a2d0a4b724a4a3aabf1787",
+  "documentNamespace": "https://spdx.org/spdxdocs/syc-ai-9e748f8a9ff95ea3c63024d093ff139ffe1e4baebee6d3c9b3acca1c2ee53b65",
   "creationInfo": {
-    "created": "2026-10-03T22:13:26Z",
+    "created": "2026-10-05T23:08:37Z",
     "creators": [
       "Organization: SYC",
       "Tool: syc-ai-local-evidence/1"
@@ -162,7 +162,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7f66f2010561f566c7a0bf937227c0a597ddab3c85597c3e544898019fcb9fb7"
+          "checksumValue": "4ba2c381ab713d46b1a4d0f2f158fc29ac94f10afe91b7f5d28bf1e4ec8d390a"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -174,7 +174,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "536d386236d835ee1415c27d07d7f4d12d41cb72d99bde82fcf82e3358bed720"
+          "checksumValue": "2e744c52dc903df278175a88cf2a52c48ccb94aa11babaeabda5894ab2acffdd"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -186,7 +186,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "d96f584251807993ee63164fb06c62d7a103731432d618a34fe4a4a43eb6a5ca"
+          "checksumValue": "a0195c07575b8c61036e47d9bc0127fb51010a806e0ab7308e211330fc747c60"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -198,7 +198,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c60093987b564b62bbefd3d3e389c171598a8ac514d5e6a83562600c885019b1"
+          "checksumValue": "731b099a5ba92eebe9a8c62497213f767ec25beddc63bb328da60de36fbe198b"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -210,7 +210,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c2f189ba08e326b56f5256dc141838a19bb6e12f70b3e84430ec215e135fa61e"
+          "checksumValue": "fe520578a0bf9fce9c9ce102ff3f9a997b1cb9be6cd1f19e8bbd26fac8eca367"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -222,7 +222,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "43a504ed19f1e3c9a6aab3ecf8bc3d8bc8356a40453e6c67e1df2b05b29f20bf"
+          "checksumValue": "da23e8a0aa3f8f1635bc1f366f1d3e72ad5d8926de307303da20e26cb1f6d768"
         }
       ],
       "licenseConcluded": "NOASSERTION",
