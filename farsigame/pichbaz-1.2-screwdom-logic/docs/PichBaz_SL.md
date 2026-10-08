@@ -47,7 +47,11 @@
 - اجرا روی سرور به دست سشن FarsiGameHand2؛ لاگ `Docs/status/logs/sl_apply.log`.
 
 ## نتیجهٔ اعمال روی سرور
-APPLY_PLACEHOLDER
+- دور اول `sl_apply.sh` (19:53-20:26 UTC): پشتیبان `/root/SYC-Archives/PichBaz-sl/pre-sl-1008-1953.tgz` (۲۵ فایل)، استخراج، import (۲۱۵
+  رشته)، test_all: ۳۴ تست PASS و `core_levels_api` FAIL چون فایل تست به‌روزشده در بستهٔ اول جا مانده بود (بسته اصلاح شد: ۹۱ فایل).
+- ادامه با `Tools/sl_resume.sh` (20:28-20:30 UTC): `core_levels_api` PASS → **ALL PASS (۳۵)**؛ `EXPORT OK` → `Builds/PichBaz-1.2.0-store.apk`
+  (۷۶٬۴۶۸٬۲۵۱ بایت، sha256 `b946f5540f92db96912376480deff33c93320fc087e288a1a41b9b2cdd8578ca`، امضای v2)؛ uplo: پیام **۱۲۹** به SYC؛
+  Zodita: `ready: pichbaz 1.2.0 (versionCode 10) 72.9 MB`؛ commit سرور `3716663`. بازار: هیچ.
 
 ## درس‌ها
 - خروجی Godot در pipe کاملاً بافر می‌شود؛ پیشرفت تولید را از زمان فایل‌های `levels_r3` بخوان.
